@@ -1,0 +1,24 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark h-100">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <svg class="bi pe-none me-2" width="40" height="32">
+            <use xlink:href="#bootstrap"></use>
+        </svg>
+        <span class="fs-4">Ca_UN-CHK</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        @for (menu of MenuItems; track $index) {
+        <li class="nav-item">
+            <a class="nav-link text-white outline" aria-current="page" routerLink="{{ menu.route }}"
+                routerLinkActive="ActiveMenu" [routerLinkActiveOptions]="{ exact: true }">
+                <span><i class="me-3" [class]="menu.icon"></i><span>{{ menu.title }}</span></span>
+            </a>
+        </li>
+        }
+    </ul>
+    <hr>
+    <button class="btn btn-outline-primary">
+        <i class="pi pi-sign-out text-pointer me-2"></i>
+        Se déconnecter
+    </button>
+</div>

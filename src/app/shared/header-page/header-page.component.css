@@ -1,0 +1,19 @@
+ul li{
+    margin: 0 0.5rem;
+    padding: 0 1rem;
+}
+
+.active{
+    border-bottom: 2px solid #0D6EFD;
+    outline-offset: -1px;
+}
+
+.active a{
+    color: #0D6EFD;
+}
+
+li:hover{
+    border-bottom: 2px solid #0D6EFD;
+    outline-offset: -1px;
+    transition: all 0.3s ease-in-out;
+}
