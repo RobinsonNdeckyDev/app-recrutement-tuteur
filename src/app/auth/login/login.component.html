@@ -1,26 +1,63 @@
 <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
     <div class="row w-100">
-        <div class="col-md-4 mx-auto">
-            <div class="card">
+        <div class="col-md-8 mx-auto">
+            <div class="shadow">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Connexion</h5>
-                    <form>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Entrez votre email" required>
+                    <div class="row">
+                        <div class="col-md-6 p-0 m-0">
+                            <div class="card rounded-0 px-4 py-3 bg-card text-white h-100 d-flex flex-direction-column justify-content-center">
+                                <h5 class="card-title text-center fw-bold mb-5 mt-3">Connectez-vous</h5>
+                                <form action="" class="mt-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                            <input type="email" class="form-control" id="email" placeholder="Votre adresse email" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-person-fill-lock"></i></span>
+                                            <input type="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
+                                        </div>
+                                    </div>
+
+                                    <p class="my-2"><a routerLink="/forgot-password" class="text-white nav-link">Mot de passe oublíé ?</a></p>
+
+                                    <div class="d-flex justify-content-center mb-3 mt-4">
+                                        <button type="submit" class="btn bg-button fw-bold px-5">Se connecter</button>
+                                    </div>
+                                </form>
+
+                                <div class="d-flex justify-content-center align-items-center mt-3">
+                                        <span class="me-3 p-2 icon-social">
+                                            <a href="" class="text-white">
+                                                <i class="bi bi-facebook"></i>
+                                            </a>
+                                        </span>
+                                        <span class="me-3 p-2 icon-social">
+                                            <a href="" class="text-white">
+                                                <i class="bi bi-google"></i>
+                                            </a>
+                                        </span>
+                                        <span class="me-3 p-2 icon-social">
+                                            <a href="" class="text-white">
+                                                <i class="bi bi-linkedin"></i>
+                                            </a>
+                                        </span>
+                                </div>
+
+                                <p class="text-center mt-4">
+                                        <a routerLink="/register" class="nav-link">
+                                            Vous n'avez pas de compte? <span class="fw-bold">Inscrivez-vous !</span>
+                                        </a>
+                                </p>
+
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe" required>
+                        <div class="col-md-6 border p-0 m-0">
+                            <img src="/assets/auth/user-auth.png" alt="" class="img-fluid h-100 w-100">
                         </div>
-
-                        <p class="text-start my-2"><a href="#" class="text-decoration-none">Mot de passe oublié ?</a></p>
-
-                        <button type="submit" class="btn btn-primary w-100 mt-3 mb-2">Se connecter</button>
-
-                        <p class="text-center my-2"><a routerLink="/register" class="nav-link">Vous n'avez pas de compte ?
-                            Inscrivez-vous</a></p>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

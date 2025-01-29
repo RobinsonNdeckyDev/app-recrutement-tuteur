@@ -1,1 +1,60 @@
-<p>register works!</p>
+<div class="container-fluid d-flex align-items-center justify-content-center register" style="height: 100vh;">
+    <div class="row w-100">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center my-4">Créez vous un compte</h5>
+
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="prenom" class="form-label">Prénom: </label>
+                                    <input type="text" class="form-control" id="prenom" placeholder="Entrez votre prénom" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nom" class="form-label">Nom: </label>
+                                    <input type="text" class="form-control" id="nom" placeholder="Entrez votre nom" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="adresse" class="form-label">Adresse: </label>
+                                    <input type="text" class="form-control" id="adresse" placeholder="Entrez votre adresse" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telephone" class="form-label">Telephone: </label>
+                                    <input type="tel" class="form-control" id="telephone" placeholder="Entrez votre numéro de telephone" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email: </label>
+                                    <input type="email" class="form-control" id="email" placeholder="Entrez votre email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Mot de passe: </label>
+                                    <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="photoProfil" class="form-label">Photo: </label>
+                                    <input type="file" class="form-control" id="photoProfil" placeholder="Entrez votre photo de profil" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description: </label>
+                                    <input type="description" class="form-control" id="description" placeholder="Décrivez-vous" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3 mb-2 fw-bold">S'inscrire</button>
+
+                        <p class="text-center my-2">
+                            <a routerLink="/login" class="nav-link">
+                                Vous avez déja un compte ? <span class="fw-bold text-primary">Connectez-vous!</span>
+                            </a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
