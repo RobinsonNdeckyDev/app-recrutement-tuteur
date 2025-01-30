@@ -1,30 +1,43 @@
-<div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
-    <div class="row w-100">
+<div class="login container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row w-100" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
         <div class="col-md-8 mx-auto">
             <div class="shadow">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 p-0 m-0">
-                            <div class="card rounded-0 px-4 py-3 bg-card text-white h-100 d-flex flex-direction-column justify-content-center">
+                            <div class="card rounded-0 px-4 py-3 bg-card-login text-white h-100 d-flex flex-direction-column justify-content-center">
                                 <h5 class="card-title text-center fw-bold mb-5 mt-3">Connectez-vous</h5>
-                                <form action="" class="mt-4">
+                                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-4">
                                     <div class="mb-4">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                                            <input type="email" class="form-control" id="email" placeholder="Votre adresse email" required>
+                                            <input type="email" class="form-control" formControlName="email" placeholder="Votre adresse email">
                                         </div>
+                                        <!-- <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-white">
+                                            <small *ngIf="loginForm.get('email')?.errors?.['required']">L'email est requis</small>
+                                            <small *ngIf="loginForm.get('email')?.errors?.['email']">Format d'email invalide</small>
+                                        </div> -->
                                     </div>
                                     <div class="mb-4">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-person-fill-lock"></i></span>
-                                            <input type="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
+                                            <input type="password"
+                                                   class="form-control"
+                                                   formControlName="password"
+                                                   placeholder="Votre mot de passe">
                                         </div>
+                                        <!-- <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-white">
+                                            <small *ngIf="loginForm.get('password')?.errors?.['required']">Le mot de passe est requis</small>
+                                        </div> -->
                                     </div>
 
-                                    <p class="my-2"><a routerLink="/forgot-password" class="text-white nav-link">Mot de passe oublíé ?</a></p>
+                                    <p class="my-2"><a routerLink="/forgot-password" class="text-white nav-link">Mot de passe oublié ?</a></p>
 
                                     <div class="d-flex justify-content-center mb-3 mt-4">
-                                        <button type="submit" class="btn bg-button fw-bold px-5">Se connecter</button>
+                                        <button type="submit" class="btn bg-button fw-bold px-5"
+                                            [disabled]="loginForm.invalid">
+                                            Se connecter
+                                        </button>
                                     </div>
                                 </form>
 

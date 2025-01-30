@@ -1,0 +1,22 @@
+.login{
+    background-image: url('/assets/banners/img4-login.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.login .bg-card-login{
+    background-color: #e18428d5;
+}
+
+.bg-button-login{
+    background-color: var(--white);
+    border: none;
+    color: var(--marron);
+    box-shadow: 0 0 2px var(--gray-light);
+}
+
+.login .input-group i{
+    color: var(--marron);
+}
