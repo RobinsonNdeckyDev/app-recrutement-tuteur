@@ -1,1 +1,157 @@
-<p>detail-annonce works!</p>
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Carte principale -->
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <h4 class="fw-bold">Recrutement tuteurs</h4>
+                <p class="text-muted">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+                <p class="fw-bold">
+                    Publié le: <span class="text-dark">20/01/2025</span>
+                </p>
+                <button class="btn btn-outline-dark">Détails</button>
+            </div>
+        </div>
+
+        <!-- Carte secondaire -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <h5 class="fw-bold">Recrutement de tuteurs</h5>
+                    <p class="text-muted">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua.
+                    </p>
+                    <p>
+                        <strong>Publié le:</strong>
+                        <span class="fw-bold">20/01/2025</span>
+                    </p>
+                    <p>
+                        <strong>Année:</strong>
+                        <span class="fw-bold">204-2025</span>
+                    </p>
+                    <p>
+                        <strong>Date limite:</strong>
+                        <span class="fw-bold">204-2025</span>
+                    </p>
+                    <!-- Bouton qui ouvre le modal -->
+                    <button
+                        class="btn btn-primary w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#applyModal"
+                    >
+                        Postuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de candidature -->
+<div
+    class="modal fade"
+    id="applyModal"
+    tabindex="-1"
+    aria-labelledby="applyModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applyModalLabel">
+                    Postuler à l'offre
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fermer"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nom"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="prenom"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="adresse" class="form-label">Adresse</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="adresse"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="telephone" class="form-label"
+                            >Téléphone</label
+                        >
+                        <input
+                            type="tel"
+                            class="form-control"
+                            id="telephone"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="cv" class="form-label"
+                            >CV (PDF uniquement)</label
+                        >
+                        <input
+                            type="file"
+                            class="form-control"
+                            id="cv"
+                            accept=".pdf"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="lettre" class="form-label"
+                            >Lettre de motivation (PDF uniquement)</label
+                        >
+                        <input
+                            type="file"
+                            class="form-control"
+                            id="lettre"
+                            accept=".pdf"
+                            required
+                        />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        Envoyer la candidature
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
