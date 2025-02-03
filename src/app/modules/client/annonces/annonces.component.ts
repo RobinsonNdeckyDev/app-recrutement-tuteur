@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgOptimizedImage} from "@angular/common";
 import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-annonces',
   standalone: true,
-    imports: [DatePipe, RouterLink],
+    imports: [DatePipe, RouterLink, NgOptimizedImage],
   templateUrl: './annonces.component.html',
   styleUrl: './annonces.component.css'
 })
@@ -17,5 +17,9 @@ export class AnnoncesComponent {
     {id: 4, title: 'Annonce 4', content: 'Annonce 4', annee_academique: new Date(), image:"assets/banners/image.png"},
     {id: 5, title: 'Annonce 5', content: 'Annonce 5', annee_academique: new Date(), image:"assets/banners/image 9.png"},
     {id: 6, title: 'Annonce 6', content: 'Annonce 6', annee_academique: new Date(), image:"assets/banners/image 9.png"}
-]
+];
+
+  getDetails(id: any) {
+   return id;
+  }
 }

@@ -1,0 +1,9 @@
+header{
+    background-image: url("/assets/banners/image.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+header div{
+    background-color: rgba(0, 0, 0, 0.5);
+}

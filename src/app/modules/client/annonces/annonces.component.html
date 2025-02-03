@@ -1,21 +1,25 @@
-<header class="py-5 bg-light">
-    <h2 class="text-center fw-bolder">Liste des annonces</h2>
+<header>
+   <div class="w-100 py-5">
+       <h2 class="text-center text-white fw-bolder">Liste des annonces</h2>
+   </div>
 </header>
-<section class="d-flex justify-content-center align-items-center">
-    <div class="row">
-        <div class="col col-2 bg-secondary">
-            <input type="search" id="search" name="search" placeholder="Rechercher annonce" class="form-control">
-        </div>
-        <div class="col col-10 py-5">
+<section class="d-flex justify-content-between overflow-hidden">
+    <div class="px-3 bg-dark" style="width: 400px;">
+        <input type="search" id="search" name="search" placeholder="Rechercher annonce" class="w-100 mt-3 form-control">
+    </div>
+    <div>
+        <div>
            <div class="row">
                @for (annonce of annonces; track annonce.id){
-                   <div class="col col-4 shadow-sm rounded p-3 mb-5">
-                       <img [src]="annonce.image" [alt]="annonce.title">
-                       <div>
+                   <div class="col col-3 m-4 shadow-sm">
+                       <img [src]="annonce.image" [alt]="annonce.title" class="w-100">
+                       <div class="py-3">
                            <h5>{{annonce.title}}</h5>
                            <p>{{annonce.content}}</p>
                            <span class="d-block text-primary fw-semibold">{{annonce.annee_academique | date}}</span>
-                           <button [routerLink]="['/detailAnnonce', annonce.id]" class="btn btn-primary btn-sm">Détails</button>
+                           <button [routerLink]="['/detailAnnonce', annonce.id]" (click)="getDetails(annonce)" class="btn btn-primary btn-sm">
+                               Détails
+                           </button>
                        </div>
                    </div>
                }
