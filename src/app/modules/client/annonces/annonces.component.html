@@ -1,21 +1,21 @@
 <header class="py-5 bg-light">
     <h2 class="text-center fw-bolder">Liste des annonces</h2>
 </header>
-<section class="d-flex justify-content-center align-items-center py-4">
-    <div class="container row">
-        <div class="col col-2">
+<section class="d-flex justify-content-center align-items-center">
+    <div class="row">
+        <div class="col col-2 bg-secondary">
             <input type="search" id="search" name="search" placeholder="Rechercher annonce" class="form-control">
         </div>
-        <div class="col col-10">
-           <div class="row d-flex justify-content-center align-items-center">
+        <div class="col col-10 py-5">
+           <div class="row">
                @for (annonce of annonces; track annonce.id){
-                   <div class="col col-3 shadow-sm rounded p-3 m-3">
+                   <div class="col col-4 shadow-sm rounded p-3 mb-5">
                        <img [src]="annonce.image" [alt]="annonce.title">
                        <div>
                            <h5>{{annonce.title}}</h5>
                            <p>{{annonce.content}}</p>
                            <span class="d-block text-primary fw-semibold">{{annonce.annee_academique | date}}</span>
-                           <button class="btn btn-primary btn-sm">Détails</button>
+                           <button [routerLink]="['/detailAnnonce', annonce.id]" class="btn btn-primary btn-sm">Détails</button>
                        </div>
                    </div>
                }
