@@ -1,14 +1,14 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark h-100">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <svg class="bi pe-none me-2" width="40" height="32">
+<div class="sidebar d-flex flex-column flex-shrink-0 p-3 h-100">
+    <a href="/" class="d-flex align-items-center mx-auto mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <!-- <svg class="bi pe-none me-2" width="40" height="32">
             <use xlink:href="#bootstrap"></use>
-        </svg>
-        <span class="fs-4">Ca_UN-CHK</span>
+        </svg> -->
+        <span class="fs-5 fw-bold">UNCHK</span>
     </a>
-    <hr>
+    <hr class="text-white">
     <ul class="nav nav-pills flex-column mb-auto">
         @for (menu of MenuItems; track $index) {
-        <li class="nav-item">
+        <li class="nav-item my-2">
             <a class="nav-link text-white outline" aria-current="page" routerLink="{{ menu.route }}"
                 routerLinkActive="ActiveMenu" [routerLinkActiveOptions]="{ exact: true }">
                 <span><i class="me-3" [class]="menu.icon"></i><span>{{ menu.title }}</span></span>
@@ -16,8 +16,8 @@
         </li>
         }
     </ul>
-    <hr>
-    <button class="btn btn-outline-primary">
+    <hr class="text-white">
+    <button class="btn btn-outline text-white">
         <i class="pi pi-sign-out text-pointer me-2"></i>
         Se déconnecter
     </button>

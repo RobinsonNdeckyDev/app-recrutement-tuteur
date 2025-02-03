@@ -1,3 +1,4 @@
+import { AuthService } from './core/services/authService/auth.service';
 
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
@@ -12,7 +13,10 @@ import * as AOS from 'aos';
 })
 export class AppComponent {
 
-  ngOnInit() {
-    AOS.init();
-  }
+    constructor(private authService: AuthService){}
+
+    ngOnInit() {
+        AOS.init();
+        this.authService.autoLogin();
+    }
 }

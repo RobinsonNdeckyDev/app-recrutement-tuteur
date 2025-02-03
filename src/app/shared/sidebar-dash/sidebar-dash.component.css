@@ -1,5 +1,9 @@
+.sidebar{
+    background-color: #1879BC;
+}
+
 .ActiveMenu {
-    background-color: #0D6EFD;
+    background-color: var(--blue-1);
     color: #fff;
 }
 
@@ -8,10 +12,14 @@ li{
 }
 
 li:hover{
-    background-color: #0D6EFD;
+    background-color: var(--blue-1);
     color: #fff;
-    outline: 1px solid #0D6EFD;
+    outline: 1px solid var(--blue-1);
     outline-offset: -1px;
     border-radius: 0.5rem;
     margin: 0.2rem 0;
+}
+
+hr{
+    height: 4px;
 }

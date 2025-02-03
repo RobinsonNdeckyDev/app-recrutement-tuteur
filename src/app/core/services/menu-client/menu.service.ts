@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../authService/auth.service';
 
 export interface MenuItem {
     title: string; // Titre du menu
@@ -23,54 +25,77 @@ export class MenuService {
             title: 'Utilisateurs',
             route: './admin/utilisateurs',
             icon: 'pi pi-users',
-            access: ['vendeur', 'aide-vendeur'],
+            access: ['admin'],
         },
         {
-            title: 'Séances',
-            route: './admin/seance',
+            title: 'Annonces',
+            route: './admin/annonces',
+            icon: 'bi bi-megaphone',
+            access: ['admin'],
+        },
+        {
+            title: 'Années académiques',
+            route: './admin/anneesAcademiques',
             icon: 'bi bi-calendar',
-            access: ['vendeur', 'aide-vendeur'],
+            access: ['admin'],
         },
         {
-            title: 'Paiements',
-            route: './admin/paiement',
-            icon: 'bi bi-wallet',
-            access: ['vendeur', 'aide-vendeur'],
+            title: 'Candidatures',
+            route: './admin/candidatures',
+            icon: 'bi bi-folder',
+            access: ['admin'],
         },
         {
-            title: 'Ressources',
-            route: './admin/ressources',
-            icon: 'pi pi-image',
-            access: ['vendeur', 'aide-vendeur'],
+            title: 'Documents',
+            route: './admin/documents',
+            icon: 'bi bi-files',
+            access: ['admin'],
+        },
+
+        // menu candidat
+        {
+            title: 'Dashboard',
+            route: './candidat',
+            icon: 'bi bi-speedometer',
+            access: ['candidat'],
         },
         {
-            title: 'Support client',
-            route: './admin/support-client',
+            title: 'Mes candidatures',
+            route: './candidat/candidatures',
+            icon: 'pi pi-users',
+            access: ['candidat'],
+        },
+        {
+            title: 'Annonces',
+            route: './candidat/annonces',
+            icon: 'bi bi-calendar',
+            access: ['candidat'],
+        },
+        {
+            title: 'Mes Documents',
+            route: './candidat/Documents',
             icon: 'pi pi-question',
-            access: ['vendeur', 'aide-vendeur'],
-        },
-        {
-            title: 'Newsletter',
-            route: './admin/newsletter',
-            icon: 'pi pi-box',
-            access: ['vendeur', 'aide-vendeur'],
-        },
-        {
-            title: 'Paramétres',
-            route: './admin/parametres',
-            icon: 'pi pi-cog',
-            access: ['vendeur', 'aide-vendeur'],
+            access: ['candidat'],
         },
 
-        // menu specialiste
-
-        // menu patient
     ];
 
-    constructor() {}
+    constructor(private router: Router, private authService: AuthService) {}
 
     // Recuperer la liste des menus
     getMenusDash(): MenuItem[] {
+
+        // Récupérer le role de l'utilisateur
+        const userConnected = this.authService.getCurrentUser();
+        console.log('userConnected', userConnected);
+
+        // Filtrer les menus en fonction du role
+        if (userConnected) {
+            this.menus = this.menus.filter((menu) => {
+                return menu.access.includes(userConnected.role.toLowerCase());
+            });
+        }
+
         return this.menus;
     }
 }

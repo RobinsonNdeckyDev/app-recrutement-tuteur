@@ -31,30 +31,29 @@ export class LoginComponent {
         });
       }
 
-      onSubmit() {
+    onSubmit() {
         if (this.loginForm.valid) {
-            console.log(this.loginForm.value);
-          
-            this.authService.login(this.loginForm.value).subscribe(
-                (data) => {
-                    console.log(data);
-                    this.authService.setToken(data.token);
-                    this.router.navigate(['/home']);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Connexion reussie',
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+            this.authService.login(this.loginForm.value).subscribe({
+                next: (response) => {
+                    console.log("response login", response);
+                    this.authService.setUserData(response);
+
+                    // Redirection basée sur le rôle
+                    if (this.authService.isAdmin()) {
+                        this.router.navigate(['/dashboard/admin']);
+                    } else {
+                        this.router.navigate(['/dashboard/candidat']);
+                    }
+
+                    this.toastr.success('Connexion réussie');
                 },
-                (error) => {
-                    console.log(error);
-                    this.toastr.error('Connexion échouée', 'Veuillez verifier vos identifiants', {
-                        timeOut: 2000,
-                        positionClass: 'toast-top-right'
-                      });
+                error: (error) => {
+                    this.toastr.error('Erreur de connexion');
+                    console.error(error);
+                    this.router.navigate(['/login']);
+                    this.toastr.error('Erreur de connexion');
                 }
-            );
+            });
         }
-      }
+    }
 }

@@ -3,6 +3,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { authGuardGuard } from './core/guards/auth-guard.guard';
 
 export const routes: Routes = [
   // route l'authentification
@@ -22,7 +23,8 @@ export const routes: Routes = [
 
   // Route vers le module dashboard
   {path: 'dashboard',
-    loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+    loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
+    canActivate: [authGuardGuard]
   },
 
   // route par défaut

@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import { provideHttpClient } from '@angular/common/http';
-import Aura from '@primeng/themes/aura';
+import Material from '@primeng/themes/material';
 import { routes } from './app.routes';
 import { provideToastr } from 'ngx-toastr';
 
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideToastr(),
     providePrimeNG({
       theme: {
-          preset: Aura
+          preset: null
       }
     }),
   ]

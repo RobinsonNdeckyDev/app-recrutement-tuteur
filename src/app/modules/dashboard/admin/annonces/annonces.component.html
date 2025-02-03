@@ -1,0 +1,57 @@
+<p class="fw-medium text-shadow">Gestion des annonces</p>
+
+<div class="card px-3 shadow">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <button class="btn colorprimary" data-bs-toggle="modal" data-bs-target="#ajoutAnneeAcademique">
+            Publlier une annonce
+        </button>
+        
+        <input type="text" class="form-control w-50" placeholder="Rechercher une annonce">
+    </div>
+
+    <div class="my-4">
+        <div class="row g-4">
+            <div class="col-md-6" *ngFor="let annonce of tabsAnnonces">
+                <div class="card px-2">
+                    <div class="card-title">
+                        <h4 class="fw-bold">
+                            {{ annonce.title }}
+                        </h4>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>
+                                description
+                            </p>
+                            <span class="">
+                                <i class="pi pi-eye"></i>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        {{annonce.description}}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="">
+                            <span class="">
+                                <i class="pi pi-clock"></i>
+                            </span>
+                            <span class="fw-bold">
+                                {{annonce.dateExpiration}}
+                            </span>
+                        </div>
+
+                        <div class="">
+                            <span class="fw-bold">
+                                {{annonce.dateExpiration | date : 'dd/MM/yyyy' : 'fr-FR' : 'hh-mm-ss' }}  
+                            </span>
+                            <span class="">
+                                <i class="pi pi-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
