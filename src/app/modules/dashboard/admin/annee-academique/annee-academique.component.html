@@ -21,13 +21,13 @@
         </thead>
         <tbody>
             <tr *ngFor="let annee of paginatedAnnees">
-                <td>{{ annee.id }}</td>
+                <td>{{ annee.id_annee }}</td>
                 <td>{{ annee.annee }}</td>
-                <td>{{ annee.debut }}</td>
-                <td>{{ annee.fin }}</td>
+                <td>{{ annee.dateDebut | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ annee.dateFin | date: 'dd/MM/yyyy' }}</td>
                 <td class="text-center d-flex justify-content-center align-items-center">
                     <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                    <span><i class="pi pi-trash"></i></span>
+                    <span><i class="pi pi-trash" (click)="deleteAnneeAcademique(annee.id_annee)"></i></span>
                 </td>
             </tr>
         </tbody>
@@ -61,23 +61,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="">
+                <form [formGroup]="anneeAcademiqueForm" (ngSubmit)="addAnneeAcademique()">
                     <div class="mb-3">
                         <label for="annee" class="form-label">Année</label>
-                        <input type="text" class="form-control" id="annee" name="annee">
+                        <input type="text" class="form-control" id="annee" name="annee" formControlName="annee">
                     </div>
                     <div class="mb-3">
                         <label for="debut" class="form-label">Début</label>
-                        <input type="date" class="form-control" id="debut" name="debut">
+                        <input type="date" class="form-control" id="debut" name="debut" formControlName="dateDebut">
                     </div>
                     <div class="mb-3">
                         <label for="fin" class="form-label">Fin</label>
-                        <input type="date" class="form-control" id="fin" name="fin">
+                        <input type="date" class="form-control" id="fin" name="fin" formControlName="dateFin">
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-primary">Ajouter</button>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="anneeAcademiqueForm.invalid">Ajouter</button>
                     </div>
                 </form>
             </div>

@@ -1,29 +1,200 @@
-<header>
-   <div class="w-100 py-5">
-       <h2 class="text-center text-white fw-bolder">Liste des annonces</h2>
-   </div>
-</header>
-<section class="d-flex justify-content-between overflow-hidden">
-    <div class="px-3 bg-dark" style="width: 400px;">
-        <input type="search" id="search" name="search" placeholder="Rechercher annonce" class="w-100 mt-3 form-control">
-    </div>
-    <div>
-        <div>
-           <div class="row">
-               @for (annonce of annonces; track annonce.id){
-                   <div class="col col-3 m-4 shadow">
-                       <img [src]="annonce.image" [alt]="annonce.title" class="w-100">
-                       <div class="py-3">
-                           <h5>{{annonce.title}}</h5>
-                           <p>{{annonce.content}}</p>
-                           <span class="d-block text-primary fw-semibold">{{annonce.annee_academique | date}}</span>
-                           <button [routerLink]="['/detailAnnonce', annonce.id]" (click)="getDetails()" class="btn btn-primary btn-sm">
-                               Détails
-                           </button>
-                       </div>
-                   </div>
-               }
-           </div>
+<div class="container-fluid p-0 opacity-0.1">
+    <div class="banner position-relative text-center">
+        <img
+            src="assets/banners/img3-login.png"
+            class="img-fluid w-100"
+            alt="Bannière Santé Mentale"
+        />
+        <div
+            class="banner-overlay position-absolute top-50 start-50 translate-middle text-white"
+        >
+            <h2 class="fw-bold text-center text-primary">
+                Listes des Annonces
+            </h2>
+            <p class="lead">
+                Trouvez les meilleurs annonces qui vous correspondent
+            </p>
         </div>
     </div>
-</section>
+</div>
+
+<div class="container my-4 py-3">
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm p-3">
+                    <h5 class="text-primary">Rechercher</h5>
+                    <input
+                        type="text"
+                        class="form-control mb-3"
+                        placeholder="Rechercher une annonce..."
+                    />
+
+                    <h5 class="text-primary mt-3">Filtres</h5>
+
+                    <!-- Filtre par catégorie -->
+                    <label class="form-label">Catégorie</label>
+                    <select class="form-select mb-3">
+                        <option value="">Toutes</option>
+                        <option value="emploi">Emploi</option>
+                        <option value="stage">Stage</option>
+                        <option value="freelance">Freelance</option>
+                    </select>
+
+                    <!-- Filtre par date -->
+                    <label class="form-label">Date de publication</label>
+                    <input type="date" class="form-control mb-3" />
+
+                    <!-- Bouton de filtrage -->
+                    <button class="btn btn-success w-100">Filtrer</button>
+                </div>
+            </div>
+
+            <!-- Liste des annonces -->
+            <div class="col-md-9">
+                <div class="row d-flex flex-column">
+                    <!-- Carte d'annonce 1 -->
+                    <div class="col-md-12 mb-4">
+                        <div class="card shadow-sm mb-3">
+                            <div
+                                class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4"
+                            >
+                                <div
+                                    class="d-flex justify-content-between align-items-center mb-2"
+                                >
+                                    <h5 class="card-title text-primary mb-2">
+                                        Titre Annonce 1
+                                    </h5>
+                                    <i class="bi bi-eye text-muted"></i>
+                                </div>
+                                <span
+                                    class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
+                                    >En cours</span
+                                >
+                                <p class="text-muted mb-2">Description 1</p>
+                                <p
+                                    class="card-text"
+                                    style="text-align: justify"
+                                >
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Tristique hendrerit nitus
+                                    et ultrices nulla aliquet.
+                                </p>
+                                <div
+                                    class="d-flex justify-content-between align-items-center mt-3"
+                                >
+                                    <div class="d-flex align-items-center">
+                                        <i
+                                            class="bi bi-calendar text-muted me-2"
+                                        ></i>
+                                        <small class="text-muted"
+                                            >24 Janv. 2025</small
+                                        >
+                                    </div>
+                                    <button class="btn btn-primary px-4">
+                                        Postuler
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carte d'annonce 2 -->
+                    <div class="col-md-12 mb-4">
+                        <div class="card shadow-sm mb-3">
+                            <div
+                                class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4"
+                            >
+                                <div
+                                    class="d-flex justify-content-between align-items-center mb-2"
+                                >
+                                    <h5 class="card-title text-primary mb-2">
+                                        Titre Annonce 2
+                                    </h5>
+                                    <i class="bi bi-eye text-muted"></i>
+                                </div>
+                                <span
+                                    class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
+                                    >En cours</span
+                                >
+                                <p class="text-muted mb-2">Description 2</p>
+                                <p
+                                    class="card-text"
+                                    style="text-align: justify"
+                                >
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Tristique hendrerit nitus
+                                    et ultrices nulla aliquet.
+                                </p>
+                                <div
+                                    class="d-flex justify-content-between align-items-center mt-3"
+                                >
+                                    <div class="d-flex align-items-center">
+                                        <i
+                                            class="bi bi-calendar text-muted me-2"
+                                        ></i>
+                                        <small class="text-muted"
+                                            >25 Janv. 2025</small
+                                        >
+                                    </div>
+                                    <button class="btn btn-primary px-4">
+                                        Postuler
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carte d'annonce 3 -->
+                    <div class="col-md-12 mb-4">
+                        <div class="card shadow-sm mb-3">
+                            <div
+                                class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4"
+                            >
+                                <div
+                                    class="d-flex justify-content-between align-items-center mb-2"
+                                >
+                                    <h5 class="card-title text-primary mb-2">
+                                        Titre Annonce 3
+                                    </h5>
+                                    <i class="bi bi-eye text-muted"></i>
+                                </div>
+                                <span
+                                    class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
+                                    >En cours</span
+                                >
+                                <p class="text-muted mb-2">Description 3</p>
+                                <p
+                                    class="card-text"
+                                    style="text-align: justify"
+                                >
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Tristique hendrerit nitus
+                                    et ultrices nulla aliquet.
+                                </p>
+                                <div
+                                    class="d-flex justify-content-between align-items-center mt-3"
+                                >
+                                    <div class="d-flex align-items-center">
+                                        <i
+                                            class="bi bi-calendar text-muted me-2"
+                                        ></i>
+                                        <small class="text-muted"
+                                            >26 Janv. 2025</small
+                                        >
+                                    </div>
+                                    <button class="btn btn-primary px-4">
+                                        Postuler
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin des annonces -->
+            </div>
+            <!-- Fin de la colonne des annonces -->
+        </div>
+    </div>
+</div>

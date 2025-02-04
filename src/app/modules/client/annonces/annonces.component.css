@@ -1,9 +1,13 @@
-header{
-    background-image: url("/assets/banners/image.png");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+.banner {
+    height: 200px;
+    overflow: hidden;
 }
-header div{
-    background-color: rgba(0, 0, 0, 0.5);
+.banner img {
+    object-fit: cover;
+    height: 100%;
+}
+.banner-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
 }
