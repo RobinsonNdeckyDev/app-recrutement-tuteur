@@ -102,7 +102,7 @@ export class AnneeAcademiqueComponent {
                 this.updatePagination(); // Mettre à jour la pagination
             },
             (error) => {
-                console.error('Une erreur s\'est produite lors de la recherche des annonces:', error);
+                console.error('Une erreur s\'est produite lors de la récupération des annonces:', error);
             }
         )
     }
@@ -117,7 +117,6 @@ export class AnneeAcademiqueComponent {
                     this.getAllanneesAcademiques();
                     this.anneeAcademiqueForm.reset();
                     this.toastr.success("année ajouté avec succes !")
-                    
                 },
                 (error) => {
                     console.error('Une erreur s\'est produite lors de la recherche des annonces:', error);
