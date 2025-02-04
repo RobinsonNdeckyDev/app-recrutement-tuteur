@@ -11,13 +11,13 @@
         <div>
            <div class="row">
                @for (annonce of annonces; track annonce.id){
-                   <div class="col col-3 m-4 shadow-sm">
+                   <div class="col col-3 m-4 shadow">
                        <img [src]="annonce.image" [alt]="annonce.title" class="w-100">
                        <div class="py-3">
                            <h5>{{annonce.title}}</h5>
                            <p>{{annonce.content}}</p>
                            <span class="d-block text-primary fw-semibold">{{annonce.annee_academique | date}}</span>
-                           <button [routerLink]="['/detailAnnonce', annonce.id]" (click)="getDetails(annonce)" class="btn btn-primary btn-sm">
+                           <button [routerLink]="['/detailAnnonce', annonce.id]" (click)="getDetails()" class="btn btn-primary btn-sm">
                                Détails
                            </button>
                        </div>

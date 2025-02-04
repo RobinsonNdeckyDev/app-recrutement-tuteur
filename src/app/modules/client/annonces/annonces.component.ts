@@ -19,7 +19,7 @@ export class AnnoncesComponent {
     {id: 6, title: 'Annonce 6', content: 'Annonce 6', annee_academique: new Date(), image:"assets/banners/image 9.png"}
 ];
 
-  getDetails(id: any) {
-   return id;
+  getDetails() {
+   
   }
 }
