@@ -62,14 +62,22 @@ export class AnneeAcademiqueService {
 
     // Méthode pour mettre à jour une année académique (uniquement accessible par un admin)
     updateAnneeAcademique(id: number, anneeAcademique: AnneeAcademique) {
+        const token = localStorage.getItem('token');
+
         if (!this.authService.isAdmin()) {
             throw new Error(
                 'Vous devez être un administrateur pour effectuer cette action.'
             );
         }
+
+        const headers = new HttpHeaders().set(
+            'Authorization',
+            `Bearer ${token}`
+        );
+
         return this.http.put<AnneeAcademique>(
             `${this.apiUrl}/annees_annonces/${id}`,
-            anneeAcademique
+            anneeAcademique, {headers}
         );
     }
 

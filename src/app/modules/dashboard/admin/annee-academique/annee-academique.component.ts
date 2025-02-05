@@ -1,15 +1,8 @@
 import { AnneeAcademique } from './../../../../core/models/annee-academique';
 import { Component } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { AnneeAcademiqueService } from '../../../../core/services/api/annee-academique.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, NgModel } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -17,14 +10,8 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [
     CommonModule,
-    TableModule, 
-    TagModule, 
-    IconFieldModule, 
-    InputIconModule, 
-    InputTextModule, 
-    MultiSelectModule, 
-    SelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
 ],
   templateUrl: './annee-academique.component.html',
   styleUrl: './annee-academique.component.css'
@@ -32,7 +19,9 @@ import { ToastrService } from 'ngx-toastr';
 export class AnneeAcademiqueComponent {
 
     tabAnneesAcademiques: any = [];
+    selectedAnnee: any = [];
     anneeAcademiqueForm!: FormGroup;
+    anneeAcademiqueFormUpdate!: FormGroup;
 
     // anneesAcademiques = [
     //     {
@@ -84,6 +73,12 @@ export class AnneeAcademiqueComponent {
             dateDebut: ['', Validators.required],
             dateFin: ['', Validators.required],
         })
+
+        this.anneeAcademiqueFormUpdate = this.fb.group({
+            annee: ['', Validators.required],
+            dateDebut: ['', Validators.required],
+            dateFin: ['', Validators.required],
+        })
     }
 
     // Initialisation du composant
@@ -115,7 +110,9 @@ export class AnneeAcademiqueComponent {
                 (anneeAcademique) => {
                     console.log("anneeAcademique", anneeAcademique);
                     this.getAllanneesAcademiques();
-                    this.anneeAcademiqueForm.reset();
+                    document.getElementById('ajoutAnneeAcademique')?.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    document.querySelector('.modal-backdrop')?.remove();
                     this.toastr.success("année ajouté avec succes !")
                 },
                 (error) => {
@@ -140,7 +137,74 @@ export class AnneeAcademiqueComponent {
             }
         )
     }
+
+    // Afficher les détails d'une année académique
+    showdetailsAnnee(anneeAcademique:any){
+        this.selectedAnnee = {...anneeAcademique};
+    }
+
+    preRemplirFormulaire(id: number) {
+        this.selectedAnnee = this.tabAnneesAcademiques.find(
+            (annee: any) => annee.id_annee === id
+        );
     
+        if (!this.selectedAnnee) {
+            console.error("Année académique non trouvée !");
+            this.toastr.error("Impossible de trouver l'année académique.");
+            return;
+        }
+    
+        // Mettre à jour le formulaire avec les valeurs existantes
+        this.anneeAcademiqueFormUpdate.setValue({
+            annee: this.selectedAnnee.annee || '',
+            dateDebut: this.selectedAnnee.dateDebut || '',
+            dateFin: this.selectedAnnee.dateFin || ''
+        });
+    
+        console.log("Formulaire pré-rempli :", this.anneeAcademiqueFormUpdate.value);
+    }
+    
+
+    // Mettre à jour une année académique
+    updateAnneeAcademique(id: number) {
+        console.log("ID année à modifier :", id);
+    
+        const donnees = this.anneeAcademiqueFormUpdate.value;
+        this.anneeAcademiqueService.updateAnneeAcademique(id, donnees).subscribe(
+            (updatedAnnee) => {
+                console.log("Réponse API après mise à jour :", updatedAnnee);
+    
+                // Mettre à jour l'élément correspondant dans tabAnneesAcademiques
+                this.tabAnneesAcademiques = this.tabAnneesAcademiques.map((annee: any) =>
+                    annee.id_annee === id ? { ...annee, ...updatedAnnee } : annee
+                );
+    
+                // Vérifier que selectedAnnee est bien mise à jour
+                this.selectedAnnee = { ...updatedAnnee };
+    
+                // Réafficher les nouvelles valeurs dans le formulaire
+                this.anneeAcademiqueFormUpdate.patchValue({
+                    annee: updatedAnnee.annee,
+                    dateDebut: updatedAnnee.dateDebut,
+                    dateFin: updatedAnnee.dateFin,
+                });
+    
+                console.log("Données mises à jour dans le formulaire :", this.anneeAcademiqueFormUpdate.value);
+
+                this.getAllanneesAcademiques();
+                document.getElementById('modifierAnneeAcademique')?.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                document.querySelector('.modal-backdrop')?.remove();
+
+    
+                this.toastr.success("Année mise à jour avec succès !");
+            },
+            (error) => {
+                console.error("Erreur lors de la mise à jour de l'année :", error);
+                this.toastr.error("Une erreur s'est produite lors de la mise à jour.");
+            }
+        );
+    }
 
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {

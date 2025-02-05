@@ -5,7 +5,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-center my-4 text-light fw-bold">Créez vous un compte</h5>
 
-                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-4">
+                    <form [formGroup]="registerForm" (ngSubmit)="inscriptionForm()" class="mt-4">
                         <div class="row">
                             <div class="col-md-6 text-light">
                                 <div class="mb-3">
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="photoProfil" class="form-label">Photo: </label>
-                                    <input type="file" class="form-control" id="photoProfil" placeholder="Entrez votre photo de profil">
+                                    <input type="file" class="form-control" id="photoProfil" formControlName="photoProfil">
                                 </div>
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description: </label>

@@ -1,7 +1,7 @@
 export interface AnneeAcademique {
     id: number;
     annee: number;
-    date_debut: Date;
-    date_fin: Date;  
+    dateDebut: Date;
+    dateFin: Date;  
     date_modification: Date;
 }
