@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-detail-annonce',
@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './detail-annonce.component.html',
   styleUrl: './detail-annonce.component.css'
 })
-export class DetailAnnonceComponent {
+export class DetailAnnonceComponent{
 
 }
