@@ -57,7 +57,7 @@ export class AnneeAcademiqueComponent {
     // ]
 
     // Liste filtrée affichée dans le tableau
-    
+
     anneesAcademiquesFiltered: any[] = [];
     currentPage = 1;
     rowsPerPage = 4;
@@ -72,12 +72,16 @@ export class AnneeAcademiqueComponent {
             annee: ['', Validators.required],
             dateDebut: ['', Validators.required],
             dateFin: ['', Validators.required],
+            etat: true,
+            description: ['', Validators.required]
         })
 
         this.anneeAcademiqueFormUpdate = this.fb.group({
             annee: ['', Validators.required],
             dateDebut: ['', Validators.required],
             dateFin: ['', Validators.required],
+            etat: true,
+            description: ['', Validators.required]
         })
     }
 
@@ -86,7 +90,7 @@ export class AnneeAcademiqueComponent {
         this.updatePagination();
         this.getAllanneesAcademiques();
     }
-    
+
 
     // Récupérer toutes les années académiques
     getAllanneesAcademiques(){
@@ -112,6 +116,7 @@ export class AnneeAcademiqueComponent {
                     this.getAllanneesAcademiques();
                     document.getElementById('ajoutAnneeAcademique')?.classList.remove('show');
                     document.body.classList.remove('modal-open');
+                    this.anneeAcademiqueForm.reset();
                     document.querySelector('.modal-backdrop')?.remove();
                     this.toastr.success("année ajouté avec succes !")
                 },
@@ -147,48 +152,48 @@ export class AnneeAcademiqueComponent {
         this.selectedAnnee = this.tabAnneesAcademiques.find(
             (annee: any) => annee.id_annee === id
         );
-    
+
         if (!this.selectedAnnee) {
             console.error("Année académique non trouvée !");
             this.toastr.error("Impossible de trouver l'année académique.");
             return;
         }
-    
+
         // Mettre à jour le formulaire avec les valeurs existantes
         this.anneeAcademiqueFormUpdate.setValue({
             annee: this.selectedAnnee.annee || '',
             dateDebut: this.selectedAnnee.dateDebut || '',
             dateFin: this.selectedAnnee.dateFin || ''
         });
-    
+
         console.log("Formulaire pré-rempli :", this.anneeAcademiqueFormUpdate.value);
     }
-    
+
 
     // Mettre à jour une année académique
     updateAnneeAcademique(id: number) {
         console.log("ID année à modifier :", id);
-    
+
         const donnees = this.anneeAcademiqueFormUpdate.value;
         this.anneeAcademiqueService.updateAnneeAcademique(id, donnees).subscribe(
             (updatedAnnee) => {
                 console.log("Réponse API après mise à jour :", updatedAnnee);
-    
+
                 // Mettre à jour l'élément correspondant dans tabAnneesAcademiques
                 this.tabAnneesAcademiques = this.tabAnneesAcademiques.map((annee: any) =>
                     annee.id_annee === id ? { ...annee, ...updatedAnnee } : annee
                 );
-    
+
                 // Vérifier que selectedAnnee est bien mise à jour
                 this.selectedAnnee = { ...updatedAnnee };
-    
+
                 // Réafficher les nouvelles valeurs dans le formulaire
                 this.anneeAcademiqueFormUpdate.patchValue({
                     annee: updatedAnnee.annee,
                     dateDebut: updatedAnnee.dateDebut,
                     dateFin: updatedAnnee.dateFin,
                 });
-    
+
                 console.log("Données mises à jour dans le formulaire :", this.anneeAcademiqueFormUpdate.value);
 
                 this.getAllanneesAcademiques();
@@ -196,7 +201,7 @@ export class AnneeAcademiqueComponent {
                 document.body.classList.remove('modal-open');
                 document.querySelector('.modal-backdrop')?.remove();
 
-    
+
                 this.toastr.success("Année mise à jour avec succès !");
             },
             (error) => {
@@ -220,7 +225,7 @@ export class AnneeAcademiqueComponent {
     }
 
     // Retourne les années académiques paginées
-    get paginatedAnnees(): any[] {
+    getPaginatedAnnees(): any[] {
         const start = (this.currentPage - 1) * this.rowsPerPage;
         return this.anneesAcademiquesFiltered.slice(start, start + this.rowsPerPage);
     }
@@ -229,15 +234,15 @@ export class AnneeAcademiqueComponent {
     searchAnneeAcademique(event: any) {
         const searchValue = event.target.value.toLowerCase();
         this.anneesAcademiquesFiltered = this.tabAnneesAcademiques.filter(
-            (anneeAcademique: any) => 
+            (anneeAcademique: any) =>
             anneeAcademique.annee.toLowerCase().includes(searchValue)
         );
 
-        
+
         this.totalPages = Math.ceil(this.anneesAcademiquesFiltered.length / this.rowsPerPage);
-        
+
         // Réinitialiser à la première page après filtrage
-        this.currentPage = 1; 
+        this.currentPage = 1;
     }
 
 }

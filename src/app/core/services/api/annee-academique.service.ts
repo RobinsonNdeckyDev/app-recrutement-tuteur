@@ -31,8 +31,13 @@ export class AnneeAcademiqueService {
             `Bearer ${token}`
         );
 
+        console.log('headers:', headers);
+        // console.log('Token:', token);
+        // console.log('Request URL:', `${this.apiUrl}/annees-acdemiques`);
+
+
         return this.http.get<AnneeAcademique[]>(
-            `${this.apiUrl}/annees_annonces`,
+            `${this.apiUrl}/annees-academiques`,
             { headers }
         );
     }
@@ -54,8 +59,8 @@ export class AnneeAcademiqueService {
         );
 
         return this.http.post<AnneeAcademique>(
-            `${this.apiUrl}/annees_annonces`,
-            anneeAcademique, 
+            `${this.apiUrl}/annees-academiques`,
+            anneeAcademique,
             { headers }
         );
     }
@@ -76,7 +81,7 @@ export class AnneeAcademiqueService {
         );
 
         return this.http.put<AnneeAcademique>(
-            `${this.apiUrl}/annees_annonces/${id}`,
+            `${this.apiUrl}/annees-academiques/${id}`,
             anneeAcademique, {headers}
         );
     }
@@ -96,6 +101,6 @@ export class AnneeAcademiqueService {
             `Bearer ${token}`
         );
 
-        return this.http.delete<void>(`${this.apiUrl}/annees_annonces/${id}`, { headers });
+        return this.http.delete<void>(`${this.apiUrl}/annees_academiques/${id}`, { headers });
     }
 }

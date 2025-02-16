@@ -5,27 +5,33 @@
         <button class="btn colorprimary" data-bs-toggle="modal" data-bs-target="#ajoutAnneeAcademique">
             Ajouter une année académique
         </button>
-        
+
         <input type="text" class="form-control w-50" placeholder="Rechercher une année académique" (input)="searchAnneeAcademique($event)">
     </div>
-    
+
     <table class="table table-striped mt-4">
         <thead class="">
             <tr>
                 <th>#</th>
                 <th>Année</th>
+                <th>Description</th>
                 <th>Début</th>
                 <th>Fin</th>
+                <th>Etat</th>
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @if (paginatedAnnees) {
-                <tr *ngFor="let annee of paginatedAnnees">
+            @if (getPaginatedAnnees()) {
+                <tr *ngFor="let annee of getPaginatedAnnees()">
                     <td>{{ annee.id_annee }}</td>
                     <td>{{ annee.annee }}</td>
+                    <td>{{ annee.description }}</td>
                     <td>{{ annee.dateDebut | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ annee.dateFin | date: 'dd/MM/yyyy' }}</td>
+                    <td [ngClass]="annee.etat ? 'active-class' : 'inactive-class'">
+                        {{ annee.etat ? 'Active' : 'Désactivée' }}
+                    </td>
                     <td class="text-center d-flex justify-content-center align-items-center">
                         <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique" (click)="preRemplirFormulaire(annee.id_annee)"></i></span>
                         <span><i class="pi pi-trash" (click)="deleteAnneeAcademique(annee.id_annee)"></i></span>
@@ -39,7 +45,7 @@
             }
         </tbody>
     </table>
-    
+
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4 mb-3">
         <nav>
@@ -56,7 +62,7 @@
             </ul>
         </nav>
     </div>
-    
+
 </div>
 
 <!-- Modal d'ajout -->
@@ -72,6 +78,10 @@
                     <div class="mb-3">
                         <label for="annee" class="form-label">Année</label>
                         <input type="text" class="form-control" id="annee" name="annee" formControlName="annee">
+                 </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" placeholder="Décrivez votre année académique" formControlName="description">
                     </div>
                     <div class="mb-3">
                         <label for="debut" class="form-label">Début</label>

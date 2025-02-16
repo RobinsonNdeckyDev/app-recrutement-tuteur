@@ -1,12 +1,13 @@
+import { AnneeAcademique } from './annee-academique';
 export interface Annonce {
     id?: number;
-    title: string;
+    titre: string;
     description: string;
-    dateCreation: Date;
-    dateExpiration: string;
+    dateLimite: string;
     etat: string;
     auteur: string;
     contenu: string;
-    imageUrl: string;
+    imageAnnonce: string;
+    AnneeAcademiqueId: Number;
 }
 

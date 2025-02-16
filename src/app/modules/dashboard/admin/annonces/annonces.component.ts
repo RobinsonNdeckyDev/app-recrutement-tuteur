@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DateFormatPipe } from '../../../../shared/pipes/dateFormatPipe';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AnneeAcademiqueService } from '../../../../core/services/api/annee-academique.service';
 import { AnnonceService } from '../../../../core/services/api/annonce.service';
 
 @Component({
   selector: 'app-annonces',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [DateFormatPipe],
   templateUrl: './annonces.component.html',
   styleUrl: './annonces.component.css'
@@ -19,6 +19,7 @@ export class AnnoncesComponent {
 
     tabsAnnonces: any = [];
     tabAnneeAcademiques: any = [];
+    idAnneeAnnonce!: number;
 
     // Liste filtrée affichée dans le tableau
     tabAnnoncesFiltered: any[] = [];
@@ -39,12 +40,12 @@ export class AnnoncesComponent {
         this.annonceFormAdd = this.fb.group({
             titre: ['', Validators.required],
             description: ['', Validators.required],
-            id_annee: ['', Validators.required],
             image: [''],
+            idAnneeAnnonce: ['', Validators.required],
             auteur: ['', Validators.required],
             date_limite: ['', Validators.required],
             contenu: ['', Validators.required],
-            // etat: ['']
+            etat: ['OUVERTE']
         });
 
         this.annonceFormUpdate = this.fb.group({
@@ -52,6 +53,7 @@ export class AnnoncesComponent {
             description: ['', Validators.required],
             id_annee: ['', Validators.required],
             image: [''],
+            idAnneeAnnonce: ['', Validators.required],
             auteur: ['', Validators.required],
             date_limite: ['', Validators.required],
             contenu: ['', Validators.required],
@@ -62,6 +64,7 @@ export class AnnoncesComponent {
     ngOnInit(){
         this.updatePagination();
         this.getAllAnneeAcademiques();
+        this.getAllAnnonces();
     }
 
     // Récupérer toutes les années académiques
@@ -95,18 +98,38 @@ export class AnnoncesComponent {
     // Ajouter une annonce
     addAnnonce() {
         if (this.annonceFormAdd.valid) {
-            const formData = this.annonceFormAdd.value;
+            let annonce = this.annonceFormAdd.value;
 
-            // Convertir id_annee en nombre, si nécessaire
-            formData.id_annee = Number(formData.id_annee);
-    
-            console.log("Données envoyées à l'API :", formData);
-    
+            // Vérifie si idAnneeAnnonce est bien défini et est un nombre
+            console.log("Annonce avant envoi :", annonce);
+
+            const idAnneeAnnonce = +annonce.idAnneeAnnonce;
+
+            if (isNaN(idAnneeAnnonce)) {
+                this.annonceFormAdd.get('idAnneeAnnonce')?.setErrors({ 'invalid': true });
+                return;
+            }
+
+            // S'assurer que idAnneeAnnonce ne soit pas envoyé dans le corps de la requête
+            const annonceData = {
+                titre: annonce.titre,
+                description: annonce.description,
+                contenu: annonce.contenu,
+                dateLimite: annonce.date_limite,
+                etat: annonce.etat,
+                auteur: annonce.auteur, // Assure-toi que 'auteur' et d'autres champs nécessaires soient ici
+                imageAnnonce: annonce.image,
+                anneeAcademiqueId: idAnneeAnnonce // Utilisation de l'ID de l'année dans l'URL (et non dans le corps)
+            };
+
+            console.log("annoncedata: ", annonceData);
+
             // Appel à l'API pour ajouter l'annonce
-            this.annonceService.addAnnonce(formData).subscribe(
+            this.annonceService.addAnnonce(annonceData).subscribe(
                 (annonce) => {
                     console.log("Annonce ajoutée", annonce);
                     this.getAllAnnonces();
+                    this.annonceFormAdd.reset();
                     document.getElementById('ajoutAnnonce')?.classList.remove('show');
                     document.body.classList.remove('modal-open');
                     document.querySelector('.modal-backdrop')?.remove();
@@ -119,13 +142,12 @@ export class AnnoncesComponent {
             );
         }
     }
-    
 
     // addAnnonce(){
     //     if(this.annonceFormAdd.valid){
     //         // Conversion de id_annee en number
     //         let formData = this.annonceFormAdd.value;
-    //         formData.id_annee = Number(formData.id_annee); 
+    //         formData.id_annee = Number(formData.id_annee);
 
     //         if (isNaN(formData.id_annee) || formData.id_annee === 0) {
     //             this.toastr.error("L'année académique est invalide.");
@@ -175,13 +197,13 @@ export class AnnoncesComponent {
         this.selectedAnnonce = this.tabsAnnonces.find(
             (annonce: any) => annonce.id === id
         );
-    
+
         if (!this.selectedAnnonce) {
             console.error("annonce non trouvée !");
             this.toastr.error("Impossible de trouver l'annonce.");
             return;
         }
-    
+
         // Mettre à jour le formulaire avec les valeurs existantes
         this.annonceFormUpdate.setValue({
             titre: this.selectedAnnonce.titre || '',
@@ -193,32 +215,32 @@ export class AnnoncesComponent {
             etat: this.selectedAnnonce.etat || '',
             anneeAcademique: this.selectedAnnonce.anneeAcademique || '',
         });
-    
+
         console.log("Formulaire pré-rempli :", this.annonceFormUpdate.value);
     }
 
     updateAnnonce(id: number) {
         console.log("ID annonce à modifier :", id);
-    
+
         const donnees = this.annonceFormUpdate.value;
         this.annonceService.updateAnnonce(id, donnees).subscribe(
             (updateAnnonce) => {
                 console.log("Réponse API après mise à jour :", updateAnnonce);
-    
+
                 // Mettre à jour l'élément correspondant dans tabsAnnonces
                 this.tabsAnnonces = this.tabsAnnonces.map((annonce: any) =>
                     annonce.id === id ? { ...annonce, ...updateAnnonce } : annonce
                 );
-    
+
                 // Vérifier que selectedAnnee est bien mise à jour
                 this.selectedAnnonce = { ...updateAnnonce };
-    
+
                 // Réafficher les nouvelles valeurs dans le formulaire
                 this.annonceFormUpdate.patchValue({
-                    
+
 
                 });
-    
+
                 console.log("Données mises à jour dans le formulaire :", this.annonceFormUpdate.value);
 
                 // this.getAllanneesAcademiques();
@@ -226,7 +248,7 @@ export class AnnoncesComponent {
                 document.body.classList.remove('modal-open');
                 document.querySelector('.modal-backdrop')?.remove();
 
-    
+
                 this.toastr.success("Année mise à jour avec succès !");
             },
             (error) => {
@@ -239,6 +261,7 @@ export class AnnoncesComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabAnnoncesFiltered = [...this.tabsAnnonces];
+        console.log("tabAnnoncesFiltered: ", this.tabAnnoncesFiltered);
         this.totalPages = Math.ceil(this.tabsAnnonces.length / this.rowsPerPage);
     }
 
@@ -247,6 +270,12 @@ export class AnnoncesComponent {
         if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
         }
+    }
+
+    // Retourne les années annonces paginées
+    getPaginatedAnnonces(): any[] {
+        const start = (this.currentPage - 1) * this.rowsPerPage;
+        return this.tabAnnoncesFiltered.slice(start, start + this.rowsPerPage);
     }
 
     // Filtre la liste selon la recherche
@@ -258,11 +287,11 @@ export class AnnoncesComponent {
             annonce.auteur.toLowerCase().includes(searchValue)
         );
 
-        
+
         this.totalPages = Math.ceil(this.tabAnnoncesFiltered.length / this.rowsPerPage);
-        
+
         // Réinitialiser à la première page après filtrage
-        this.currentPage = 1; 
+        this.currentPage = 1;
     }
 
 

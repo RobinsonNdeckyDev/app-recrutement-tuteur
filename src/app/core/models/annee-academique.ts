@@ -1,7 +1,8 @@
 export interface AnneeAcademique {
-    id: number;
-    annee: number;
+    id?: number;
+    descripion: string;
+    annee: String;
     dateDebut: Date;
-    dateFin: Date;  
-    date_modification: Date;
+    dateFin: Date;
+    etat: Boolean;
 }
