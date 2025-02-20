@@ -55,6 +55,12 @@ export class GestionAdminComponent {
         })
     }
 
+    // Iniialisation
+    ngOnInit() {
+        this.updatePagination();
+        this.getAllAdmins();
+    }
+
 
     // Récupérer toutes les admins
     getAllAdmins(){
@@ -62,6 +68,7 @@ export class GestionAdminComponent {
             (admins) => {
                 console.log("Liste des admins", admins);
                 this.tabsAdmins = admins;
+                this.updatePagination(); // Mettre à jour la pagination
             },
             (error) => {
                 console.error('Une erreur s\'est produite lors de la récupération des admins:', error);
@@ -89,21 +96,6 @@ export class GestionAdminComponent {
                 }
             )
         }
-    }
-
-    // Supprimer un admin
-    deleteAdmin(id: number){
-        this.adminService.deleteAdmin(id).subscribe(
-            (admin) => {
-                console.log("admin à supprimer", admin);
-                this.getAllAdmins();
-                this.toastr.success("admin supprimé avec succes !")
-            },
-            (error) => {
-                console.error('Une erreur s\'est produite lors de la suppression de l\'admin:', error);
-                this.toastr.error("Une erreur s'est produite lors de la suppression de l'admin.");
-            }
-        )
     }
 
     // Afficher les détails d'un admin
@@ -146,43 +138,58 @@ export class GestionAdminComponent {
             (updateAdmin) => {
                 console.log("Réponse API après mise à jour :", updateAdmin);
 
-                // Mettre à jour l'élément correspondant dans tabAdmins
+                // Mettre à jour l'élément correspondant dans tabsAdmins
                 this.tabsAdmins = this.tabsAdmins.map((admin: any) =>
                     admin.id === id ? { ...admin, ...updateAdmin } : admin
                 );
 
-                // Vérifier que selectedA est bien mise à jour
+                // Vérifier que selectedAdmin est bien mise à jour
                 this.selectedAdmin = { ...updateAdmin };
 
                 // Réafficher les nouvelles valeurs dans le formulaire
-                // this.adminFormUpdate.patchValue({
-                //     prenom: updateAdmin.prenom,
-                //     nom: updateAdmin.nom,
-                //     descrip: updateAdmin.dateFin,
-                // });
+                this.adminFormUpdate.patchValue({
 
-                // console.log("Données mises à jour dans le formulaire :", this.a.value);
+
+                });
+
+                console.log("Données mises à jour dans le formulaire :", this.adminFormUpdate.value);
 
                 // this.getAllanneesAcademiques();
-                document.getElementById('modifierAnneeAcademique')?.classList.remove('show');
+                document.getElementById('modifierAdmin')?.classList.remove('show');
                 document.body.classList.remove('modal-open');
                 document.querySelector('.modal-backdrop')?.remove();
 
 
-                this.toastr.success("Année mise à jour avec succès !");
+                this.toastr.success("Admin mise à jour avec succès !");
             },
             (error) => {
-                console.error("Erreur lors de la mise à jour de l'année :", error);
+                console.error("Erreur lors de la mise à jour de l'admin :", error);
                 this.toastr.error("Une erreur s'est produite lors de la mise à jour.");
             }
         );
     }
 
+    // Supprimer un admin
+    deleteAdmin(id: number){
+        this.adminService.deleteAdmin(id).subscribe(
+            (admin) => {
+                console.log("admin à supprimer", admin);
+                this.getAllAdmins();
+                this.toastr.success("admin supprimé avec succes !")
+            },
+            (error) => {
+                console.error('Une erreur s\'est produite lors de la suppression de l\'admin:', error);
+                this.toastr.error("Une erreur s'est produite lors de la suppression de l'admin.");
+            }
+        )
+    }
+
     // Met à jour la liste filtrée et le nombre total de pages
-    // updatePagination() {
-    //     this.anneesAcademiquesFiltered = [...this.tabAnneesAcademiques];
-    //     this.totalPages = Math.ceil(this.tabAnneesAcademiques.length / this.rowsPerPage);
-    // }
+    updatePagination() {
+        this.tabAdminsFiltered = [...this.tabsAdmins];
+        console.log("tabAdminFiltered: ", this.tabAdminsFiltered);
+        this.totalPages = Math.ceil(this.tabsAdmins.length / this.rowsPerPage);
+    }
 
     // Change la page actuelle
     setPage(page: number) {
@@ -191,5 +198,25 @@ export class GestionAdminComponent {
         }
     }
 
+    // Retourne les années admins paginées
+    getPaginatedAdmin(): any[] {
+        const start = (this.currentPage - 1) * this.rowsPerPage;
+        return this.tabAdminsFiltered.slice(start, start + this.rowsPerPage);
+    }
+
+    // Filtre la liste selon la recherche
+    searchAdmin(event: any) {
+        const searchValue = event.target.value.toLowerCase();
+        this.tabAdminsFiltered = this.tabsAdmins.filter((admin:any) =>
+            admin.prenom.toLowerCase().includes(searchValue) ||
+            admin.nom.toLowerCase().includes(searchValue)
+        );
+
+
+        this.totalPages = Math.ceil(this.tabAdminsFiltered.length / this.rowsPerPage);
+
+        // Réinitialiser à la première page après filtrage
+        this.currentPage = 1;
+    }
 
 }
