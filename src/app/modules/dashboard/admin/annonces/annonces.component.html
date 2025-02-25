@@ -152,7 +152,7 @@
 </div>
 
 <!-- Modal détail annonce -->
-<div class="modal fade" id="detailsAnnonce" tabindex="-1" aria-labelledby="detailsAnnonceLabel" aria-hidden="true">
+<div class="modal fade" id="detailsAnnonce" tabindex="-1" aria-labelledby="detailsAnnonceLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -175,39 +175,17 @@
                         </p>
                     </div>
                     <div class="col-4">
-                        <img [src]="selectedAnnonce?.image" alt="Image de l'annonce" class="img-fluid mb-3">
+                        <img [src]="selectedAnnonce?.image_annonce" alt="Image de l'annonce" class="img-fluid mb-3">
 
                         <div class="">
                             <p class="">Auteur: {{selectedAnnonce?.auteur}}</p>
+                            <p>Année de l'annonce : {{ selectedAnnonce.anneeAcademique?.annee }}</p>
                             <p class="">Crée le: {{selectedAnnonce?.created_at | date: 'dd/MM/yyyy'}}</p>
                             <p class="">Date cloture: {{selectedAnnonce?.dateLimite | date: 'dd/MM/yyyy'}}</p>
                             <p class="">État: {{selectedAnnonce?.etat}}</p>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="mb-3">
-                    <label class="form-label">Titre</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.titre" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" [value]="selectedAnnonce?.description" disabled></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">État</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.etat" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Date de création</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.created_at | date: 'dd/MM/yyyy'" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Date d'expiration</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.dateLimite | date: 'dd/MM/yyyy'" disabled>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
-                </div> -->
             </div>
         </div>
     </div>
@@ -235,10 +213,9 @@
                                 <input type="text" class="form-control" id="description" name="description" [value]="selectedAnnonce?.description">
                             </div>
                             <div class="mb-3">
-                                <label for="idAnneeAnnonce" class="form-label">Année académique</label>
-                                <select class="form-select" formControlName="idAnneeAnnonce" id="idAnneeAnnonce" aria-label="Default select example">
-                                    <option default *ngIf="selectedAnnonce?.id_annee">{{selectedAnnonce?.annee}}</option>
-                                    <option *ngFor="let annee of tabAnneeAcademiques" [value]="annee.id_annee">{{ annee.annee }}</option>
+                                <label for="id_annee" class="form-label">Année académique</label>
+                                <select class="form-select" formControlName="id_annee" id="id_annee" aria-label="Default select example">
+                                    <option *ngFor="let annee of tabAnneeAcademiques" [value]="annee.id" [selected]="annee.annee === selectedAnnonce.anneeAcademique?.annee">{{ annee.annee }}</option>
                                 </select>
                             </div>
                         </div>

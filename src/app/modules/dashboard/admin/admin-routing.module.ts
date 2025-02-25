@@ -7,6 +7,8 @@ import { CandidaturesComponent } from './candidatures/candidatures.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { AnneeAcademiqueComponent } from './annee-academique/annee-academique.component';
 import { ProfilComponent } from './profil/profil.component';
+import { GestionFormatDocComponent } from './gestion-format-doc/gestion-format-doc.component';
+import { GestionTypeDocComponent } from './gestion-type-doc/gestion-type-doc.component';
 
 const routes: Routes = [
     { path: '', component: AdminDashComponent},
@@ -14,7 +16,9 @@ const routes: Routes = [
     { path: 'utilisateurs', component: UsersComponent},
     { path: 'annonces', component: AnnoncesComponent},
     { path: 'candidatures', component: CandidaturesComponent},
-    { path: 'documents', component: DocumentsComponent},
+    { path: 'MesDocuments', component: DocumentsComponent},
+    { path: 'formatDocument', component: GestionFormatDocComponent},
+    { path: 'typeDocument', component: GestionTypeDocComponent},
     { path: 'anneesAcademiques', component: AnneeAcademiqueComponent},
     { path: 'profil', component: ProfilComponent}
 ];

@@ -52,8 +52,7 @@ export class AnnoncesComponent {
             titre: ['', Validators.required],
             description: ['', Validators.required],
             id_annee: ['', Validators.required],
-            image: [''],
-            idAnneeAnnonce: ['', Validators.required],
+            image_annonce: [''],
             auteur: ['', Validators.required],
             date_limite: ['', Validators.required],
             contenu: ['', Validators.required],
@@ -143,36 +142,6 @@ export class AnnoncesComponent {
         }
     }
 
-    // addAnnonce(){
-    //     if(this.annonceFormAdd.valid){
-    //         // Conversion de id_annee en number
-    //         let formData = this.annonceFormAdd.value;
-    //         formData.id_annee = Number(formData.id_annee);
-
-    //         if (isNaN(formData.id_annee) || formData.id_annee === 0) {
-    //             this.toastr.error("L'année académique est invalide.");
-    //             return;
-    //         }
-
-    //         console.log("anneeAcademiqueForm", this.annonceFormAdd.value);
-
-    //         this.annonceService.addAnnonce(formData).subscribe(
-    //             (annonce) => {
-    //                 console.log("annonce ajoutée", annonce);
-    //                 this.getAllAnnonces();
-    //                 document.getElementById('ajoutAnnonce')?.classList.remove('show');
-    //                 document.body.classList.remove('modal-open');
-    //                 document.querySelector('.modal-backdrop')?.remove();
-    //                 this.toastr.success("annonce ajoutée avec succes !")
-    //             },
-    //             (error) => {
-    //                 console.error('Une erreur s\'est produite lors de l\'ajout de l\'annonce:', error);
-    //                 this.toastr.error("Une erreur s'est produite lors de l'ajout de l'annonce.");
-    //             }
-    //         )
-    //     }
-    // }
-
     // Supprimer une annonce
     deleteAnnonce(id: number){
         this.annonceService.deleteAnnonce(id).subscribe(
@@ -191,6 +160,7 @@ export class AnnoncesComponent {
     // Afficher les détails d'une annonce
     showdetailsAnnonce(annonce:any){
         this.selectedAnnonce = {...annonce};
+        console.log("Annonce sélectionnée: ", this.selectedAnnonce)
     }
 
     preRemplirFormulaire(id: number) {
@@ -208,12 +178,12 @@ export class AnnoncesComponent {
         this.annonceFormUpdate.setValue({
             titre: this.selectedAnnonce.titre || '',
             description: this.selectedAnnonce.description || '',
-            image: this.selectedAnnonce.image || '',
+            id_annee: this.selectedAnnonce.annee || '',
+            image_annonce: this.selectedAnnonce.image_annonce || '',
             auteur: this.selectedAnnonce.auteur || '',
-            dateExpiration: this.selectedAnnonce.dateExpiration || '',
+            date_limite: this.selectedAnnonce.date_limite || '',
             contenu: this.selectedAnnonce.contenu || '',
             etat: this.selectedAnnonce.etat || '',
-            anneeAcademique: this.selectedAnnonce.anneeAcademique || '',
         });
 
         console.log("Formulaire pré-rempli :", this.annonceFormUpdate.value);

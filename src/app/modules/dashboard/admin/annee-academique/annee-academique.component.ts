@@ -2,7 +2,7 @@ import { AnneeAcademique } from './../../../../core/models/annee-academique';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnneeAcademiqueService } from '../../../../core/services/api/annee-academique.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, NgModel } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -23,41 +23,7 @@ export class AnneeAcademiqueComponent {
     anneeAcademiqueForm!: FormGroup;
     anneeAcademiqueFormUpdate!: FormGroup;
 
-    // anneesAcademiques = [
-    //     {
-    //         id: 0,
-    //         annee: '2024-2025',
-    //         debut: '01/01/2024',
-    //         fin: '31/12/2025'
-    //     },
-    //     {
-    //         id: 1,
-    //         annee: '2023-2024',
-    //         debut: '01/01/2023',
-    //         fin: '31/12/2024'
-    //     },
-    //     {
-    //         id: 2,
-    //         annee: '2022-2023',
-    //         debut: '01/01/2022',
-    //         fin: '31/12/2023'
-    //     },
-    //     {
-    //         id: 3,
-    //         annee: '2021-2022',
-    //         debut: '01/01/2021',
-    //         fin: '31/12/2022'
-    //     },
-    //     {
-    //         id: 4,
-    //         annee: '2020-2021',
-    //         debut: '01/01/2020',
-    //         fin: '31/12/2021'
-    //     }
-    // ]
-
-    // Liste filtrée affichée dans le tableau
-
+    
     anneesAcademiquesFiltered: any[] = [];
     currentPage = 1;
     rowsPerPage = 4;

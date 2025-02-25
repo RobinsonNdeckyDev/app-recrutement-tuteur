@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../authService/auth.service';
-
+// Modifiez d'abord l'interface pour inclure les sous-menus optionnels
 export interface MenuItem {
-    title: string; // Titre du menu
-    icon: string; // Icône
-    route: string; // Route associée
-    access: string[]; // Rôles autorisés
+    title: string;
+    icon: string;
+    route: string;
+    access: string[];
+    children?: MenuItem[]; // Ajout des sous-menus optionnels
 }
 
 @Injectable({
@@ -50,26 +51,26 @@ export class MenuService {
             route: './admin/documents',
             icon: 'bi bi-files',
             access: ['admin'],
-        },
-
-        // menu candidat
-        {
-            title: 'Dashboard',
-            route: './candidat',
-            icon: 'bi bi-speedometer',
-            access: ['candidat'],
-        },
-        {
-            title: 'Mes candidatures',
-            route: './candidat/candidatures',
-            icon: 'pi pi-users',
-            access: ['candidat'],
-        },
-        {
-            title: 'Annonces',
-            route: './candidat/annonces',
-            icon: 'bi bi-calendar',
-            access: ['candidat'],
+            children: [
+                {
+                    title: 'Mes documents',
+                    route: './admin/MesDocuments',
+                    icon: 'bi bi-files',
+                    access: ['admin'],
+                },
+                {
+                    title: 'Format document',
+                    route: './admin/formatDocument',
+                    icon: 'bi bi-file-earmark',
+                    access: ['admin'],
+                },
+                {
+                    title: 'Type document',
+                    route: './admin/typeDocument',
+                    icon: 'bi bi-file-text',
+                    access: ['admin'],
+                }
+            ]
         },
         {
             title: 'Mes Documents',

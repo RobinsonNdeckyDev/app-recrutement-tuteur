@@ -1,10 +1,10 @@
+import { CandidatService } from './../../../../core/services/api/candidat.service';
 import { Component } from '@angular/core';
-import { DateFormatPipe } from '../../../../shared/pipes/dateFormatPipe';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminService } from '../../../../core/services/api/admin.service';
 import { AuthService } from '../../../../core/services/authService/auth.service';
 import { CommonModule } from '@angular/common';
+import { FileService } from '../../../../core/services/api/file.service';
 
 @Component({
   selector: 'app-gestion-candidat',
@@ -15,22 +15,24 @@ import { CommonModule } from '@angular/common';
 })
 export class GestionCandidatComponent {
 
-    tabsAdmins: any = [];
-    tabAdminsFiltered: any[] = [];
-    selectedAdmin: any = [];
-    adminFormAdd!: FormGroup;
-    adminFormUpdate!: FormGroup;
+    tabsCandidats: any = [];
+    tabsCandidatsFiltered: any[] = [];
+    selectedCandidat: any = [];
+    candidatFormAdd!: FormGroup;
+    candidatFormUpdate!: FormGroup;
+    selectedFile: File | null = null;
     currentPage = 1;
     rowsPerPage = 4;
     totalPages = 0;
 
     constructor(
-        private adminService: AdminService,
+        private candidatService: CandidatService,
         private toastr: ToastrService,
+        private fileService: FileService,
         private authService: AuthService,
         private fb: FormBuilder,
     ){
-        this.adminFormAdd = this.fb.group({
+        this.candidatFormAdd = this.fb.group({
             email: ['', Validators.required],
             password: ['', Validators.required],
             photoProfil: [''],
@@ -39,10 +41,10 @@ export class GestionCandidatComponent {
             description: ['', Validators.required],
             adresse: ['', Validators.required],
             telephone: ['', Validators.required],
-            role: ['ADMIN']
+            role: ['CANDIDAT']
         });
 
-        this.adminFormUpdate = this.fb.group({
+        this.candidatFormUpdate = this.fb.group({
             email: ['', Validators.required],
             password: ['', Validators.required],
             photoProfil: [''],
@@ -51,144 +53,213 @@ export class GestionCandidatComponent {
             description: ['', Validators.required],
             adresse: ['', Validators.required],
             telephone: ['', Validators.required],
-            role: ['ADMIN']
+            role: ['CANDIDAT']
         })
+    }
+
+    // Gestion des fichiers images
+    onFileSelected(event: any) {
+        const file = event.target.files[0];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (file) {
+            if (file.size > maxSize) {
+                this.toastr.error('Le fichier est trop volumineux. Taille maximum : 5MB');
+                return;
+            }
+            if (!allowedTypes.includes(file.type)) {
+                this.toastr.error('Format de fichier non supporté. Utilisez JPG, PNG ou GIF');
+                return;
+            }
+            this.selectedFile = file;
+        }
     }
 
     // Iniialisation
     ngOnInit() {
         this.updatePagination();
-        this.getAllAdmins();
+        this.getAllCandidats();
     }
 
 
-    // Récupérer toutes les admins
-    getAllAdmins(){
-        this.adminService.getAdmins().subscribe(
-            (admins) => {
-                console.log("Liste des admins", admins);
-                this.tabsAdmins = admins;
+    // Récupérer toutes les candidats
+    getAllCandidats(){
+        this.candidatService.getCandidats().subscribe(
+            (candidats) => {
+                console.log("Liste des candidats", candidats);
+                this.tabsCandidats = candidats;
                 this.updatePagination(); // Mettre à jour la pagination
             },
             (error) => {
-                console.error('Une erreur s\'est produite lors de la récupération des admins:', error);
+                console.error('Une erreur s\'est produite lors de la récupération des candidats:', error);
             }
         )
     }
 
-    // Ajouter un admin
-    addAdmin(){
-        if(this.adminFormAdd.valid){
-            console.log("adminFormAdd", this.adminFormAdd.value);
-            this.authService.inscription(this.adminFormAdd.value).subscribe(
-                (admin) => {
-                    console.log("Admin pour ajout", admin);
-                    this.getAllAdmins();
-                    document.getElementById('ajoutAdmin')?.classList.remove('show');
-                    document.body.classList.remove('modal-open');
-                    this.adminFormAdd.reset();
-                    document.querySelector('.modal-backdrop')?.remove();
-                    this.toastr.success("année ajouté avec succes !")
+    // Ajouter un candidat
+    addCandidat(){
+        if(this.selectedFile){
+            // On upload l'image
+            this.fileService.uploadFile(this.selectedFile).subscribe(
+                (response) => {
+                    // On récupère l'URL de l'image uploadée
+                    const candidatData = this.candidatFormAdd.value;
+                    candidatData.photoProfil = response.url;
+
+                    // Puis on crée le candidat avec l'URL de l'image
+                    this.authService.inscription(candidatData).subscribe(
+                        (candidat) => {
+                            console.log("candidat pour ajout", candidat);
+                            this.getAllCandidats();
+                            document.getElementById('ajoutCandidat')?.classList.remove('show');
+                            document.body.classList.remove('modal-open');
+                            this.candidatFormAdd.reset();
+                            document.querySelector('.modal-backdrop')?.remove();
+                            this.selectedFile = null;
+                            this.toastr.success("candidat ajouté avec succes!")
+                        },
+                        (error) => {
+                            console.error('Une erreur s\'est produite lors de l\'ajout d\'un candidat:', error);
+                            this.toastr.error("Une erreur s'est produite lors de l'ajout d'un candidat'.");
+                        }
+                    )
                 },
                 (error) => {
-                    console.error('Une erreur s\'est produite lors de l\'ajout d\'un admin:', error);
-                    this.toastr.error("Une erreur s'est produite lors de l'ajout d'un admin'.");
+                    console.error('Une erreur s\'est produite lors de l\'upload de l\'image:', error);
+                    this.toastr.error("Une erreur s'est produite lors de l'upload de l'image.");
+                }
+            )
+        }else {
+            // Si pas d'image, on crée le candiddat directement
+            this.candidatService.addCandidat(this.candidatFormAdd.value).subscribe(
+                (candidat) => {
+                    console.log("Candidat pour ajout", candidat);
+                    this.getAllCandidats();
+                    document.getElementById('ajoutCandidat')?.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    this.candidatFormAdd.reset();
+                    document.querySelector('.modal-backdrop')?.remove();
+                    this.toastr.success("candidat ajouté avec succes !")
+                },
+                (error) => {
+                    console.error('Une erreur s\'est produite lors de l\'ajout du candidat:', error);
+                    this.toastr.error("Une erreur s'est produite lors de l'ajout du candidat'.");
                 }
             )
         }
     }
 
-    // Afficher les détails d'un admin
-    showdetailsAdmin(admin:any){
-        this.selectedAdmin = {...admin};
+    // Méthode utilitaire pour fermer les modals
+    private closeModal(modalId: string) {
+        document.getElementById(modalId)?.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        document.querySelector('.modal-backdrop')?.remove();
+    }
+
+    // Afficher les détails d'un candidat
+    showdetailsCandidat(candidat:any){
+        this.selectedCandidat = {...candidat};
     }
 
     preRemplirFormulaire(id: number) {
-        this.selectedAdmin = this.tabsAdmins.find(
-            (admin: any) => admin.id === id
+        this.selectedCandidat = this.tabsCandidats.find(
+            (candidat: any) => candidat.id === id
         );
 
-        if (!this.selectedAdmin) {
-            console.error("Admin non trouvée !");
-            this.toastr.error("Impossible de trouver cet admin.");
+        if (!this.selectedCandidat) {
+            console.error("candidat non trouvée !");
+            this.toastr.error("Impossible de trouver ce candidat.");
             return;
         }
 
         // Mettre à jour le formulaire avec les valeurs existantes
-        this.adminFormUpdate.setValue({
-            prenom: this.selectedAdmin.prenom || '',
-            nom: this.selectedAdmin.nom || '',
-            password: this.selectedAdmin.password || '',
-            email: this.selectedAdmin.email || '',
-            description: this.selectedAdmin.description || '',
-            adresse: this.selectedAdmin.adresse || '',
-            telephone: this.selectedAdmin.telephone || '',
-            photoProfil: this.selectedAdmin.photoProfil || '',
+        this.candidatFormUpdate.setValue({
+            prenom: this.selectedCandidat.prenom || '',
+            nom: this.selectedCandidat.nom || '',
+            password: this.selectedCandidat.password || '',
+            email: this.selectedCandidat.email || '',
+            description: this.selectedCandidat.description || '',
+            adresse: this.selectedCandidat.adresse || '',
+            telephone: this.selectedCandidat.telephone || '',
+            photoProfil: this.selectedCandidat.photoProfil || '',
+            role: this.selectedCandidat.role || 'CANDIDAT'
         });
 
-        console.log("Formulaire pré-rempli :", this.adminFormUpdate.value);
+        console.log("Formulaire pré-rempli :", this.candidatFormUpdate.value);
     }
 
-    // Mettre à jour un admin
-    updateAdmin(id: number) {
-        console.log("ID admin à modifier :", id);
+    // Mettre à jour un candidat
+    updateCandidat(id: number) {
+        if (this.selectedFile) {
+            // Upload de la nouvelle image
+            this.fileService.uploadFile(this.selectedFile).subscribe(
+                (fileResponse) => {
+                    const donnees = this.candidatFormUpdate.value;
+                    donnees.photoProfil = fileResponse.url;
 
-        const donnees = this.adminFormUpdate.value;
-        this.adminService.updateAdmin(id, donnees).subscribe(
-            (updateAdmin) => {
-                console.log("Réponse API après mise à jour :", updateAdmin);
+                    console.log("données: ", donnees);
 
-                // Mettre à jour l'élément correspondant dans tabsAdmins
-                this.tabsAdmins = this.tabsAdmins.map((admin: any) =>
-                    admin.id === id ? { ...admin, ...updateAdmin } : admin
+                    this.processUpdateCandidat(id, donnees);
+                },
+                (error) => {
+                    console.error('Erreur upload image:', error);
+                    this.toastr.error("Erreur lors de l'upload de l'image");
+                }
+            );
+        } else {
+            // Mise à jour sans nouvelle image
+            const donnees = this.candidatFormUpdate.value;
+            this.processUpdateCandidat(id, donnees);
+        }
+    }
+
+    // Méthode pour traiter la mise à jour d'un candidat
+    private processUpdateCandidat(id: number, donnees: any) {
+        this.candidatService.updateCandidat(id, donnees).subscribe(
+            (updateCandidat) => {
+
+                console.log("updatedCandidat: ", updateCandidat);
+
+                this.tabsCandidats = this.tabsCandidats.map((candidat: any) =>
+                    candidat.id === id ? { ...candidat, ...updateCandidat } : candidat
                 );
 
-                // Vérifier que selectedAdmin est bien mise à jour
-                this.selectedAdmin = { ...updateAdmin };
-
-                // Réafficher les nouvelles valeurs dans le formulaire
-                this.adminFormUpdate.patchValue({
-
-
-                });
-
-                console.log("Données mises à jour dans le formulaire :", this.adminFormUpdate.value);
-
-                // this.getAllanneesAcademiques();
-                document.getElementById('modifierAdmin')?.classList.remove('show');
-                document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop')?.remove();
-
-
-                this.toastr.success("Admin mise à jour avec succès !");
+                // Mettre à jour selectedCandidat
+                this.selectedCandidat = { ...updateCandidat };
+                this.getAllCandidats();
+                this.candidatFormUpdate.reset();
+                this.selectedFile = null;
+                this.closeModal('modifierCandidat');
+                this.toastr.success("Candidat modifié avec succès!");
             },
             (error) => {
-                console.error("Erreur lors de la mise à jour de l'admin :", error);
-                this.toastr.error("Une erreur s'est produite lors de la mise à jour.");
+                console.error("Erreur lors de la mise à jour:", error);
+                this.toastr.error("Erreur lors de la mise à jour");
             }
         );
     }
 
     // Supprimer un admin
-    deleteAdmin(id: number){
-        this.adminService.deleteAdmin(id).subscribe(
-            (admin) => {
-                console.log("admin à supprimer", admin);
-                this.getAllAdmins();
-                this.toastr.success("admin supprimé avec succes !")
+    deleteCandidat(id: number){
+        this.candidatService.deleteCandidat(id).subscribe(
+            (candidat) => {
+                console.log("candidat à supprimer", candidat);
+                this.getAllCandidats();
+                this.toastr.success("candidat supprimé avec succes !")
             },
             (error) => {
-                console.error('Une erreur s\'est produite lors de la suppression de l\'admin:', error);
-                this.toastr.error("Une erreur s'est produite lors de la suppression de l'admin.");
+                console.error('Une erreur s\'est produite lors de la suppression du candidat:', error);
+                this.toastr.error("Une erreur s'est produite lors de la suppression du candidat.");
             }
         )
     }
 
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
-        this.tabAdminsFiltered = [...this.tabsAdmins];
-        console.log("tabAdminFiltered: ", this.tabAdminsFiltered);
-        this.totalPages = Math.ceil(this.tabsAdmins.length / this.rowsPerPage);
+        this.tabsCandidatsFiltered = [...this.tabsCandidats];
+        console.log("tabtabsCandidatsFiltered: ", this.tabsCandidatsFiltered);
+        this.totalPages = Math.ceil(this.tabsCandidats.length / this.rowsPerPage);
     }
 
     // Change la page actuelle
@@ -199,27 +270,36 @@ export class GestionCandidatComponent {
     }
 
     // Retourne les années admins paginées
-    getPaginatedAdmin(): any[] {
+    getPaginatedCandidats(): any[] {
         const start = (this.currentPage - 1) * this.rowsPerPage;
-        return this.tabAdminsFiltered.slice(start, start + this.rowsPerPage);
+        return this.tabsCandidatsFiltered.slice(start, start + this.rowsPerPage);
     }
 
     // Filtre la liste selon la recherche
-    searchAdmin(event: any) {
+    searchCandidat(event: any) {
         const searchValue = event.target.value.toLowerCase();
-        this.tabAdminsFiltered = this.tabsAdmins.filter((admin:any) =>
-            admin.prenom.toLowerCase().includes(searchValue) ||
-            admin.nom.toLowerCase().includes(searchValue)
+        this.tabsCandidatsFiltered = this.tabsCandidats.filter((candidat:any) =>
+            candidat.prenom.toLowerCase().includes(searchValue) ||
+            candidat.nom.toLowerCase().includes(searchValue)
         );
 
 
-        this.totalPages = Math.ceil(this.tabAdminsFiltered.length / this.rowsPerPage);
+        this.totalPages = Math.ceil(this.tabsCandidatsFiltered.length / this.rowsPerPage);
 
         // Réinitialiser à la première page après filtrage
         this.currentPage = 1;
     }
+
+    // Méthode pour prévisualiser l'image
+    getImageUrl(candidat: any): string {
+        if (candidat?.photoProfil) {
+            // Extrait le nom du fichier de l'URL complète
+            const fileName = candidat.photoProfil.split('/').pop();
+            return this.fileService.getFileUrl(fileName);
+        }
+        return 'assets/images/default-profile.png';
+    }
 }
 
 
-// --------------------------------------------------------------------------------------------
 

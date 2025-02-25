@@ -13,8 +13,8 @@
             <th>Prénom</th>
             <th>Email</th>
             <th>Téléphone</th>
-            <th>Etat</th>
-            <th class="text-center">Actions</th>&
+            <!-- <th>Etat</th> -->
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -76,14 +76,21 @@
         </tr> -->
         @if (getPaginatedAdmin()) {
             <tr *ngFor="let admin of getPaginatedAdmin()">
-                <td>{{ admin.photoProfil }}</td>
+                <td>
+                    <img [src]="getImageUrl(admin)"
+                        [alt]="admin.nom + ' ' + admin.prenom"
+                        class="img-thumbnail"
+                        style="width: 30px; height: 30px;"
+                    >
+                </td>
                 <td>{{ admin.prenom }}</td>
                 <td>{{ admin.email }}</td>
                 <td>{{ admin.telephone }}</td>
-                <td [ngClass]="admin.etat ? 'active-class' : 'inactive-class'">
+                <!-- <td [ngClass]="admin.etat ? 'active-class' : 'inactive-class'">
                     {{ admin.etat ? 'Active' : 'Désactivée' }}
-                </td>
+                </td> -->
                 <td class="text-center d-flex justify-content-center align-items-center">
+                    <span><i class="pi pi-eye"></i></span>
                     <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAdmin" (click)="preRemplirFormulaire(admin.id)"></i></span>
                     <span><i class="pi pi-trash" (click)="deleteAdmin(admin.id)"></i></span>
                 </td>
@@ -126,41 +133,53 @@
             </div>
             <div class="modal-body">
                 <form [formGroup]="adminFormAdd" (ngSubmit)="addAdmin()">
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="prenom" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nom" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="nom" name="nom" formControlName="nom">
+                            </div>
+                            <div class="mb-3">
+                                <label for="adresse" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="adresse" name="adresse" formControlName="adresse">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" name="nom" formControlName="nom">
-                        </div>
-                        <div class="mb-3">
-                            <label for="adresse" class="form-label">Adresse</label>
-                            <input type="text" class="form-control" id="adresse" name="adresse" formControlName="adresse">
-                        </div>
-                        <div class="mb-3">
-                            <label for="telephone" class="form-label">Téléphone</label>
-                            <input type="tel" class="form-control" id="telephone" name="telephone" formControlName="telephone">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" formControlName="email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe </label>
+                                <input type="password" class="form-control" id="password" name="password" formControlName="password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="telephone" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="telephone" name="telephone" formControlName="telephone">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" formControlName="email">
+
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <label for="photoProfil">Photo de profil</label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="photoProfil"
+                                (change)="onFileSelected($event)"
+                                accept="image/*">
+                            <small class="form-text text-muted">Format accepté : JPG, PNG, GIF (max 5MB)</small>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mot de passe </label>
-                            <input type="password" class="form-control" id="password" name="password" formControlName="password">
-                        </div>
-                        <div class="mb-3">
-                            <label for="photoProfil" class="form-label">Photo de profil</label>
-                            <input type="file" class="form-control" id="photoProfil" name="photoProfil" formControlName="photoProfil">
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description" name="description" placeholder="Décrivez votre année académique" formControlName="description">
-                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea type="text" class="form-control" id="description" name="description" placeholder="Décrivez votre année académique" formControlName="description"></textarea>
                     </div>
 
                     <div class="modal-footer">
@@ -174,26 +193,63 @@
 </div>
 
 <!-- Modal Modifier -->
-<!-- <div class="modal fade" id="modifierAnneeAcademique" tabindex="-1" aria-labelledby="modifierAnneeAcademiqueLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="modifierAdmin" tabindex="-1" aria-labelledby="modifierAdmin">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modifierAnneeAcademiqueLabel">Modification d'un admin</h1>
+                <h1 class="modal-title fs-5" id="modifierAdmin">Modification d'un administrateur</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="adminFormUpdate" (ngSubmit)="updateAdmin(selectedAdmin?.id)">
-                    <div class="mb-3">
-                        <label for="annee" class="form-label">Année</label>
-                        <input type="text" class="form-control" id="annee" formControlName="annee">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="prenomUpdate" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="prenomUpdate" name="prenom" formControlName="prenom" [value]="selectedAdmin?.prenom">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nomUpdate" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="nomUpdate" name="nom" formControlName="nom" [value]="selectedAdmin?.nom">
+                            </div>
+                            <div class="mb-3">
+                                <label for="adresseUpdate" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="adresseUpdate" name="adresse" formControlName="adresse" [value]="selectedAdmin?.adresse">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="emailUpdate" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailUpdate" name="email" formControlName="email" [value]="selectedAdmin?.email">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="telephoneUpdate" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="telephoneUpdate" name="telephone" formControlName="telephone" [value]="selectedAdmin?.telephone">
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="photoProfilUpdate">Photo de profil</label>
+                                    <!-- Afficher l'image actuelle si elle existe -->
+                                    <img *ngIf="selectedAdmin"
+                                         [src]="getImageUrl(selectedAdmin)"
+                                         alt="Photo de profil actuelle"
+                                         class="img-thumbnail mb-2"
+                                         style="max-width: 150px">
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        id="photoProfilUpdate"
+                                        (change)="onFileSelected($event)"
+                                        accept="image/*">
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="mb-3">
-                        <label for="dateDebut" class="form-label">Début</label>
-                        <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut">
-                    </div>
-                    <div class="mb-3">
-                        <label for="dateFin" class="form-label">Fin</label>
-                        <input type="date" class="form-control" id="dateFin" formControlName="dateFin">
+                        <label for="descriptionUpdate" class="form-label">Description</label>
+                        <textarea type="text" class="form-control" id="descriptionUpdate" name="description" formControlName="description" [value]="selectedAdmin?.description"></textarea>
                     </div>
 
                     <div class="modal-footer">
@@ -204,4 +260,4 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>
