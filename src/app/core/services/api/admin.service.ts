@@ -39,7 +39,7 @@ export class AdminService {
     }
 
     // service pour ajouter un admin
-    addAdmin(annonce: any) {
+    addAdmin(admin: any) {
         const token = localStorage.getItem('token');
 
         const headers = new HttpHeaders().set(
@@ -47,7 +47,7 @@ export class AdminService {
             `Bearer ${token}`
         );
 
-        return this.http.post(`${this.apiUrl}/admins`, annonce, {headers});
+        return this.http.post(`${this.apiUrl}/admins`, admin, {headers});
     }
 
     // service pour mettre à jour un admin

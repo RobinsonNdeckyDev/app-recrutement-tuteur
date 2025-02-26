@@ -41,11 +41,11 @@ export class GestionTypeDocComponent {
         })
 
         this.typeDocFormUpdate = this.fb.group({
-            nomType: ['', Validators.required],
+            nom_type: ['', Validators.required],
             description: ['', Validators.required],
             etat: ['', Validators.required],
-            estObligatoire: ['', Validators.required],
-            formatDocumentId: ['', Validators.required],
+            est_obligatoire: ['', Validators.required],
+            id_format_document: ['', Validators.required],
         })
     }
 
@@ -61,7 +61,7 @@ export class GestionTypeDocComponent {
             (typeDocs) => {
                 console.log("Typesdocs", typeDocs);
                 this.tabTypeDoc = typeDocs;
-                // this.updatePagination(); // Mettre à jour la pagination
+                this.updatePagination(); // Mettre à jour la pagination
             },
             (error) => {
                 console.error('Une erreur s\'est produite lors de la récupération des typeDocs:', error);
@@ -85,21 +85,21 @@ export class GestionTypeDocComponent {
     addTypeDoc() {
         if (this.typeDocForm.valid) {
             let type = this.typeDocForm.value;
-            
+
             // Vérification et conversion des valeurs
             const formatDocId = Number(type.id_format_document);
-            
+
             if (!formatDocId || isNaN(formatDocId)) {
                 this.toastr.error("Le format du document est requis");
                 return;
             }
 
             const typeDocData = {
-                nom_type: type.nom_type.trim(),
+                nomType: type.nom_type.trim(),
                 description: type.description.trim(),
                 etat: type.etat,
-                est_obligatoire: Boolean(type.est_obligatoire),
-                id_format_document: formatDocId
+                estObligatoire: type.est_obligatoire,
+                formatDocumentId: type.id_format_document
             };
 
             console.log("typeDocData à l'envoi:", typeDocData);
@@ -127,7 +127,7 @@ export class GestionTypeDocComponent {
         this.selectedTypeDoc = this.tabTypeDoc.find(
             (typeDoc: any) => typeDoc.id === id
         );
-        
+
         if (this.selectedTypeDoc) {
             console.log("details type doc: ", this.selectedTypeDoc);
         } else {
@@ -150,11 +150,11 @@ export class GestionTypeDocComponent {
 
         // Mettre à jour le formulaire avec les valeurs existantes
         this.typeDocFormUpdate.setValue({
-            nomType: this.selectedTypeDoc.nomType || '',
+            nom_type: this.selectedTypeDoc.nomType || '',
             description: this.selectedTypeDoc.description || '',
-            estObligatoire: this.selectedTypeDoc.estObligatoire || '',
+            est_obligatoire: this.selectedTypeDoc.estObligatoire || '',
             etat: this.selectedTypeDoc.etat || '',
-            FormatDodumentId: this.selectedTypeDoc.nomFormat || '',
+            id_format_document: this.selectedTypeDoc.formatDocument?.id || '',
         });
 
         console.log("Formulaire pré-rempli :", this.typeDocFormUpdate.value);
@@ -164,31 +164,29 @@ export class GestionTypeDocComponent {
     updateTypeDoc(id: number) {
         console.log("ID typeDoc à modifier :", id);
 
-        const donnees = this.typeDocFormUpdate.value;
+        const formValues = this.typeDocFormUpdate.value;
+
+        // Transformer les données pour correspondre au DTO attendu
+        const donnees = {
+            nomType: formValues.nom_type,
+            description: formValues.description,
+            estObligatoire: formValues.est_obligatoire,
+            etat: formValues.etat,
+            formatDocumentId: formValues.id_format_document
+        };
+
         this.typeDocService.updateTypeDoc(id, donnees).subscribe(
             (updateTypeDoc) => {
                 console.log("Réponse API après mise à jour :", updateTypeDoc);
-
-                // Mettre à jour l'élément correspondant dans tabTypeDoc
                 this.tabTypeDoc = this.tabTypeDoc.map((typeDoc: any) =>
                     typeDoc.id === id ? { ...typeDoc, ...updateTypeDoc } : typeDoc
                 );
-
-                // Vérifier que selectedTypeDoc est bien mise à jour
                 this.selectedTypeDoc = { ...updateTypeDoc };
 
-                // Réafficher les nouvelles valeurs dans le formulaire
-                this.typeDocFormUpdate.patchValue({
-
-                });
-
-                console.log("Données mises à jour dans le formulaire :", this.typeDocFormUpdate.value);
-
-                this.getAllTypeDocs;
+                this.getAllTypeDocs();
                 document.getElementById('modifierTypeDoc')?.classList.remove('show');
                 document.body.classList.remove('modal-open');
                 document.querySelector('.modal-backdrop')?.remove();
-
 
                 this.toastr.success("Type doc mis à jour avec succès !");
             },

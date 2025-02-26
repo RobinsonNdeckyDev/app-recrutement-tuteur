@@ -97,58 +97,111 @@ export class GestionAdminComponent {
     }
 
     // Ajouter un admin
-    addAdmin() {
-        if (this.adminFormAdd.valid) {
-            if (this.selectedFile) {
-                // D'abord, on upload l'image
-                this.fileService.uploadFile(this.selectedFile).subscribe(
-                    (fileResponse) => {
-                        // On récupère l'URL de l'image uploadée
-                        const adminData = this.adminFormAdd.value;
-                        adminData.photoProfil = fileResponse.url;
-                        // Puis on crée l'admin avec l'URL de l'image
-                        this.adminService.addAdmin(adminData).subscribe(
-                            (admin) => {
-                                console.log("Admin ajouté avec image:", admin);
-                                this.getAllAdmins();
-                                this.closeModal('ajoutAdmin');
-                                this.adminFormAdd.reset();
-                                this.selectedFile = null;
-                                this.toastr.success("Administrateur ajouté avec succès !");
-                            },
-                            (error) => {
-                                console.error('Erreur lors de l\'ajout:', error);
-                                this.toastr.error("Erreur lors de l'ajout de l'administrateur");
-                            }
-                        );
-                    },
-                    (error) => {
-                        console.error('Erreur upload image:', error);
-                        this.toastr.error("Erreur lors de l'upload de l'image");
-                    }
-                );
-            } else {
-                // Si pas d'image, on crée l'admin directement
-                this.adminService.addAdmin(this.adminFormAdd.value).subscribe(
-                    (admin) => {
-                        console.log("Admin pour ajout", admin);
-                        this.getAllAdmins();
-                        document.getElementById('ajoutAdmin')?.classList.remove('show');
-                        document.body.classList.remove('modal-open');
-                        this.adminFormAdd.reset();
-                        document.querySelector('.modal-backdrop')?.remove();
-                        this.toastr.success("année ajouté avec succes !")
-                    },
-                    (error) => {
-                        console.error('Une erreur s\'est produite lors de l\'ajout d\'un admin:', error);
-                        this.toastr.error("Une erreur s'est produite lors de l'ajout d'un admin'.");
-                    }
-                )
-            }
+    addAdmin(){
+        if(this.selectedFile){
+            // On upload l'image
+            this.fileService.uploadFile(this.selectedFile).subscribe(
+                (response) => {
+                    // On récupère l'URL de l'image uploadée
+                    const adminData = this.adminFormAdd.value;
+                    adminData.photoProfil = response.url;
+
+                    // Puis on crée l'admin avec l'URL de l'image
+                    this.adminService.addAdmin(adminData).subscribe(
+                        (admin) => {
+                            console.log("admin pour ajout", admin);
+                            this.getAllAdmins();
+                            document.getElementById('ajoutAdmin')?.classList.remove('show');
+                            document.body.classList.remove('modal-open');
+                            this.adminFormAdd.reset();
+                            document.querySelector('.modal-backdrop')?.remove();
+                            this.selectedFile = null;
+                            this.toastr.success("admin ajouté avec succes!")
+                        },
+                        (error) => {
+                            console.error('Une erreur s\'est produite lors de l\'ajout d\'un admin:', error);
+                            this.toastr.error("Une erreur s'est produite lors de l'ajout d'un admin'.");
+                        }
+                    )
+                },
+                (error) => {
+                    console.error('Une erreur s\'est produite lors de l\'upload de l\'image:', error);
+                    this.toastr.error("Une erreur s'est produite lors de l'upload de l'image.");
+                }
+            )
+        }else {
+            // Si pas d'image, on crée l'admin directement
+            this.adminService.addAdmin(this.adminFormAdd.value).subscribe(
+                (admin) => {
+                    console.log("admin pour ajout", admin);
+                    this.getAllAdmins();
+                    document.getElementById('ajoutCandidat')?.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    this.adminFormAdd.reset();
+                    document.querySelector('.modal-backdrop')?.remove();
+                    this.toastr.success("admin ajouté avec succes !")
+                },
+                (error) => {
+                    console.error('Une erreur s\'est produite lors de l\'ajout d \'un admin:', error);
+                    this.toastr.error("Une erreur s'est produite lors de l'ajout d \'un admin'.");
+                }
+            )
         }
     }
 
+    // addAdmin() {
+    //     if (this.adminFormAdd.valid) {
+    //         if (this.selectedFile) {
+    //             // D'abord, on upload l'image
+    //             this.fileService.uploadFile(this.selectedFile).subscribe(
+    //                 (fileResponse) => {
+    //                     // On récupère l'URL de l'image uploadée
+    //                     const adminData = this.adminFormAdd.value;
+    //                     adminData.photoProfil = fileResponse.url;
+    //                     // Puis on crée l'admin avec l'URL de l'image
+    //                     this.adminService.addAdmin(adminData).subscribe(
+    //                         (admin) => {
+    //                             console.log("Admin ajouté avec image:", admin);
+    //                             this.getAllAdmins();
+    //                             this.closeModal('ajoutAdmin');
+    //                             this.adminFormAdd.reset();
+    //                             this.selectedFile = null;
+    //                             this.toastr.success("Administrateur ajouté avec succès !");
+    //                         },
+    //                         (error) => {
+    //                             console.error('Erreur lors de l\'ajout:', error);
+    //                             this.toastr.error("Erreur lors de l'ajout de l'administrateur");
+    //                         }
+    //                     );
+    //                 },
+    //                 (error) => {
+    //                     console.error('Erreur upload image:', error);
+    //                     this.toastr.error("Erreur lors de l'upload de l'image");
+    //                 }
+    //             );
+    //         } else {
+    //             // Si pas d'image, on crée l'admin directement
+    //             this.adminService.addAdmin(this.adminFormAdd.value).subscribe(
+    //                 (admin) => {
+    //                     console.log("Admin pour ajout", admin);
+    //                     this.getAllAdmins();
+    //                     document.getElementById('ajoutAdmin')?.classList.remove('show');
+    //                     document.body.classList.remove('modal-open');
+    //                     this.adminFormAdd.reset();
+    //                     document.querySelector('.modal-backdrop')?.remove();
+    //                     this.toastr.success("année ajouté avec succes !")
+    //                 },
+    //                 (error) => {
+    //                     console.error('Une erreur s\'est produite lors de l\'ajout d\'un admin:', error);
+    //                     this.toastr.error("Une erreur s'est produite lors de l'ajout d'un admin'.");
+    //                 }
+    //             )
+    //         }
+    //     }
+    // }
+
     // Méthode utilitaire pour fermer les modals
+
     private closeModal(modalId: string) {
         document.getElementById(modalId)?.classList.remove('show');
         document.body.classList.remove('modal-open');

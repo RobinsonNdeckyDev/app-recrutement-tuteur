@@ -1,8 +1,8 @@
 export interface TypeDoc{
     id?:number;
-    nom_type: String;
-    est_obligatoire: Boolean;
+    nomType: String;
+    estObligatoire: Boolean;
     description: String;
     etat: String;
-    id_format_document: number;
+    formatDocumentId: number;
 }
