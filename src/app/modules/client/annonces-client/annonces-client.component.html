@@ -1,0 +1,51 @@
+<p>annonces-client works!</p>
+
+<p>annonces works!</p>
+
+<!-- <div class="container-fluid p-0 opacity-0.1">
+    <div class="banner position-relative text-center">
+        <img
+            src="assets/banners/img3-login.png"
+            class="img-fluid w-100"
+            alt="Bannière Santé Mentale"
+        />
+        <div
+            class="banner-overlay position-absolute top-50 start-50 translate-middle text-white"
+        >
+            <h2 class="fw-bold text-center text-primary">
+                Listes des Annonces
+            </h2>
+            <p class="lead">
+                Trouvez les meilleurs annonces qui vous correspondent
+            </p>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow">
+
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row" *ngIf="tabAnnonces">
+                <div class="col-md-12">
+                    <div class="card shadow" *ngFor="let annonce of tabAnnonces">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h3>{{annonce.titre}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-center my-4" *ngIf="!tabAnnonces">
+                    Aucune annonce trouvée
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
