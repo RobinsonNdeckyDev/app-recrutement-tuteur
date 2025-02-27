@@ -1,1 +1,61 @@
-<p>users works!</p>
+<section class="my-3">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card px-3 py-2 shadow">
+                <div class="d-flex justify-content-between align-iems-center">
+                    <h5 class="">Utilisateurs</h5>
+                    <div class="">
+                        <span>
+                            <i class=""></i>
+                        </span>
+                    </div>
+                </div>
+                <p class="">text</p>
+            </div>
+        </div>
+        <div class="col-md-4 cursor-pointer">
+            <div class="card px-3 py-2 shadow"  (click)="afficherCandidats()">
+                <div class="d-flex justify-content-between align-iems-center">
+                    <h5 class="">Candidats</h5>
+                    <div class="">
+                        <span>
+                            <i class=""></i>
+                        </span>
+                    </div>
+                </div>
+                <p class="">text</p>
+            </div>
+        </div>
+        <div class="col-md-4 cursor-pointer">
+            <div class="card px-3 py-2 shadow" (click)="afficherAdmins()">
+                <div class="d-flex justify-content-between align-iems-center">
+                    <h5 class="">Admins</h5>
+                    <div class="">
+                        <span>
+                            <i class=""></i>
+                        </span>
+                    </div>
+                </div>
+                <p class="">text</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card px-3 shadow">
+                <div *ngIf="!afficherAdmin">
+                    <app-gestion-candidat></app-gestion-candidat>
+                </div>
+                <div *ngIf="afficherAdmin">
+                    <app-gestion-admin></app-gestion-admin>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow"></div>
+        </div>
+    </div>
+</section>

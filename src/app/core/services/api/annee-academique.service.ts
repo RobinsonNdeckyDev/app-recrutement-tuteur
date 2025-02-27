@@ -31,8 +31,13 @@ export class AnneeAcademiqueService {
             `Bearer ${token}`
         );
 
+        console.log('headers:', headers);
+        // console.log('Token:', token);
+        // console.log('Request URL:', `${this.apiUrl}/annees-acdemiques`);
+
+
         return this.http.get<AnneeAcademique[]>(
-            `${this.apiUrl}/annees_annonces`,
+            `${this.apiUrl}/annees-academiques`,
             { headers }
         );
     }
@@ -54,22 +59,30 @@ export class AnneeAcademiqueService {
         );
 
         return this.http.post<AnneeAcademique>(
-            `${this.apiUrl}/annees_annonces`,
-            anneeAcademique, 
+            `${this.apiUrl}/annees-academiques`,
+            anneeAcademique,
             { headers }
         );
     }
 
     // Méthode pour mettre à jour une année académique (uniquement accessible par un admin)
     updateAnneeAcademique(id: number, anneeAcademique: AnneeAcademique) {
+        const token = localStorage.getItem('token');
+
         if (!this.authService.isAdmin()) {
             throw new Error(
                 'Vous devez être un administrateur pour effectuer cette action.'
             );
         }
+
+        const headers = new HttpHeaders().set(
+            'Authorization',
+            `Bearer ${token}`
+        );
+
         return this.http.put<AnneeAcademique>(
-            `${this.apiUrl}/annees_annonces/${id}`,
-            anneeAcademique
+            `${this.apiUrl}/annees-academiques/${id}`,
+            anneeAcademique, {headers}
         );
     }
 
@@ -88,6 +101,6 @@ export class AnneeAcademiqueService {
             `Bearer ${token}`
         );
 
-        return this.http.delete<void>(`${this.apiUrl}/annees_annonces/${id}`, { headers });
+        return this.http.delete<void>(`${this.apiUrl}/annees_academiques/${id}`, { headers });
     }
 }

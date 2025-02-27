@@ -11,58 +11,65 @@
 
     <div class="mt-2">
         <div class="row g-3">
-            <div class="col-md-6" *ngFor="let annonce of tabAnnoncesFiltered">
-                <div class="card px-2 shadow">
-                    <div class="etatAnnonce" [ngClass]="annonce.etat === 'En cours' ? 'bg-warning' : 'bg-success'">
-                        <span >{{annonce.etat}}</span>
-                    </div>
-                    <div class="mt-3">
-                        <h4 class="fw-bold">
-                            {{ annonce.title }}
-                        </h4>
+            @if (getPaginatedAnnonces()) {
+                <div class="col-md-6" *ngFor="let annonce of getPaginatedAnnonces()">
+                    <div class="card px-2">
+                        <div class="etatAnnonce" [ngClass]="annonce.etat === 'En cours' ? 'bg-warning' : 'bg-success'">
+                            <span >{{annonce.etat}}</span>
+                        </div>
+                        <div class="mt-3">
+                            <h4 class="fw-bold">
+                                {{ annonce.titre }}
+                            </h4>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p>
-                                description
-                            </p>
-                            <div class="d-flex gap-2 align-items-center">
-                                <span class="" data-bs-toggle="modal" data-bs-target="#detailsAnnonce" (click)="showdetailsAnnonce(annonce)">
-                                    <i class="pi pi-eye"></i>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p>
+                                    description
+                                </p>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <span class="" data-bs-toggle="modal" data-bs-target="#detailsAnnonce" (click)="showdetailsAnnonce(annonce)">
+                                        <i class="pi pi-eye"></i>
+                                    </span>
+                                    <span class="" data-bs-toggle="modal" data-bs-target="#modifierAnnonce" (click)="preRemplirFormulaire(annonce?.id)">
+                                        <i class="pi pi-pencil"></i>
+                                    </span>
+                                    <span class="">
+                                        <i class="pi pi-trash"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mb-3">
+                            {{annonce.description}}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="">
+                                <span class="">
+                                    <i class="pi pi-clock"></i>
                                 </span>
-                                <span class="" data-bs-toggle="modal" data-bs-target="#modifierAnnonce" (click)="getAnnonce(annonce?.id)">
-                                    <i class="pi pi-pencil"></i>
+                                <span class="fw-bold">
+                                    {{annonce.created_at | date : 'dd/MM/yyyy'}}
+                                </span>
+                            </div>
+
+                            <div class="">
+                                <span class="fw-bold">
+                                    {{annonce.dateLimite | date : 'dd/MM/yyyy'}}
                                 </span>
                                 <span class="">
-                                    <i class="pi pi-trash"></i>
+                                    <i class="pi pi-clock"></i>
                                 </span>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="">
-                        {{annonce.description}}
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="">
-                            <span class="">
-                                <i class="pi pi-clock"></i>
-                            </span>
-                            <span class="fw-bold">
-                                {{annonce.dateCreation | date : 'dd/MM/yyyy'}}
-                            </span>
-                        </div>
-
-                        <div class="">
-                            <span class="fw-bold">
-                                {{annonce.dateExpiration | date : 'dd/MM/yyyy'}}
-                            </span>
-                            <span class="">
-                                <i class="pi pi-clock"></i>
-                            </span>
-                        </div>
                     </div>
                 </div>
-            </div>
+            }
+            @else {
+                <p class="text-center my-2 text-primary">
+                    Aucune annonce disponible pour l'instant
+                </p>
+            }
         </div>
     </div>
 
@@ -87,30 +94,56 @@
 
 <!-- Modal d'ajout annonce -->
 <div class="modal fade" id="ajoutAnnonce" tabindex="-1" aria-labelledby="ajoutAnnonceLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="ajoutAnnonceLabel">Ajouter une annonce</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="">
-                    <div class="mb-3">
-                        <label for="annee" class="form-label">Année</label>
-                        <input type="text" class="form-control" id="annee" name="annee">
+                <form [formGroup]="annonceFormAdd" (ngSubmit)="addAnnonce()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="titre" class="form-label">Titre</label>
+                                <input type="text" class="form-control" id="titre" name="titre" formControlName="titre">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description" formControlName="description">
+                            </div>
+                            <div class="mb-3">
+                                <label for="idAnneeAnnonce" class="form-label">Année académique</label>
+                                <select class="form-select" formControlName="idAnneeAnnonce" id="idAnneeAnnonce" aria-label="Default select example">
+                                    <option disabled selected>Sélectionner une année académique</option>
+                                    <option *ngFor="let annee of tabAnneeAcademiques" [value]="annee.id">{{ annee.annee }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="imageAnnonce" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="imageAnnonce" name="imageAnnonce" formControlName="image">
+                            </div>
+                            <div class="mb-3">
+                                <label for="auteur" class="form-label">Auteur</label>
+                                <input type="text" class="form-control" id="auteur" name="auteur" formControlName="auteur">
+                            </div>
+                            <div class="mb-3">
+                                <label for="debut" class="form-label">Date de cloture</label>
+                                <input type="date" class="form-control" id="debut" name="debut" formControlName="date_limite">
+                            </div>
+                        </div>
                     </div>
+
                     <div class="mb-3">
-                        <label for="debut" class="form-label">Début</label>
-                        <input type="date" class="form-control" id="debut" name="debut">
-                    </div>
-                    <div class="mb-3">
-                        <label for="fin" class="form-label">Fin</label>
-                        <input type="date" class="form-control" id="fin" name="fin">
+                        <label for="contenu" class="form-label">Contenu</label>
+                        <textarea class="form-control" name="contenu" id="contenu" cols="30" rows="8" formControlName="contenu"></textarea>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-primary">Ajouter</button>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="!annonceFormAdd.valid">Ajouter</button>
                     </div>
                 </form>
             </div>
@@ -119,7 +152,7 @@
 </div>
 
 <!-- Modal détail annonce -->
-<div class="modal fade" id="detailsAnnonce" tabindex="-1" aria-labelledby="detailsAnnonceLabel" aria-hidden="true">
+<div class="modal fade" id="detailsAnnonce" tabindex="-1" aria-labelledby="detailsAnnonceLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -127,28 +160,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Titre</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.title" disabled>
+                <div class="">
+                    <h3 class="text-center">{{selectedAnnonce?.titre}}</h3>
+                    <p class="my-2">{{selectedAnnonce?.description}}</p>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" [value]="selectedAnnonce?.description" disabled></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">État</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.etat" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Date de création</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.dateCreation | date: 'dd/MM/yyyy'" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Date d'expiration</label>
-                    <input type="text" class="form-control" [value]="selectedAnnonce?.dateExpiration | date: 'dd/MM/yyyy'" disabled>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-8">
+                        <h4 class="mb-5">Contenu de l'annonce</h4>
+                        <p class="text-justify mb-3">
+                            {{selectedAnnonce?.contenu}}
+                        </p>
+                    </div>
+                    <div class="col-4">
+                        <img [src]="selectedAnnonce?.image_annonce" alt="Image de l'annonce" class="img-fluid mb-3">
+
+                        <div class="">
+                            <p class="">Auteur: {{selectedAnnonce?.auteur}}</p>
+                            <p>Année de l'annonce : {{ selectedAnnonce.anneeAcademique?.annee }}</p>
+                            <p class="">Crée le: {{selectedAnnonce?.created_at | date: 'dd/MM/yyyy'}}</p>
+                            <p class="">Date cloture: {{selectedAnnonce?.dateLimite | date: 'dd/MM/yyyy'}}</p>
+                            <p class="">État: {{selectedAnnonce?.etat}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -165,53 +201,43 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="">
+                <form [formGroup]="annonceFormUpdate" (ngSubmit)="updateAnnonce(selectedAnnonce?.id_annonce)">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Titre</label>
-                                <input type="text" class="form-control" [value]="selectedAnnonce?.title" >
+                                <label for="titre" class="form-label">Titre</label>
+                                <input type="text" class="form-control" id="titre" name="titre" [value]="selectedAnnonce?.titre">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">description</label>
-                                <input type="text" class="form-control" [value]="selectedAnnonce?.description" >
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description" [value]="selectedAnnonce?.description">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Année academique</label>
-                                <select name="" id="" class="form-control">
-                                    <option default>Sélectionner l'année académique</option>
-                                    <option value="2024-2025">2025-2026</option>
-                                    <option value="2023-2024">2023-2024</option>
-                                    <option value="2022-2023">2022-2023</option>
-                                    <option value="2021-2022">2021-2022</option>
-                                    <option value="2020-2021">2020-2021</option>
-                                    <option value="2019-2020">2019-2020</option>
-                                    <option value="2018-2019">2018-2019</option>
+                                <label for="id_annee" class="form-label">Année académique</label>
+                                <select class="form-select" formControlName="id_annee" id="id_annee" aria-label="Default select example">
+                                    <option *ngFor="let annee of tabAnneeAcademiques" [value]="annee.id" [selected]="annee.annee === selectedAnnonce.anneeAcademique?.annee">{{ annee.annee }}</option>
                                 </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">date de cloture</label>
-                                <input type="date" class="form-control" [value]="selectedAnnonce?.dateExpiration">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Contenu</label>
-                                <input type="text" class="form-control" [value]="selectedAnnonce?.contenu">
+                                <label for="imageAnnonce" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="imageAnnonce" name="imageAnnonce">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Image</label> <span>{{selectedAnnonce?.image}}</span>
-                                <input type="file" class="form-control">
+                                <label for="auteur" class="form-label">Auteur</label>
+                                <input type="text" class="form-control" id="auteur" name="auteur" [value]="selectedAnnonce?.auteur" >
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Auteur</label>
-                                <input type="text" class="form-control" [value]="selectedAnnonce?.auteur">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Etat</label>
-                                <input type="text" class="form-control" [value]="selectedAnnonce?.etat">
+                                <label for="debut" class="form-label">Date de cloture</label>
+                                <input type="date" class="form-control" id="debut" name="debut" [value]="selectedAnnonce?.dateLimite" >
                             </div>
                         </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contenu" class="form-label">Contenu</label>
+                        <textarea class="form-control" name="contenu" id="contenu" cols="30" rows="8" [value]="selectedAnnonce?.contenu"></textarea>
                     </div>
 
                     <div class="modal-footer">

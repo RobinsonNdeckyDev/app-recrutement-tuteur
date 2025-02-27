@@ -4,11 +4,13 @@ import { ClientLayoutComponent } from './layouts/client-layout/client-layout.com
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { authGuardGuard } from './core/guards/auth-guard.guard';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   // route l'authentification
   { path: 'login', component:  LoginComponent},
   { path: 'register', component:  RegisterComponent},
+  { path: 'forgot-password', component: ForgotPasswordComponent},
   // route pour la page de déconnexion
   // { path: 'logout', component: LogoutComponent },
   // route pour les pages d'erreurs

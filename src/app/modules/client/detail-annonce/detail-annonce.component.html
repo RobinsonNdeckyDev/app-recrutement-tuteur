@@ -1,3 +1,8 @@
+<header>
+    <div>
+        <h2 class="fw-bold">Détails des annonces</h2>
+    </div>
+</header>
 <div class="container my-5">
     <div class="row g-4">
         <!-- Carte principale -->
@@ -10,10 +15,10 @@
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                     ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 </p>
-                <!-- <button class="btn btn-outline-dark mb-2">Détails</button> -->
-                <a routerLink="/annonces" class="btn btn-outline-dark"
-                    >Retour à la liste</a
-                >
+                <p class="fw-bold">
+                    Publié le: <span class="text-primary">20/01/2025</span>
+                </p>
+                <button class="btn btn-outline-dark">Détails</button>
             </div>
         </div>
 
@@ -27,16 +32,16 @@
                     </p>
                     <p>
                         <strong>Publié le:</strong>
-                        <span class="fw-bold">{{ annonce.date }}</span>
+                        <span class="fw-bold">20/01/2025</span>
                     </p>
                     <!-- <p>
                         <strong>Année:</strong>
                         <span class="fw-bold">204-2025</span>
-                    </p> -->
-                    <!-- <p>
+                    </p>
+                    <p>
                         <strong>Date limite:</strong>
                         <span class="fw-bold">204-2025</span>
-                    </p> -->
+                    </p>
                     <!-- Bouton qui ouvre le modal -->
                     <button
                         class="btn btn-primary w-100"

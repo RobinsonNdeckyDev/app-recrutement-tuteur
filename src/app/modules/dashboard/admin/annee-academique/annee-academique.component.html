@@ -5,34 +5,47 @@
         <button class="btn colorprimary" data-bs-toggle="modal" data-bs-target="#ajoutAnneeAcademique">
             Ajouter une année académique
         </button>
-        
+
         <input type="text" class="form-control w-50" placeholder="Rechercher une année académique" (input)="searchAnneeAcademique($event)">
     </div>
-    
+
     <table class="table table-striped mt-4">
         <thead class="">
             <tr>
                 <th>#</th>
                 <th>Année</th>
+                <th>Description</th>
                 <th>Début</th>
                 <th>Fin</th>
+                <th>Etat</th>
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let annee of paginatedAnnees">
-                <td>{{ annee.id_annee }}</td>
-                <td>{{ annee.annee }}</td>
-                <td>{{ annee.dateDebut | date: 'dd/MM/yyyy' }}</td>
-                <td>{{ annee.dateFin | date: 'dd/MM/yyyy' }}</td>
-                <td class="text-center d-flex justify-content-center align-items-center">
-                    <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                    <span><i class="pi pi-trash" (click)="deleteAnneeAcademique(annee.id_annee)"></i></span>
-                </td>
-            </tr>
+            @if (getPaginatedAnnees()) {
+                <tr *ngFor="let annee of getPaginatedAnnees()">
+                    <td>{{ annee.id_annee }}</td>
+                    <td>{{ annee.annee }}</td>
+                    <td>{{ annee.description }}</td>
+                    <td>{{ annee.dateDebut | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ annee.dateFin | date: 'dd/MM/yyyy' }}</td>
+                    <td [ngClass]="annee.etat ? 'active-class' : 'inactive-class'">
+                        {{ annee.etat ? 'Active' : 'Désactivée' }}
+                    </td>
+                    <td class="text-center d-flex justify-content-center align-items-center">
+                        <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique" (click)="preRemplirFormulaire(annee.id_annee)"></i></span>
+                        <span><i class="pi pi-trash" (click)="deleteAnneeAcademique(annee.id_annee)"></i></span>
+                    </td>
+                </tr>
+            }
+            @else {
+                <p class="text-center text-primary my-4">
+                    Aucune année académique disponible
+                </p>
+            }
         </tbody>
     </table>
-    
+
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4 mb-3">
         <nav>
@@ -49,7 +62,7 @@
             </ul>
         </nav>
     </div>
-    
+
 </div>
 
 <!-- Modal d'ajout -->
@@ -65,6 +78,10 @@
                     <div class="mb-3">
                         <label for="annee" class="form-label">Année</label>
                         <input type="text" class="form-control" id="annee" name="annee" formControlName="annee">
+                 </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" placeholder="Décrivez votre année académique" formControlName="description">
                     </div>
                     <div class="mb-3">
                         <label for="debut" class="form-label">Début</label>
@@ -77,7 +94,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-outline-primary" [disabled]="anneeAcademiqueForm.invalid">Ajouter</button>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="!anneeAcademiqueForm.valid">Ajouter</button>
                     </div>
                 </form>
             </div>
@@ -94,23 +111,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="">
+                <form [formGroup]="anneeAcademiqueFormUpdate" (ngSubmit)="updateAnneeAcademique(selectedAnnee?.id_annee)">
                     <div class="mb-3">
                         <label for="annee" class="form-label">Année</label>
-                        <input type="text" class="form-control" id="annee" name="annee">
+                        <input type="text" class="form-control" id="annee" formControlName="annee">
                     </div>
                     <div class="mb-3">
-                        <label for="debut" class="form-label">Début</label>
-                        <input type="date" class="form-control" id="debut" name="debut">
+                        <label for="dateDebut" class="form-label">Début</label>
+                        <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut">
                     </div>
                     <div class="mb-3">
-                        <label for="fin" class="form-label">Fin</label>
-                        <input type="date" class="form-control" id="fin" name="fin">
+                        <label for="dateFin" class="form-label">Fin</label>
+                        <input type="date" class="form-control" id="dateFin" formControlName="dateFin">
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-outline-primary">Modifier</button>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="anneeAcademiqueFormUpdate.invalid">Modifier</button>
                     </div>
                 </form>
             </div>

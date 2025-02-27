@@ -23,3 +23,19 @@ li:hover{
 hr{
     height: 4px;
 }
+
+
+.dropdown-toggle::after {
+    float: right;
+    margin-top: 10px;
+}
+
+.collapse {
+    list-style: none;
+    padding-left: 0;
+}
+
+.collapse .nav-link {
+    padding-left: 1rem;
+    font-size: 0.9em;
+}

@@ -6,6 +6,7 @@ import { LoginResponse } from '../../models/login-response';
 import { User } from '../../models/user';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { RegisterRequest } from '../../models/registerRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,16 @@ export class AuthService {
         }
     }
 
+    // Connexion d'un utilisateur
     login(loginRequest: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, loginRequest);
     }
+
+    // Inscription d'un candidat
+    inscription(RegisterRequest: RegisterRequest): Observable<RegisterRequest> {
+        return this.http.post<RegisterRequest>(`${this.apiUrl}/auth/register`, RegisterRequest);
+    }
+
 
     setUserData(response: LoginResponse): void {
         console.log("response login", response);
