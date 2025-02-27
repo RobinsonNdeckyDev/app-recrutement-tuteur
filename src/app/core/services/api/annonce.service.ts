@@ -20,26 +20,12 @@ export class AnnonceService {
 
     // service pour récupérer toutes les annonces
     getAnnonces() {
-        const token = localStorage.getItem('token');
-
-        const headers = new HttpHeaders().set(
-            'Authorization',
-            `Bearer ${token}`
-        );
-
-        return this.http.get(`${this.apiUrl}/annonces`, {headers});
+        return this.http.get(`${this.apiUrl}/annonces`);
     }
 
     // service pour récupérer une annonce par son ID
     getAnnonce(id: number) {
-        const token = localStorage.getItem('token');
-
-        const headers = new HttpHeaders().set(
-            'Authorization',
-            `Bearer ${token}`
-        );
-
-        return this.http.get(`${this.apiUrl}/annonces/${id}`, {headers});
+        return this.http.get(`${this.apiUrl}/annonces/${id}`);
     }
 
     // service pour ajouter une annonce
