@@ -55,7 +55,7 @@
             <div class="col-md-9">
                 <div class="row d-flex flex-column">
                     <!-- Carte d'annonce 1 -->
-                    <div
+                    <!-- <div
                         class="col-md-12 mb-4"
                         *NgIf="annonces.length > 0; else noData"
                     >
@@ -76,7 +76,7 @@
                                 </div>
                                 <span
                                     class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                                    >{{ annonce.status }}</span
+                                    >{{ annonce.etat }}</span
                                 >
                                 <p class="text-muted mb-2">Description</p>
                                 <p
@@ -93,7 +93,7 @@
                                             class="bi bi-calendar text-muted me-2"
                                         ></i>
                                         <small class="text-muted">{{
-                                            annonce.date
+                                            annonce.dateLimite
                                         }}</small>
                                     </div>
                                     <button class="btn btn-primary px-4">
@@ -108,7 +108,7 @@
                         <ng-template #noData>
                             <p>Aucune annonce disponible pour le moment.</p>
                         </ng-template>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- Fin des annonces -->
             </div>

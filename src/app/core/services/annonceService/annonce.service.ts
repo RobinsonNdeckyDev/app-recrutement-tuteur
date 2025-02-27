@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class AnnonceService {
-  private apiUrl = environment.apiEndpoint; // Remplace avec ton URL API
+  private apiUrl = environment.apiEndpoint;
 
   constructor(private http: HttpClient) {}
 
