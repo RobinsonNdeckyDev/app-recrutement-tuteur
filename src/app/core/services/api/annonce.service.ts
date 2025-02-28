@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../authService/auth.service';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Annonce } from '../../models/annonce';
 
 
@@ -12,56 +12,47 @@ import { Annonce } from '../../models/annonce';
   providedIn: 'root'
 })
 export class AnnonceService {
+
     private apiUrl = environment.apiEndpoint;
 
     constructor(
-        private http: HttpClient,
-        private authService: AuthService
-    ) { }
+        private http: HttpClient
+    ) {}
+    
 
-    // service pour récupérer toutes les annonces
-    getAnnonces() {
+    // Récupérer toutes les annonces (avec typage)
+    getAnnonces(): Observable<Annonce[]> {
         return this.http.get<Annonce[]>(`${this.apiUrl}/annonces`);
     }
 
-    // service pour récupérer une annonce par son ID
-    getAnnonce(id: number) {
-        return this.http.get<Annonce[]>(`${this.apiUrl}/annonces/${id}`);
+    // Récupérer une annonce par son ID (avec typage)
+    getAnnonce(id: number): Observable<Annonce> {
+        return this.http.get<Annonce>(`${this.apiUrl}/annonces/${id}`);
     }
 
-    // service pour ajouter une annonce
-    addAnnonce(annonce: any) {
+    
+    // Ajouter une annonce
+    addAnnonce(annonce: Annonce) {
         const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-        const headers = new HttpHeaders().set(
-            'Authorization',
-            `Bearer ${token}`
-        );
-
-        return this.http.post(`${this.apiUrl}/annonces`, annonce, {headers});
+        return this.http.post(`${this.apiUrl}/annonces`, annonce, { headers });
     }
 
-    // service pour mettre à jour une annonce
-    updateAnnonce(id: number, annonce: any) {
+    // Mettre à jour une annonce
+    updateAnnonce(id: number, annonce: Annonce) {
         const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-        const headers = new HttpHeaders().set(
-            'Authorization',
-            `Bearer ${token}`
-        );
-
-        return this.http.put(`${this.apiUrl}/annonces/${id}`, annonce, {headers});
+        return this.http.put(`${this.apiUrl}/annonces/${id}`, annonce, { headers });
     }
 
-    // service pour supprimer une annonce
+    // Supprimer une annonce
     deleteAnnonce(id: number) {
         const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-        const headers = new HttpHeaders().set(
-            'Authorization',
-            `Bearer ${token}`
-        );
-
-        return this.http.delete(`${this.apiUrl}/annonces/${id}`, {headers});
+        return this.http.delete(`${this.apiUrl}/annonces/${id}`, { headers });
     }
+
 }

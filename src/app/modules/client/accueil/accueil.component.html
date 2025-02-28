@@ -37,11 +37,11 @@
     </h3>
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h3 class="text-primary py-3"></h3>
-        <a href="#" class="btn btn-primary">Voir plus</a>
+        <a href="/annonces" class="btn btn-primary">Voir toutes les annonces</a>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="annonces.length > 0">
         <!-- Carte d'annonce (répéter pour plusieurs annonces) -->
-        <div class="col-md-4 mb-4">
+        <div class="col-md-6 mb-4" *ngFor="let annonce of annonces">
             <div class="card shadow-sm mb-3">
                 <div
                     class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4 p-3"
@@ -51,25 +51,24 @@
                     >
                         <div>
                             <h5 class="card-title text-primary mb-2">
-                                Titre Annonce 1
+                                {{ annonce.titre }}
                             </h5>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <i class="bi bi-eye text-muted"></i>
+                            <a [routerLink]="['/detailAnnonce', annonce.id]"
+                                ><i class="bi bi-eye text-muted"></i
+                            ></a>
                         </div>
                     </div>
                     <!-- Badge Epingle en haut à droite -->
                     <span
                         class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                        >En cours</span
+                        >{{ annonce.etat }}</span
                     >
-                    <p class="text-muted mb-2">Description 1</p>
+                    <!-- <p class="text-muted mb-2">Description</p> -->
                     <div class="flex-grow-1">
                         <p class="card-text" style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Vitae venentis et dis in fermentum. Tristique
-                            hendrerit nitus et ultrices nulla aliquet. Sit vel
-                            integer ut mattis bicilisi.
+                            {{ annonce.description }}
                         </p>
                     </div>
                     <div
@@ -77,227 +76,16 @@
                     >
                         <div class="d-flex align-items-center">
                             <i class="bi bi-calendar text-muted me-2"></i>
-                            <small class="text-muted">24 Janv. 2025</small>
+                            <small class="text-muted">{{
+                                annonce.dateLimite
+                            }}</small>
                         </div>
-                        <button class="btn btn-primary px-4">Postuler</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm mb-3">
-                <div
-                    class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4 p-3"
-                >
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                        <div>
-                            <h5 class="card-title text-primary mb-2">
-                                Titre Annonce 2
-                            </h5>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <i class="bi bi-eye text-muted"></i>
-                        </div>
-                    </div>
-                    <!-- Badge Epingle en haut à droite -->
-                    <span
-                        class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                        >En cours</span
-                    >
-                    <p class="text-muted mb-2">Description 2</p>
-                    <div class="flex-grow-1">
-                        <p class="card-text" style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Vitae venentis et dis in fermentum. Tristique
-                            hendrerit nitus et ultrices nulla aliquet. Sit vel
-                            integer ut mattis bicilisi.
-                        </p>
-                    </div>
-                    <div
-                        class="d-flex justify-content-between align-items-center mt-3"
-                    >
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-calendar text-muted me-2"></i>
-                            <small class="text-muted">25 Janv. 2025</small>
-                        </div>
-                        <button class="btn btn-primary px-4">Postuler</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm mb-3">
-                <div
-                    class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4 p-3"
-                >
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                        <div>
-                            <h5 class="card-title text-primary mb-2">
-                                Titre Annonce 3
-                            </h5>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <i class="bi bi-eye text-muted"></i>
-                        </div>
-                    </div>
-                    <!-- Badge Epingle en haut à droite -->
-                    <span
-                        class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                        >En cours</span
-                    >
-                    <p class="text-muted mb-2">Description 3</p>
-                    <div class="flex-grow-1">
-                        <p class="card-text" style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Vitae venentis et dis in fermentum. Tristique
-                            hendrerit nitus et ultrices nulla aliquet. Sit vel
-                            integer ut mattis bicilisi.
-                        </p>
-                    </div>
-                    <div
-                        class="d-flex justify-content-between align-items-center mt-3"
-                    >
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-calendar text-muted me-2"></i>
-                            <small class="text-muted">26 Janv. 2025</small>
-                        </div>
-                        <button class="btn btn-primary px-4">Postuler</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <!-- Carte d'annonce (répéter pour plusieurs annonces) -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm mb-3">
-                <div
-                    class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4 p-3"
-                >
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                        <div>
-                            <h5 class="card-title text-primary mb-2">
-                                Titre Annonce 1
-                            </h5>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <i class="bi bi-eye text-muted"></i>
-                        </div>
-                    </div>
-                    <!-- Badge Epingle en haut à droite -->
-                    <span
-                        class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                        >En cours</span
-                    >
-                    <p class="text-muted mb-2">Description 1</p>
-                    <div class="flex-grow-1">
-                        <p class="card-text" style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Vitae venentis et dis in fermentum. Tristique
-                            hendrerit nitus et ultrices nulla aliquet. Sit vel
-                            integer ut mattis bicilisi.
-                        </p>
-                    </div>
-                    <div
-                        class="d-flex justify-content-between align-items-center mt-3"
-                    >
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-calendar text-muted me-2"></i>
-                            <small class="text-muted">24 Janv. 2025</small>
-                        </div>
-                        <button class="btn btn-primary px-4">Postuler</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm mb-3">
-                <div
-                    class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4 p-3"
-                >
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                        <div>
-                            <h5 class="card-title text-primary mb-2">
-                                Titre Annonce 2
-                            </h5>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <i class="bi bi-eye text-muted"></i>
-                        </div>
-                    </div>
-                    <!-- Badge Epingle en haut à droite -->
-                    <span
-                        class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                        >En cours</span
-                    >
-                    <p class="text-muted mb-2">Description 2</p>
-                    <div class="flex-grow-1">
-                        <p class="card-text" style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Vitae venentis et dis in fermentum. Tristique
-                            hendrerit nitus et ultrices nulla aliquet. Sit vel
-                            integer ut mattis bicilisi.
-                        </p>
-                    </div>
-                    <div
-                        class="d-flex justify-content-between align-items-center mt-3"
-                    >
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-calendar text-muted me-2"></i>
-                            <small class="text-muted">25 Janv. 2025</small>
-                        </div>
-                        <button class="btn btn-primary px-4">Postuler</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm mb-3">
-                <div
-                    class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4 p-3"
-                >
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                        <div>
-                            <h5 class="card-title text-primary mb-2">
-                                Titre Annonce 3
-                            </h5>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <i class="bi bi-eye text-muted"></i>
-                        </div>
-                    </div>
-                    <!-- Badge Epingle en haut à droite -->
-                    <span
-                        class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
-                        >En cours</span
-                    >
-                    <p class="text-muted mb-2">Description 3</p>
-                    <div class="flex-grow-1">
-                        <p class="card-text" style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Vitae venentis et dis in fermentum. Tristique
-                            hendrerit nitus et ultrices nulla aliquet. Sit vel
-                            integer ut mattis bicilisi.
-                        </p>
-                    </div>
-                    <div
-                        class="d-flex justify-content-between align-items-center mt-3"
-                    >
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-calendar text-muted me-2"></i>
-                            <small class="text-muted">26 Janv. 2025</small>
-                        </div>
-                        <button class="btn btn-primary px-4">Postuler</button>
+                        <!-- <a href="" class="btn btn-primary px-4">Voir plus</a> -->
+                        <a
+                            [routerLink]="['/detailAnnonce', annonce.id]"
+                            class="btn btn-primary px-4"
+                            >Voir plus</a
+                        >
                     </div>
                 </div>
             </div>
