@@ -1,0 +1,16 @@
+input:focus{
+    border: 1px solid black;
+    outline: none;
+}
+
+.banniere {
+    background: url("/assets/banners/img4-login.jpg") no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.banniere div{
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5rem;
+    text-align: center;
+    color: white;
+}
