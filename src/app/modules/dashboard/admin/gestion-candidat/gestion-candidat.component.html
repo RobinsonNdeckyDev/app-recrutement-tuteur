@@ -90,7 +90,7 @@
                     {{ candidat.etat ? 'Active' : 'Désactivée' }}
                 </td> -->
                 <td class="text-center d-flex justify-content-center align-items-center">
-                    <span><i class="pi pi-eye"></i></span>
+                    <span><i class="pi pi-eye" data-bs-toggle="modal" data-bs-target="#detailsCandidat" (click)="showdetailsCandidat(candidat.id)"></i></span>
                     <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierCandidat" (click)="preRemplirFormulaire(candidat.id)"></i></span>
                     <span><i class="pi pi-trash" (click)="deleteCandidat(candidat.id)"></i></span>
                 </td>
@@ -128,7 +128,7 @@
 
 
 <!-- Modal d'ajout -->
-<div class="modal fade" id="ajoutCandidat" tabindex="-1" aria-labelledby="ajoutCandidat" aria-hidden="true">
+<div class="modal fade" id="ajoutCandidat" tabindex="-1" aria-labelledby="ajoutCandidat">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -196,8 +196,45 @@
     </div>
 </div>
 
+<!-- Modal détails Candidat -->
+<div class="modal fade" id="detailsCandidat" tabindex="-1" aria-labelledby="detailsCandidat">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-primary" id="detailsCandidat">Détails du candidat</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <img [src]="getImageUrl(selectedCandidat)" 
+                         [alt]="selectedCandidat?.nom + ' ' + selectedCandidat?.prenom"
+                         class="img-fluid rounded-circle shadow"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4 class="mt-4">{{selectedCandidat?.prenom}} {{selectedCandidat?.nom}}</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong class="text-primary fw-medium">Email:</strong> {{selectedCandidat?.email}}</p>
+                        <p><strong class="text-primary fw-medium">Téléphone:</strong> {{selectedCandidat?.telephone}}</p>
+                        <p><strong class="text-primary fw-medium">Adresse:</strong> {{selectedCandidat?.adresse}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong class="text-primary fw-medium">Description:</strong></p>
+                        <p class="text-muted">{{selectedCandidat?.description}}</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Modifier -->
-<div class="modal fade" id="modifierCandidat" tabindex="-1" aria-labelledby="modifierCandidat" aria-hidden="true">
+<div class="modal fade" id="modifierCandidat" tabindex="-1" aria-labelledby="modifierCandidat">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -233,12 +270,12 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-group">
-                                    <label for="photoProfilUpdate">Photo de profil</label>
+                                    <label for="photoProfilUpdate">Photo de profil </label>
                                     <!-- Afficher l'image actuelle si elle existe -->
                                     <img *ngIf="selectedCandidat"
                                          [src]="getImageUrl(selectedCandidat)"
                                          alt="Photo de profil actuelle"
-                                         class="img-thumbnail mb-2"
+                                         class="img-thumbnail mb-2 mx-3"
                                          style="max-width: 150px">
                                     <input
                                         type="file"

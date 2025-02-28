@@ -72,10 +72,36 @@ export class MenuService {
                 }
             ]
         },
+
+        // Menu candidats
+        {
+            title: 'Dashboard',
+            route: './candidat/dashboard',
+            icon: 'bi bi-speedometer',
+            access: ['candidat'],
+        },
+        {
+            title: 'Annonces',
+            route: './candidat/annonces',
+            icon: 'bi bi-megaphone',
+            access: ['candidat'],
+        },
+        {
+            title: 'Mes Candidatures',
+            route: './candidat/candidatures',
+            icon: 'bi bi-folder',
+            access: ['candidat'],
+        },
         {
             title: 'Mes Documents',
             route: './candidat/Documents',
-            icon: 'pi pi-question',
+            icon: 'bi bi-files',
+            access: ['candidat'],
+        },
+        {
+            title: 'Mon compte',
+            route: './candidat/compte',
+            icon: 'bi bi-person-circle',
             access: ['candidat'],
         },
 

@@ -39,3 +39,7 @@ tbody td span i{
 .pagination a{
     cursor: pointer;
 }
+
+.iconsAnnonce{
+    cursor: pointer;
+}

@@ -8,6 +8,6 @@ export interface Annonce {
     auteur: string;
     contenu: string;
     imageAnnonce: string;
-    AnneeAcademiqueId: Number;
+    // AnneeAcademiqueId: number;
 }
 

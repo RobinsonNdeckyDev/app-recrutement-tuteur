@@ -24,7 +24,66 @@
 
 
 <div class="mt-5">
-    <div class="row">
+    <div class="row d-flex flex-column">
+        <!-- Carte d'annonce 1 -->
+        <div
+            class="col-md-12 mb-4"
+            *ngIf="annonces.length > 0; "
+        >
+            <div
+                class="card shadow-sm mb-3"
+                *ngFor="let annonce of annonces"
+            >
+                <div
+                    class="card-body bg-light border-4 border-bottom border-success rounded d-flex flex-column p-4"
+                >
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                        <h5 class="card-title text-primary mb-2">
+                            {{ annonce.titre }}
+                        </h5>
+                        <i class="bi bi-eye text-muted"></i>
+                    </div>
+                    <span
+                        class="badge bg-card text-light position-absolute top-0 end-0 mt-2 me-2"
+                        >{{ annonce.etat }}</span
+                    >
+                    <p class="text-muted mb-2">Description</p>
+                    <p
+                        class="card-text"
+                        style="text-align: justify"
+                    >
+                        {{ annonce.description }}
+                    </p>
+                    <div
+                        class="d-flex justify-content-between align-items-center mt-3"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i
+                                class="bi bi-calendar text-muted me-2"
+                            ></i>
+                            <small class="text-muted">{{
+                                annonce.dateLimite
+                            }}</small>
+                        </div>
+                        <!-- <a
+                            [routerLink]="[
+                                '/detailAnnonce',
+                                annonce.id
+                            ]"
+                            >Voir plus</a
+                        > -->
+                    </div>
+                </div>
+            </div>
+            <ng-template #noData>
+                <p>Aucune annonce disponible pour le moment.</p>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- <div class="row">
         <div class="col-md-3">
             <div class="card shadow">
 
@@ -47,5 +106,5 @@
                 </p>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>

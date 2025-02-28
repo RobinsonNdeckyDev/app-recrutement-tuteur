@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AnnonceService } from '../../../core/services/api/annonce.service';
 import { CommonModule } from '@angular/common';
+import { Annonce } from '../../../core/models/annonce';
 
 @Component({
   selector: 'app-annonces-client',
@@ -9,25 +10,26 @@ import { CommonModule } from '@angular/common';
   templateUrl: './annonces-client.component.html',
   styleUrl: './annonces-client.component.css'
 })
-export class AnnoncesClientComponent {
-    tabAnnonces: any = [];
+export class AnnoncesClientComponent implements OnInit {
 
-    constructor(
-        private annonceService: AnnonceService
-    ){}
+    annonces: Annonce[] = [];
 
-    ngOnInit(){ 
-        this.getAllAnnonces();       
+    constructor(private annonceService: AnnonceService) {}
+
+    ngOnInit(): void {
+        this.getAllAnnonces();
     }
 
-    getAllAnnonces(){
-        this.annonceService.getAnnonces().subscribe(
-            (annonces) => {
-                console.log("Liste des annonces: ", annonces);
-            },
-            (error) => {
-                console.log("erreur: ", error);
+    getAllAnnonces(): void {
+        this.annonceService.getAnnonces().subscribe({
+            next: (data: Annonce[]) => {
+            this.annonces = data;
+            console.log("Annonces reçues :", this.annonces);
+        },
+            error: (err) => {
+                console.error("Erreur lors de la récupération des annonces :", err);
             }
-        )
+        });
+
     }
 }

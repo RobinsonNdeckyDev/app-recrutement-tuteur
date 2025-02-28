@@ -5,6 +5,7 @@ import { AuthService } from '../authService/auth.service';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Annonce } from '../../models/annonce';
 
 
 @Injectable({
@@ -20,12 +21,12 @@ export class AnnonceService {
 
     // service pour récupérer toutes les annonces
     getAnnonces() {
-        return this.http.get(`${this.apiUrl}/annonces`);
+        return this.http.get<Annonce[]>(`${this.apiUrl}/annonces`);
     }
 
     // service pour récupérer une annonce par son ID
     getAnnonce(id: number) {
-        return this.http.get(`${this.apiUrl}/annonces/${id}`);
+        return this.http.get<Annonce[]>(`${this.apiUrl}/annonces/${id}`);
     }
 
     // service pour ajouter une annonce

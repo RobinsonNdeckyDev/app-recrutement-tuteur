@@ -137,7 +137,7 @@
 </div>
 
 <!-- Modal détails document -->
-<div class="modal fade" id="detailsDoc" tabindex="-1" aria-labelledby="detailsDocLabel">
+<div class="modal fade" id="detailsDoc" tabindex="-1" aria-labelledby="detailsDocLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -226,7 +226,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="documentForm" (ngSubmit)="uploadDocument()">
+                <form [formGroup]="documentFormUpdate" (ngSubmit)="updateDocument()">
                     <div class="mb-3">
                         <label for="titre" class="form-label">Titre</label>
                         <input type="text" class="form-control" id="titre" name="titre" formControlName="titre" [value]="selectedDocument?.titre">
@@ -245,7 +245,7 @@
                         <label for="typeDocumentId" class="form-label">Type de document</label>
                         <select class="form-select" formControlName="typeDocumentId" id="typeDocumentId">
                             <option value="" disabled>Sélectionner un type de document</option>
-                            <option *ngFor="let typeDoc of typeDocuments" [ngValue]="typeDoc.id">
+                            <option *ngFor="let typeDoc of typeDocuments" [value]="typeDoc.id" [selected]="typeDoc.id === selectedDocument?.typeDocument?.id">
                                 {{ typeDoc.nomType }}
                             </option>
                         </select>
@@ -254,20 +254,17 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="file" class="form-label">Fichier</label>
+                        <label for="file" class="form-label">Fichier (optionnel)</label>
                         <input type="file" class="form-control" name="file" (change)="onFileSelected($event)" />
                         <small class="text-muted">Taille maximale: 15MB</small>
-                        <div *ngIf="!selectedFile && documentForm.get('file')?.touched" class="text-danger">
-                            Le fichier est requis
-                        </div>
                     </div>
 
-                    <input type="hidden" id="userId" name="userId" formControlName="userId">
+                    <input type="hidden" id="userId" formControlName="userId">
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-outline-primary" [disabled]="!documentForm.valid || !selectedFile">
-                            Ajouter
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="documentFormUpdate.invalid">
+                            Modifier
                         </button>
                     </div>
                 </form>

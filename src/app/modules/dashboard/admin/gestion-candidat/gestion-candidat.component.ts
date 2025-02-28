@@ -107,6 +107,8 @@ export class GestionCandidatComponent {
                     const candidatData = this.candidatFormAdd.value;
                     candidatData.photoProfil = response.url;
 
+                    console.log("candidatData avant ajout: ", candidatData);
+
                     // Puis on crée le candidat avec l'URL de l'image
                     this.authService.inscription(candidatData).subscribe(
                         (candidat) => {
@@ -158,8 +160,17 @@ export class GestionCandidatComponent {
     }
 
     // Afficher les détails d'un candidat
-    showdetailsCandidat(candidat:any){
-        this.selectedCandidat = {...candidat};
+    showdetailsCandidat(id:number){
+        this.selectedCandidat = this.tabsCandidats.find(
+            (candidat: any) => candidat.id === id
+        );
+
+        if (this.selectedCandidat) {
+            console.log("details candidat: ", this.selectedCandidat);
+        } else {
+            console.error("candidat non trouvé");
+            this.toastr.error("candidat non trouvé");
+        }
     }
 
     preRemplirFormulaire(id: number) {

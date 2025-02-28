@@ -18,62 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        <!-- <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr> -->
+
         @if (getPaginatedAdmin()) {
             <tr *ngFor="let admin of getPaginatedAdmin()">
                 <td>
@@ -90,7 +35,7 @@
                     {{ admin.etat ? 'Active' : 'Désactivée' }}
                 </td> -->
                 <td class="text-center d-flex justify-content-center align-items-center">
-                    <span><i class="pi pi-eye"></i></span>
+                    <span><i class="pi pi-eye" data-bs-toggle="modal" data-bs-target="#detailsAdmin" (click)="showdetailsAdmin(admin.id)"></i></span>
                     <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAdmin" (click)="preRemplirFormulaire(admin.id)"></i></span>
                     <span><i class="pi pi-trash" (click)="deleteAdmin(admin.id)"></i></span>
                 </td>
@@ -192,12 +137,49 @@
     </div>
 </div>
 
+<!-- Modal détails Admin -->
+<div class="modal fade" id="detailsAdmin" tabindex="-1" aria-labelledby="detailsAdmin" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-primary" id="detailsAdmin">Détails de l'administrateur</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <img [src]="getImageUrl(selectedAdmin)" 
+                         [alt]="selectedAdmin?.nom + ' ' + selectedAdmin?.prenom"
+                         class="img-fluid rounded-circle shadow"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4 class="mt-4">{{selectedAdmin?.prenom}} {{selectedAdmin?.nom}}</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong class="text-primary fw-medium">Email:</strong> {{selectedAdmin?.email}}</p>
+                        <p><strong class="text-primary fw-medium">Téléphone:</strong> {{selectedAdmin?.telephone}}</p>
+                        <p><strong class="text-primary fw-medium">Adresse:</strong> {{selectedAdmin?.adresse}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong class="text-primary fw-medium">Description:</strong></p>
+                        <p class="text-muted">{{selectedAdmin?.description}}</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Modifier -->
 <div class="modal fade" id="modifierAdmin" tabindex="-1" aria-labelledby="modifierAdmin">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modifierAdmin">Modification d'un administrateur</h1>
+                <h1 class="modal-title fs-5 text-primary" id="modifierAdmin">Modification de l'administrateur</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -234,7 +216,7 @@
                                     <img *ngIf="selectedAdmin"
                                          [src]="getImageUrl(selectedAdmin)"
                                          alt="Photo de profil actuelle"
-                                         class="img-thumbnail mb-2"
+                                         class="img-thumbnail mb-2 mx-3"
                                          style="max-width: 150px">
                                     <input
                                         type="file"

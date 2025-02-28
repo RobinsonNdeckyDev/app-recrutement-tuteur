@@ -2,7 +2,7 @@
 
 <div class="card px-3 shadow">
     <div class="d-flex justify-content-between align-items-center my-3">
-        <button class="btn colorprimary" data-bs-toggle="modal" data-bs-target="#ajoutAnnonce">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajoutAnnonce">
             Publlier une annonce
         </button>
 
@@ -14,11 +14,11 @@
             @if (getPaginatedAnnonces()) {
                 <div class="col-md-6" *ngFor="let annonce of getPaginatedAnnonces()">
                     <div class="card px-2">
-                        <div class="etatAnnonce" [ngClass]="annonce.etat === 'En cours' ? 'bg-warning' : 'bg-success'">
+                        <div class="etatAnnonce" [ngClass]="annonce.etat === 'En cours' ? 'bg-warning' : 'bg-primary'">
                             <span >{{annonce.etat}}</span>
                         </div>
                         <div class="mt-3">
-                            <h4 class="fw-bold">
+                            <h4 class="fw-bold text-primary">
                                 {{ annonce.titre }}
                             </h4>
 
@@ -28,13 +28,13 @@
                                 </p>
                                 <div class="d-flex gap-2 align-items-center">
                                     <span class="" data-bs-toggle="modal" data-bs-target="#detailsAnnonce" (click)="showdetailsAnnonce(annonce)">
-                                        <i class="pi pi-eye"></i>
+                                        <i class="pi pi-eye text-primary iconsAnnonce"></i>
                                     </span>
                                     <span class="" data-bs-toggle="modal" data-bs-target="#modifierAnnonce" (click)="preRemplirFormulaire(annonce?.id)">
-                                        <i class="pi pi-pencil"></i>
+                                        <i class="pi pi-pencil text-primary iconsAnnonce"></i>
                                     </span>
                                     <span class="">
-                                        <i class="pi pi-trash"></i>
+                                        <i class="pi pi-trash text-primary iconsAnnonce"></i>
                                     </span>
                                 </div>
                             </div>

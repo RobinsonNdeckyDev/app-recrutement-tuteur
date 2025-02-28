@@ -61,6 +61,18 @@ export class DocumentService {
     });
   }
 
+  updateDocument(id: number, formData: FormData): Observable<any> {
+
+        const token = localStorage.getItem('token');
+
+        const headers = new HttpHeaders().set(
+            'Authorization',
+            `Bearer ${token}`
+        );
+
+        return this.http.put(`${this.apiUrl}/${id}`, formData, {headers});
+  }
+
   deleteDocument(id: number): Observable<void> {
 
     const token = localStorage.getItem('token');

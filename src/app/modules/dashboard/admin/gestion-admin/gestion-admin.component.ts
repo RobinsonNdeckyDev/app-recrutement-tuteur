@@ -209,8 +209,17 @@ export class GestionAdminComponent {
     }
 
     // Afficher les détails d'un admin
-    showdetailsAdmin(admin:any){
-        this.selectedAdmin = {...admin};
+    showdetailsAdmin(id:number){
+        this.selectedAdmin = this.tabsAdmins.find(
+            (admin: any) => admin.id === id
+        );
+
+        if (this.selectedAdmin) {
+            console.log("details admin: ", this.selectedAdmin);
+        } else {
+            console.error("admin non trouvé");
+            this.toastr.error("admin non trouvé");
+        }
     }
 
     // Méthode pour pré-remplir le formulaire avec les valeurs existantes

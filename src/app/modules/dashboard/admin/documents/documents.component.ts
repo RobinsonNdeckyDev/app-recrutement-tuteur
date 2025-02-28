@@ -55,7 +55,7 @@ constructor (
         description: ['', Validators.required],
         typeDocumentId: ['', Validators.required],
         userId: ['', Validators.required],
-        file: [null]
+        file: ['']
     });
 }
 
@@ -102,27 +102,47 @@ constructor (
         }
     }
 
+
     preRemplirFormulaire(id: number) {
-        this.selectedDocument = this.documents.find(
-            (doc: any) => doc.id === id
-        );
-
-        if (!this.selectedDocument) {
-            console.error("doc non trouvée !");
-            this.toastr.error("Impossible de trouver le doc.");
-            return;
+        this.selectedDocument = this.documents.find(doc => doc.id === id);
+        if (this.selectedDocument) {
+            this.documentFormUpdate.patchValue({
+                titre: this.selectedDocument.titre,
+                description: this.selectedDocument.description,
+                typeDocumentId: this.selectedDocument.typeDocument.id,
+                userId: this.selectedDocument.user.id
+            });
         }
+    }
 
-        // Mettre à jour le formulaire avec les valeurs existantes
-        this.documentFormUpdate.setValue({
-            titre: this.selectedDocument.titre || '',
-            description: this.selectedDocument.description || '',
-            typeDocumentId: this.selectedDocument.typeDocument?.Id || '',
-            userId: this.selectedDocument.user?.id || '',
-            file: this.selectedDocument.file || '',
-        });
+    updateDocument(): void {
+        if (this.documentFormUpdate.valid) {
+            const formData = new FormData();
+            formData.append('titre', this.documentFormUpdate.get('titre')?.value);
+            formData.append('description', this.documentFormUpdate.get('description')?.value);
+            formData.append('typeDocumentId', this.documentFormUpdate.get('typeDocumentId')?.value);
+            formData.append('userId', this.documentFormUpdate.get('userId')?.value);
 
-        console.log("Formulaire pré-rempli :", this.documentFormUpdate.value);
+            if (this.selectedFile) {
+                formData.append('file', this.selectedFile);
+            }
+
+            this.documentService.updateDocument(this.selectedDocument.id, formData).subscribe({
+                next: (response) => {
+                    this.toastr.success('Document modifié avec succès');
+                    this.loadUserDocuments();
+                    this.documentFormUpdate.reset();
+                    // Fermer la modal
+                    document.getElementById('modifierDocument')?.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    document.querySelector('.modal-backdrop')?.remove();
+                },
+                error: (error) => {
+                    this.toastr.error('Erreur lors de la modification du document');
+                    console.error('Erreur:', error);
+                }
+            });
+        }
     }
 
     // Récupérer l'userId depuis le localStorage

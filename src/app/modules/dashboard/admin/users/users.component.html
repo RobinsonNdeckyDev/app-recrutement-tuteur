@@ -1,42 +1,33 @@
 <section class="my-3">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card px-3 py-2 shadow">
-                <div class="d-flex justify-content-between align-iems-center">
-                    <h5 class="">Utilisateurs</h5>
-                    <div class="">
-                        <span>
-                            <i class=""></i>
-                        </span>
-                    </div>
-                </div>
-                <p class="">text</p>
-            </div>
-        </div>
-        <div class="col-md-4 cursor-pointer">
-            <div class="card px-3 py-2 shadow"  (click)="afficherCandidats()">
+    <div class="row gx-4">
+        <div class="col-md-6 position-relative carteUser">
+            <div class="card px-3 py-2 shadow border-0"  (click)="afficherCandidats()">
                 <div class="d-flex justify-content-between align-iems-center">
                     <h5 class="">Candidats</h5>
-                    <div class="">
+                    <div class="iconUsers">
                         <span>
-                            <i class=""></i>
+                            <i class="bi bi-people"></i>
                         </span>
                     </div>
                 </div>
-                <p class="">text</p>
+                <span class="me-2 iconNumber" *ngIf="tabCandidats">
+                    <strong>{{tabCandidats.length}}</strong>
+                </span>
             </div>
         </div>
-        <div class="col-md-4 cursor-pointer">
-            <div class="card px-3 py-2 shadow" (click)="afficherAdmins()">
+        <div class="col-md-6 position-relative carteUser">
+            <div class="card px-3 py-2 shadow border-0" (click)="afficherAdmins()">
                 <div class="d-flex justify-content-between align-iems-center">
                     <h5 class="">Admins</h5>
-                    <div class="">
+                    <div class="iconUsers">
                         <span>
-                            <i class=""></i>
+                            <i class="bi bi-people"></i>
                         </span>
                     </div>
                 </div>
-                <p class="">text</p>
+                <span class="me-2 iconNumber" *ngIf="tabAdmins">
+                    <strong>{{tabAdmins.length}}</strong>
+                </span>
             </div>
         </div>
     </div>
@@ -45,7 +36,7 @@
 <section class="">
     <div class="row">
         <div class="col-md-8">
-            <div class="card px-3 shadow">
+            <div class="card px-3 shadow border-0">
                 <div *ngIf="!afficherAdmin">
                     <app-gestion-candidat></app-gestion-candidat>
                 </div>
