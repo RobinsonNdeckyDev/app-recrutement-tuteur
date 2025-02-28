@@ -4,54 +4,128 @@
     </div>
 </header>
 <div class="container my-5">
-    <div class="row g-4">
+    <div class="row g-4" *ngIf="annonce">
         <!-- Carte principale -->
         <div class="col-md-8">
             <div class="card shadow-sm p-4">
-                <h4 class="fw-bold">Recrutement tuteurs</h4>
+                <h4 class="fw-bold text-primary">{{ annonce.titre }}</h4>
                 <p class="text-muted">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    {{ annonce.description }}
                 </p>
-                <p class="fw-bold">
-                    Publié le: <span class="text-primary">20/01/2025</span>
+                <p class="text-muted">
+                    {{ annonce.contenu }}
                 </p>
-                <button class="btn btn-outline-dark">Détails</button>
+                <p class="fw-bold text-danger">
+                    <i class="bi bi-calendar me-2"></i>Exprie le :
+                    <span class="text-primary">{{ annonce.dateLimite }}</span>
+                </p>
+                <!-- Bouton qui ouvre le modal -->
+                <button
+                    class="btn btn-postule w-100"
+                    data-bs-toggle="modal"
+                    data-bs-target="#candidatureModal"
+                >
+                    Postuler
+                </button>
             </div>
         </div>
 
         <!-- Carte secondaire -->
-        <div class="col-md-4">
-            <div class="card shadow-sm p-3">
-                <div class="card-body">
-                    <h5 class="fw-bold">Recrutement de tuteurs</h5>
-                    <p class="text-muted">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
-                    </p>
-                    <p>
-                        <strong>Publié le: </strong>
-                        <span class="fw-bold text-primary">20/01/2025</span>
-                    </p>
-                    <p>
-                        <strong>Année:</strong>
-                        <span class="fw-bold text-primary"> 204-2025</span>
-                    </p>
-                    <p class="text-danger">
-                        <strong>Date limite:</strong>
-                        <span class="fw-bold"> 204-2025</span>
-                    </p>
-                    <!-- Bouton qui ouvre le modal -->
-                    <button
-                        class="btn btn-primary w-100"
-                        data-bs-toggle="modal"
-                        data-bs-target="#applyModal"
+        <div class="col-md-4 shadow-sm">
+            <div class="card p-2">
+                <div
+                    class="card-bodyborder-4 border-bottom border-success rounded"
+                >
+                    <div
+                        class="card-body bg-light d-flex flex-column p-2 border-4 border-bottom border-success rounded"
                     >
-                        Postuler
-                    </button>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <h5 class="card-title fw-bold text-card">
+                                Informations Requis
+                            </h5>
+                        </div>
+                        <div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bi bi-check text-primary fw-bold fs-2"
+                                    ></i>
+                                    <small class="text-bold"
+                                        >Prénom & Nom</small
+                                    >
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bi bi-check text-primary fw-bold fs-2"
+                                    ></i>
+                                    <small class="text-bold">Addresse</small>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bi bi-check text-primary fw-bold fs-2"
+                                    ></i>
+                                    <small class="text-bold">Téléphone</small>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bi bi-check text-primary fw-bold fs-2"
+                                    ></i>
+                                    <small class="text-bold">Email</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <h5 class="card-title text-card fw-bold mt-2">
+                                Fichiers Requis
+                            </h5>
+                        </div>
+                        <div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bi bi-check text-primary fw-bold fs-2"
+                                    ></i>
+                                    <small class="text-bold"
+                                        >CV - Curriculum Vitae(PDF,
+                                        URL..)</small
+                                    >
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bi bi-check text-primary fw-bold fs-2"
+                                    ></i>
+                                    <small class="text-bold"
+                                        >Dîplome ou Attestation(PDF, JPG,
+                                        PNG)</small
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,7 +133,7 @@
 </div>
 
 <!-- Modal de candidature -->
-<div
+<!-- <div
     class="modal fade"
     id="applyModal"
     tabindex="-1"
@@ -156,6 +230,183 @@
                         Envoyer la candidature
                     </button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- Modal -->
+<div
+    class="modal fade"
+    id="candidatureModal"
+    tabindex="-1"
+    aria-labelledby="candidatureModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="candidatureModalLabel">
+                    Validation de Candidature
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Progress Bar -->
+                <div class="progress mb-3">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        [style.width]="progress + '%'"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                </div>
+
+                <!-- Étape 1 : Infos personnelles -->
+                <div *ngIf="step === 1">
+                    <h5>Informations Personnelles</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="candidature.nom"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prénom</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="candidature.prenom"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            [(ngModel)]="candidature.email"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Téléphone</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="candidature.telephone"
+                        />
+                    </div>
+                </div>
+
+                <!-- Étape 2 : Téléchargement des fichiers -->
+                <div *ngIf="step === 2">
+                    <h5>Documents requis</h5>
+                    <div class="mb-3">
+                        <label class="form-label">CV</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            (change)="onFileSelect($event, 'cv')"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Diplôme</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            (change)="onFileSelect($event, 'diplome')"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Attestation</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            (change)="onFileSelect($event, 'attestation')"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lettre de Motivation</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            (change)="onFileSelect($event, 'lettre')"
+                        />
+                    </div>
+                </div>
+
+                <!-- Étape 3 : Confirmation -->
+                <div *ngIf="step === 3">
+                    <h5>Confirmation</h5>
+                    <p>
+                        Veuillez vérifier vos informations avant de soumettre
+                        votre candidature.
+                    </p>
+                    <ul>
+                        <li><strong>Nom :</strong> {{ candidature.nom }}</li>
+                        <li>
+                            <strong>Prénom :</strong> {{ candidature.prenom }}
+                        </li>
+                        <li>
+                            <strong>Email :</strong> {{ candidature.email }}
+                        </li>
+                        <li>
+                            <strong>Téléphone :</strong>
+                            {{ candidature.telephone }}
+                        </li>
+                        <li>
+                            <strong>CV :</strong>
+                            {{ candidature.cv?.name || "Non ajouté" }}
+                        </li>
+                        <li>
+                            <strong>Diplôme :</strong>
+                            {{ candidature.diplome?.name || "Non ajouté" }}
+                        </li>
+                        <li>
+                            <strong>Attestation :</strong>
+                            {{ candidature.attestation?.name || "Non ajouté" }}
+                        </li>
+                        <li>
+                            <strong>Lettre de Motivation :</strong>
+                            {{ candidature.lettre?.name || "Non ajoutée" }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="previousStep()"
+                    *ngIf="step > 1"
+                >
+                    Retour
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="nextStep()"
+                    *ngIf="step < 3"
+                >
+                    Suivant
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    (click)="submitCandidature()"
+                    *ngIf="step === 3"
+                >
+                    Soumettre
+                </button>
             </div>
         </div>
     </div>

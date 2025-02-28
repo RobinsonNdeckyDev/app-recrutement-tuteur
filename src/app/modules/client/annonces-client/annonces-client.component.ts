@@ -1,33 +1,36 @@
-import { Component } from '@angular/core';
-import { AnnonceService } from '../../../core/services/api/annonce.service';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Annonce } from '../../../core/models/annonce';
+import { AnnonceService } from '../../../core/services/api/annonce.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-annonces-client',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './annonces-client.component.html',
   styleUrl: './annonces-client.component.css'
 })
-export class AnnoncesClientComponent {
-    tabAnnonces: any = [];
+export class AnnoncesClientComponent implements OnInit{
 
-    constructor(
-        private annonceService: AnnonceService
-    ){}
+  annonces: Annonce[] = [];
 
-    ngOnInit(){ 
-        this.getAllAnnonces();       
-    }
+  constructor(private annonceService: AnnonceService) {}
 
-    getAllAnnonces(){
-        this.annonceService.getAnnonces().subscribe(
-            (annonces) => {
-                console.log("Liste des annonces: ", annonces);
-            },
-            (error) => {
-                console.log("erreur: ", error);
-            }
-        )
-    }
+  ngOnInit(): void {
+    this.getAllAnnonces();
+  }
+
+  getAllAnnonces(): void {
+    this.annonceService.getAnnonces().subscribe({
+  next: (data: Annonce[]) => {
+    this.annonces = data;
+    console.log("Annonces reçues :", this.annonces); // Debug
+  },
+  error: (err) => {
+    console.error("Erreur lors de la récupération des annonces :", err);
+  }
+});
+
+  }
 }
