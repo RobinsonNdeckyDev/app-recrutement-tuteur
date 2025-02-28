@@ -20,3 +20,23 @@
 .login .input-group i{
     color: var(--marron);
 }
+
+.iconHome{
+    background-color: white;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.iconHome i{
+    font-size: 20px;
+    color: var(--marron);
+}

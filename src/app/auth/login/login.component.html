@@ -5,7 +5,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 p-0 m-0">
-                            <div class="card rounded-0 px-4 py-3 bg-card-login text-white h-100 d-flex flex-direction-column justify-content-center">
+                            <div class="card rounded-0 px-4 py-3 bg-card-login text-white h-100 d-flex flex-direction-column justify-content-center position-relative">
+                                <span class="iconHome shadow" routerLink="/">
+                                    <i class="bi bi-house-fill"></i>
+                                </span>
                                 <h5 class="card-title text-center fw-bold mb-5 mt-3">Connectez-vous</h5>
                                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-4">
                                     <div class="mb-4">
