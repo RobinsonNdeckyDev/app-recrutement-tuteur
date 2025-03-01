@@ -22,10 +22,18 @@
                 <!-- Bouton qui ouvre le modal -->
                 <button
                     class="btn btn-postule w-100"
-                    data-bs-toggle="modal"
-                    data-bs-target="#candidatureModal"
+                    *ngIf="isCandidat"
+                    (click)="openModal()"
                 >
                     Postuler
+                </button>
+                <!-- Affichage pour les utilisateurs non candidats -->
+                <button
+                    *ngIf="!isCandidat"
+                    (click)="openModal()"
+                    class="btn btn-warning"
+                >
+                    Connectez-vous pour postuler
                 </button>
             </div>
         </div>
@@ -132,6 +140,8 @@
     </div>
 </div>
 
+<!-- Modale de candidature -->
+
 <!-- Modal de candidature -->
 <!-- <div
     class="modal fade"
@@ -235,30 +245,21 @@
     </div>
 </div> -->
 
-<!-- Modal -->
-<div
-    class="modal fade"
-    id="candidatureModal"
-    tabindex="-1"
-    aria-labelledby="candidatureModalLabel"
-    aria-hidden="true"
->
+<!-- Modale de candidature -->
+<div id="candidatureModal" class="modal" style="display: none">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="candidatureModalLabel">
-                    Validation de Candidature
-                </h5>
+                <h5 class="modal-title">Validation de Candidature</h5>
                 <button
                     type="button"
                     class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
+                    (click)="closeModal()"
                 ></button>
             </div>
 
             <div class="modal-body">
-                <!-- Progress Bar -->
+                <!-- Barre de progression -->
                 <div class="progress mb-3">
                     <div
                         class="progress-bar"

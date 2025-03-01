@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AnnonceService } from '../../../core/services/api/annonce.service';
 import { Annonce } from '../../../core/models/annonce';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/authService/auth.service';
 
 @Component({
   selector: 'app-detail-annonce',
@@ -12,19 +13,59 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './detail-annonce.component.html',
   styleUrl: './detail-annonce.component.css'
 })
-export class DetailAnnonceComponent{
+export class DetailAnnonceComponent implements OnInit {
+  isCandidat: boolean = false;
+
   constructor(
     private annonceService: AnnonceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService, private router: Router
   ) {}
 
   annonce!: Annonce; 
   // Doit être UN seul objet, pas un tableau
   ngOnInit(): void {
+    this.checkUserRole();
     const id = Number(this.route.snapshot.paramMap.get('id')); 
     // Récupère l'ID de l'URL
     if (id) {
       this.getAnnonceById(id);
+    }
+  }
+
+
+  checkUserRole(): void {
+    const user = this.authService.getCurrentUser();
+    console.log("Utilisateur connecté :", user);
+
+    if (user?.role === 'CANDIDAT') {
+      this.isCandidat = true;
+    } else {
+      this.isCandidat = false;
+    }
+  }
+
+  openModal(): void {
+    if (this.isCandidat) {
+      const modal = document.getElementById('candidatureModal');
+      if (modal) {
+      modal.style.display = 'block';
+      modal.classList.add('show'); // Ajoute la classe Bootstrap
+      modal.setAttribute('aria-hidden', 'false');
+      modal.setAttribute('aria-modal', 'true');
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  closeModal(): void {
+    const modal = document.getElementById('candidatureModal');
+    if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+
     }
   }
 
