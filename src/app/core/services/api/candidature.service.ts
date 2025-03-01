@@ -68,4 +68,5 @@ export class CandidatureService {
 
         return this.http.delete(`${this.apiUrl}/candidatures/${id}`, {headers});
     }
+    
 }

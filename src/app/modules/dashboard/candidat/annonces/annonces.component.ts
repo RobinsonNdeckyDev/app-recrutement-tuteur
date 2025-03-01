@@ -21,6 +21,7 @@ export class AnnoncesComponent {
     tabDocuments: any = [];
     documentsFiltered: any = [];
     tabFilteredAnnonces: any = [];
+    tabCandidatures: any = [];
     selectedAnnonce: any = [];
     userConnected: any = [];
     availableDocuments: any[] = []; // Documents valable pour selection
@@ -55,6 +56,7 @@ export class AnnoncesComponent {
         this.getAllAnnonces();
         this.getinfosUser();
         this.getAllDocuments();
+        this.getAllCandidatures();
     }
 
     // Gestion des fichiers images
@@ -87,6 +89,18 @@ export class AnnoncesComponent {
         }
     }
 
+    getAllCandidatures(){
+        this.candidatureService.getCandidatures().subscribe({
+            next: (res: any) => {
+                this.tabCandidatures = res;
+                console.log("tabCandidatures: ", this.tabCandidatures);
+            },
+            error: (err: any) => {
+                this.toastrService.error('Erreur lors de la récupération des candidatures');
+            }
+        });
+    }
+
     getAllAnnonces(){
         this.annonceService.getAnnonces().subscribe({
             next: (res: any) => {
@@ -105,8 +119,8 @@ export class AnnoncesComponent {
         console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
         this.formcandidature.patchValue({
             annonceId: annonce.id,
-            userId: this.userConnected.id,
-            documentIds: this.getSelectedDocumentIds(), 
+            userId: this.userConnected.userId,
+            documentIds: this.getSelectedDocumentIds(),
             etat: 'PENDING'
         });
     }
@@ -120,7 +134,7 @@ export class AnnoncesComponent {
                     // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
                     this.tabDocuments = documents.filter(doc => doc.user?.id === userConnected.userId);
                     this.documentsFiltered = [...this.tabDocuments];
-                    this.availableDocuments = [...this.documentsFiltered]; 
+                    this.availableDocuments = [...this.documentsFiltered];
                     // this.updatePagination();
                     console.log("documents de l'utilisateur:", this.tabDocuments);
                 },
@@ -190,22 +204,22 @@ export class AnnoncesComponent {
         } else {
             this.selectedDocuments = this.selectedDocuments.filter(doc => doc.id !== document.id);
         }
-        
+
         this.formcandidature.patchValue({
             documentIds: this.getSelectedDocumentIds()
         });
     }
-    
+
     removeDocument(doc: any) {
         // Trouver la checkbox correspondante et la décocher
         const checkbox = document.getElementById('doc_' + doc.id) as HTMLInputElement;
         if (checkbox) {
             checkbox.checked = false;
         }
-    
+
         // Mettre à jour les listes
         this.selectedDocuments = this.selectedDocuments.filter(d => d.id !== doc.id);
-        
+
         // Mettre à jour le formulaire
         this.formcandidature.patchValue({
             documentIds: this.getSelectedDocumentIds()
@@ -216,22 +230,32 @@ export class AnnoncesComponent {
         return this.selectedDocuments.map(doc => doc.id).join(',');
     }
 
-    postCandidature(){
+    postCandidature() {
         this.formcandidature.patchValue({
             etat: 'PENDING'
         });
 
-        if(this.formcandidature.valid && this.selectedDocuments.length > 0){
-            this.toastrService.info("En cours d'envoi...");
-            console.log("formCandidature: ", this.formcandidature.value);
-            
-            // Créer un Set pour éliminer les doublons
-            const uniqueDocumentIds = [...new Set(this.formcandidature.get('documentIds')?.value.split(',').map(Number))];
-            
-            // l'objet de données
+        if(this.formcandidature.valid && this.selectedDocuments.length > 0) {
+            const userId = this.formcandidature.get('userId')?.value;
+            const annonceId = this.formcandidature.get('annonceId')?.value;
+
+            // Vérifier localement si une candidature existe déjà
+            if (this.checkIfCandidatureExists(userId, annonceId)) {
+                this.formcandidature.reset();
+                document.getElementById('candidatureAnnonce')?.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                document.querySelector('.modal-backdrop')?.remove();
+                this.selectedDocuments = [];
+                // Rafraîchir la liste des candidatures
+                this.getAllCandidatures();
+                this.toastrService.info("Vous avez déjà postulé à cette annonce");
+                return;
+            }
+
+            // Si pas de candidature existante, procéder à l'envoi
             const candidatureData = {
-                userId: this.formcandidature.get('userId')?.value,
-                annonceId: this.formcandidature.get('annonceId')?.value,
+                userId: userId,
+                annonceId: annonceId,
                 documentIds: this.formcandidature.get('documentIds')?.value.split(',').map(Number),
                 etat: this.formcandidature.get('etat')?.value
             };
@@ -239,17 +263,30 @@ export class AnnoncesComponent {
             this.candidatureService.addCandidature(candidatureData).subscribe({
                 next: (res: any) => {
                     console.log("response candidature: ", res);
-                    this.toastrService.success("Candidature envoyée avec succès");
                     this.formcandidature.reset();
+                    document.getElementById('candidatureAnnonce')?.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    document.querySelector('.modal-backdrop')?.remove();
                     this.selectedDocuments = [];
-                    this.availableDocuments = [...this.documentsFiltered];
+                    this.toastrService.success("Candidature envoyée avec succès");
+                    // Rafraîchir la liste des candidatures
+                    this.getAllCandidatures();
                 },
                 error: (err: any) => {
                     this.toastrService.error("Erreur lors de l'envoi de la candidature");
                 }
             });
-        }else {
+        } else {
             this.toastrService.error('Veuillez remplir tous les champs requis');
         }
+    }
+
+    // Méthode pour vérifier si une candidature existe
+    checkIfCandidatureExists(userId: number, annonceId: number): boolean {
+        return this.tabCandidatures.some(
+            (candidature: any) =>
+                candidature.user.id === userId &&
+                candidature.annonce.id === annonceId
+        );
     }
 }
