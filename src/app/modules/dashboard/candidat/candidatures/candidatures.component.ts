@@ -36,7 +36,7 @@ export class CandidaturesComponent {
         private candidatureService: CandidatureService,
         private documentService: DocumentService,
         private fb: FormBuilder,
-    ) { 
+    ) {
         this.formcandidatureUpdate = this.fb.group({
             userId: ['', Validators.required],
             annonceId: ['', Validators.required],
@@ -121,7 +121,7 @@ export class CandidaturesComponent {
 
     showDetailsCandidature(candidature: any){
         this.selectedCandidature = {...candidature};
-        console.log("Annonce sélectionnée: ", this.selectedCandidature)
+        console.log("Candidature sélectionnée: ", this.selectedCandidature)
     }
 
     prepareCandidature(annonce: any) {
@@ -136,10 +136,10 @@ export class CandidaturesComponent {
     }
 
     // Méthode pour prévisualiser l'image
-    getImageUrl(admin: any): string {
-        if (admin?.photoProfil) {
+    getImageUrl(candidat: any): string {
+        if (candidat?.photoProfil) {
             // Extrait le nom du fichier de l'URL complète
-            const fileName = admin.photoProfil.split('/').pop();
+            const fileName = candidat.photoProfil.split('/').pop();
             return this.fileService.getFileUrl(fileName);
         }
         return 'assets/images/default-profile.png';
@@ -158,6 +158,24 @@ export class CandidaturesComponent {
         this.formcandidatureUpdate.patchValue({
             documentIds: this.getSelectedDocumentIds()
         });
+    }
+
+    downloadDocument(id: number): void {
+        this.documentService.downloadDocument(id).subscribe(
+        (response: any) => {
+            // Création du blob et téléchargement du fichier
+            const blob = new Blob([response], { type: 'application/octet-stream' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'document';
+            link.click();
+            window.URL.revokeObjectURL(url);
+        },
+        error => {
+            this.toastrService.error('Erreur lors du téléchargement');
+        }
+        );
     }
 
     // Met à jour la liste filtrée et le nombre total de pages
@@ -195,5 +213,5 @@ export class CandidaturesComponent {
         // Réinitialiser à la première page après filtrage
         this.currentPage = 1;
     }
-    
+
 }
