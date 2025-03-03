@@ -47,7 +47,7 @@ export class AccueilComponent implements OnInit{
           // Vérifie que dateLimite existe
           .sort((a, b) => new Date(b.dateLimite).getTime() - new Date(a.dateLimite).getTime()) 
           // Trier par dateLimite décroissante
-          .slice(0, 2); // Prendre uniquement les 2 premières annonces
+          .slice(0, 4); // Prendre uniquement les 2 premières annonces
       },
       (error) => {
         console.error('Erreur lors de la récupération des annonces:', error);
