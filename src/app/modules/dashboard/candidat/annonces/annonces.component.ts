@@ -241,13 +241,7 @@ export class AnnoncesComponent {
 
             // Vérifier localement si une candidature existe déjà
             if (this.checkIfCandidatureExists(userId, annonceId)) {
-                this.formcandidature.reset();
-                document.getElementById('candidatureAnnonce')?.classList.remove('show');
-                document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop')?.remove();
-                this.selectedDocuments = [];
-                // Rafraîchir la liste des candidatures
-                this.getAllCandidatures();
+                this.resetCandidatureForm();
                 this.toastrService.info("Vous avez déjà postulé à cette annonce");
                 return;
             }
@@ -257,17 +251,14 @@ export class AnnoncesComponent {
                 userId: userId,
                 annonceId: annonceId,
                 documentIds: this.formcandidature.get('documentIds')?.value.split(',').map(Number),
-                etat: this.formcandidature.get('etat')?.value
+                etat: "PENDING"
             };
 
             this.candidatureService.addCandidature(candidatureData).subscribe({
                 next: (res: any) => {
                     console.log("response candidature: ", res);
                     this.formcandidature.reset();
-                    document.getElementById('candidatureAnnonce')?.classList.remove('show');
-                    document.body.classList.remove('modal-open');
-                    document.querySelector('.modal-backdrop')?.remove();
-                    this.selectedDocuments = [];
+                    this.resetCandidatureForm();
                     this.toastrService.success("Candidature envoyée avec succès");
                     // Rafraîchir la liste des candidatures
                     this.getAllCandidatures();
@@ -279,6 +270,15 @@ export class AnnoncesComponent {
         } else {
             this.toastrService.error('Veuillez remplir tous les champs requis');
         }
+    }
+
+    // Effacer le formulaire de candidature
+    private resetCandidatureForm() {
+        this.formcandidature.reset();
+        document.getElementById('candidatureAnnonce')?.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        document.querySelector('.modal-backdrop')?.remove();
+        this.selectedDocuments = [];
     }
 
     // Méthode pour vérifier si une candidature existe

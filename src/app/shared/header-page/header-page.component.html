@@ -25,9 +25,22 @@
             </ul>
 
             <div class="btn-nav">
-                <button class="btn" type="button">
-                    <a routerLink="/login" class="nav-link">Se connecter</a>
-                </button>
+                @if(userConnected){
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{userInfos?.prenom}} {{userInfos?.nom}}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" routerLink="/dashboard/candidat">Mon Dashboard</a></li>
+                            <li><a class="dropdown-item" (click)="logoutUser()">Se déconnecter</a></li>
+                        </ul>
+                    </div>
+                }
+                @else {
+                    <button class="btn" type="button">
+                        <a routerLink="/login" class="nav-link">Se connecter</a>
+                    </button>
+                }
             </div>
         </div>
     </div>

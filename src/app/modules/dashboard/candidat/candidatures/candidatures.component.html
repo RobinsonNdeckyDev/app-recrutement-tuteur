@@ -1,6 +1,6 @@
 <p class="fw-medium text-shadow">Mes candidatures</p>
 
-<div class="card px-3 shadow">
+<div class="card border-0 px-3 shadow">
     <div class="d-flex justify-content-end align-items-center my-3">
         <input type="text" class="form-control w-50" placeholder="Rechercher une annonce" (input)="searchCandidature($event)">
     </div>
@@ -13,11 +13,11 @@
                         <div class="etatAnnonce" [ngClass]="candidature.etat === 'En cours' ? 'bg-warning' : 'bg-primary'">
                             <span >
                                 {{
-                                    candidature?.etat === 'PENDING' ? 'En attente' :
-                                    candidature?.etat === 'ACCEPTED' ? 'Acceptée' :
-                                    candidature?.etat === 'REJECTED' ? 'Rejetée' :
-                                    candidature?.etat === 'CANCELLED' ? 'Annulée' :
-                                    candidature?.etat === 'HIRED' ? 'Recruté(e)' :
+                                    candidature?.etat === 'PENDING' ? 'Candidature en cours' :
+                                    candidature?.etat === 'ACCEPTED' ? 'Candidature Acceptée' :
+                                    candidature?.etat === 'REJECTED' ? 'Candidature Rejetée' :
+                                    candidature?.etat === 'CANCELLED' ? 'Candidature Annulée' :
+                                    candidature?.etat === 'HIRED' ? 'Candidature Recruté(e)' :
                                     candidature?.etat
                                 }}
                             </span>
@@ -187,7 +187,7 @@
             </div>
             <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#candidatureAnnonce" (click)="prepareCandidature(selectedAnnonce)">Postuler</button> -->
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
