@@ -5,6 +5,7 @@ import { Annonce } from '../../../core/models/annonce';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/authService/auth.service';
+import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-detail-annonce',
@@ -25,6 +26,7 @@ export class DetailAnnonceComponent implements OnInit {
   annonce!: Annonce; 
   // Doit être UN seul objet, pas un tableau
   ngOnInit(): void {
+    this.prefillUserData();
     this.checkUserRole();
     const id = Number(this.route.snapshot.paramMap.get('id')); 
     // Récupère l'ID de l'URL
@@ -33,6 +35,17 @@ export class DetailAnnonceComponent implements OnInit {
     }
   }
 
+
+  /** Pré-remplit le formulaire avec les infos de l'utilisateur connecté */
+  prefillUserData(): void {
+    const user: User | null = this.authService.getCurrentUser();
+    if (user) {
+      this.candidature.nom = user.nom || '';
+      this.candidature.prenom = user.prenom || '';
+      this.candidature.email = user.email || '';
+      this.candidature.telephone = user.telephone || '';
+    }
+  }
 
   checkUserRole(): void {
     const user = this.authService.getCurrentUser();
@@ -55,7 +68,7 @@ export class DetailAnnonceComponent implements OnInit {
       modal.setAttribute('aria-modal', 'true');
       }
     } else {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/post-login']);
     }
   }
 

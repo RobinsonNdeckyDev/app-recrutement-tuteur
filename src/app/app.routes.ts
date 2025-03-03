@@ -5,10 +5,12 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { authGuardGuard } from './core/guards/auth-guard.guard';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { postLoginComponent } from './auth/post-login/post-login.component';
 
 export const routes: Routes = [
   // route l'authentification
   { path: 'login', component:  LoginComponent},
+  { path: 'post-login', component:  postLoginComponent},
   { path: 'register', component:  RegisterComponent},
   { path: 'forgot-password', component: ForgotPasswordComponent},
   // route pour la page de déconnexion

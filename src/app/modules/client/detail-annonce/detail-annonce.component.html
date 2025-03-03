@@ -31,7 +31,7 @@
                 <button
                     *ngIf="!isCandidat"
                     (click)="openModal()"
-                    class="btn btn-warning"
+                    class="btn btn-postule"
                 >
                     Connectez-vous pour postuler
                 </button>
@@ -141,111 +141,6 @@
 </div>
 
 <!-- Modale de candidature -->
-
-<!-- Modal de candidature -->
-<!-- <div
-    class="modal fade"
-    id="applyModal"
-    tabindex="-1"
-    aria-labelledby="applyModalLabel"
-    aria-hidden="true"
->
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applyModalLabel">
-                    Postuler à l'offre
-                </h5>
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Fermer"
-                ></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="nom"
-                            required
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="prenom" class="form-label">Prénom</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="prenom"
-                            required
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="adresse" class="form-label">Adresse</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="adresse"
-                            required
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            required
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="telephone" class="form-label"
-                            >Téléphone</label
-                        >
-                        <input
-                            type="tel"
-                            class="form-control"
-                            id="telephone"
-                            required
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="cv" class="form-label"
-                            >CV (PDF uniquement)</label
-                        >
-                        <input
-                            type="file"
-                            class="form-control"
-                            id="cv"
-                            accept=".pdf"
-                            required
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="lettre" class="form-label"
-                            >Lettre de motivation (PDF uniquement)</label
-                        >
-                        <input
-                            type="file"
-                            class="form-control"
-                            id="lettre"
-                            accept=".pdf"
-                            required
-                        />
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">
-                        Envoyer la candidature
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-<!-- Modale de candidature -->
 <div id="candidatureModal" class="modal" style="display: none">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -271,7 +166,7 @@
                 </div>
 
                 <!-- Étape 1 : Infos personnelles -->
-                <div *ngIf="step === 1">
+                <!-- <div *ngIf="step === 1">
                     <h5>Informations Personnelles</h5>
                     <div class="mb-3">
                         <label class="form-label">Nom</label>
@@ -303,6 +198,47 @@
                             type="text"
                             class="form-control"
                             [(ngModel)]="candidature.telephone"
+                        />
+                    </div>
+                </div> -->
+
+                <!-- Étape 1 : Infos personnelles -->
+                <div *ngIf="step === 1">
+                    <h5>Informations Personnelles</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="candidature.nom"
+                            readonly
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prénom</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="candidature.prenom"
+                            readonly
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            [(ngModel)]="candidature.email"
+                            readonly
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Téléphone</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="candidature.telephone"
+                            readonly
                         />
                     </div>
                 </div>
