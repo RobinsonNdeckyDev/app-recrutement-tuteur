@@ -6,11 +6,14 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AnneeAcademiqueService } from '../../../../core/services/api/annee-academique.service';
 import { AnnonceService } from '../../../../core/services/api/annonce.service';
+import { ModalService } from '../../../../core/services/api/modal.service';
+import { SpinnerComponent } from '../../../../components/ui/spinner/spinner.component';
+import { FileService } from '../../../../core/services/api/file.service';
 
 @Component({
   selector: 'app-annonces',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, SpinnerComponent],
   providers: [DateFormatPipe],
   templateUrl: './annonces.component.html',
   styleUrl: './annonces.component.css'
@@ -26,6 +29,8 @@ export class AnnoncesComponent {
     selectedAnnonce: any = [];
     annonceFormAdd!: FormGroup;
     annonceFormUpdate!: FormGroup;
+    selectedFile: File | null = null;
+    isLoading = false;
     currentPage = 1;
     rowsPerPage = 4;
     totalPages = 0;
@@ -35,6 +40,8 @@ export class AnnoncesComponent {
         private fb: FormBuilder,
         private toastr: ToastrService,
         private annonceService: AnnonceService,
+        private modalService: ModalService,
+        private fileService: FileService,
         private anneeAcademiqueService: AnneeAcademiqueService
     ){
         this.annonceFormAdd = this.fb.group({
@@ -51,12 +58,12 @@ export class AnnoncesComponent {
         this.annonceFormUpdate = this.fb.group({
             titre: ['', Validators.required],
             description: ['', Validators.required],
-            id_annee: ['', Validators.required],
-            image_annonce: [''],
+            image: [''],
+            idAnneeAnnonce: ['', Validators.required],
             auteur: ['', Validators.required],
             date_limite: ['', Validators.required],
             contenu: ['', Validators.required],
-            etat: ['', Validators.required]
+            etat: ['OUVERTE']
         })
     }
 
@@ -64,6 +71,25 @@ export class AnnoncesComponent {
         this.updatePagination();
         this.getAllAnneeAcademiques();
         this.getAllAnnonces();
+    }
+
+    // Gestion des fichiers images
+    onFileSelected(event: any) {
+        const file = event.target.files[0];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (file) {
+            if (file.size > maxSize) {
+                this.toastr.error('Le fichier est trop volumineux. Taille maximum : 5MB');
+                return;
+            }
+            if (!allowedTypes.includes(file.type)) {
+                this.toastr.error('Format de fichier non supporté. Utilisez JPG, PNG ou GIF');
+                return;
+            }
+            this.selectedFile = file;
+        }
     }
 
     // Récupérer toutes les années académiques
@@ -82,64 +108,131 @@ export class AnnoncesComponent {
 
     // Récupérer toutes les annonces
     getAllAnnonces(){
-        this.annonceService.getAnnonces().subscribe(
-            (annonces) => {
-                console.log("Liste des annonces", annonces);
-                this.tabsAnnonces = annonces;
-                this.updatePagination(); // Mettre à jour la pagination
-            },
-            (error) => {
-                console.error('Une erreur s\'est produite lors de la récupération des annonces:', error);
-            }
-        )
+        this.isLoading = true;
+        setTimeout(() => {
+            this.annonceService.getAnnonces().subscribe(
+                {
+                    next: (annonces) => {
+                        console.log("Liste des annonces", annonces);
+                        this.tabsAnnonces = annonces;
+                        this.updatePagination(); // Mettre à jour la pagination
+                    },
+                    error: (error) => {
+                        console.error('Une erreur s\'est produite lors de la récupération des annonces:', error);
+                    },
+                    complete: () => {
+                        this.isLoading = false;
+                    }    
+                }
+            )
+        }, 1000);
     }
 
     // Ajouter une annonce
     addAnnonce() {
-        if (this.annonceFormAdd.valid) {
-            let annonce = this.annonceFormAdd.value;
+        if(this.selectedFile){
+            // On upload l'image
+            this.fileService.uploadFile(this.selectedFile).subscribe({
+                next: (response) => {
+                    
+                    // On récupère l'URL de l'image uploadée
+                    let annonce = this.annonceFormAdd.value;
+                    annonce = {
+                        ...annonce,
+                        image: response.url
+                    }
 
-            // Vérifie si idAnneeAnnonce est bien défini et est un nombre
-            console.log("Annonce avant envoi :", annonce);
+                    // Vérifie si idAnneeAnnonce est bien défini et est un nombre
+                    console.log('Annonce avant envoi :', annonce);
 
-            const idAnneeAnnonce = +annonce.idAnneeAnnonce;
+                    const idAnneeAnnonce = +annonce.idAnneeAnnonce;
 
-            if (isNaN(idAnneeAnnonce)) {
-                this.annonceFormAdd.get('idAnneeAnnonce')?.setErrors({ 'invalid': true });
-                return;
-            }
+                    if (isNaN(idAnneeAnnonce)) {
+                        this.annonceFormAdd
+                            .get('idAnneeAnnonce')
+                            ?.setErrors({ invalid: true });
+                        return;
+                    }
 
-            // S'assurer que idAnneeAnnonce ne soit pas envoyé dans le corps de la requête
-            const annonceData = {
-                titre: annonce.titre,
-                description: annonce.description,
-                contenu: annonce.contenu,
-                dateLimite: annonce.date_limite,
-                etat: annonce.etat,
-                auteur: annonce.auteur, // Assure-toi que 'auteur' et d'autres champs nécessaires soient ici
-                imageAnnonce: annonce.image,
-                anneeAcademiqueId: idAnneeAnnonce // Utilisation de l'ID de l'année dans l'URL (et non dans le corps)
-            };
+                    // S'assurer que idAnneeAnnonce ne soit pas envoyé dans le corps de la requête
+                    const annonceData = {
+                        titre: annonce.titre,
+                        description: annonce.description,
+                        contenu: annonce.contenu,
+                        dateLimite: annonce.date_limite,
+                        etat: annonce.etat,
+                        auteur: annonce.auteur,
+                        imageAnnonce: annonce.image,
+                        anneeAcademiqueId: idAnneeAnnonce,
+                    };
 
-            console.log("annoncedata: ", annonceData);
-
-            // Appel à l'API pour ajouter l'annonce
-            this.annonceService.addAnnonce(annonceData).subscribe(
-                (annonce) => {
-                    console.log("Annonce ajoutée", annonce);
-                    this.getAllAnnonces();
-                    this.annonceFormAdd.reset();
-                    document.getElementById('ajoutAnnonce')?.classList.remove('show');
-                    document.body.classList.remove('modal-open');
-                    document.querySelector('.modal-backdrop')?.remove();
-                    this.toastr.success("Annonce ajoutée avec succès !");
+                    console.log('annoncedata: ', annonceData);
+                    // Appel à l'API pour ajouter l'annonce
+                    this.annonceService.addAnnonce(annonceData).subscribe(
+                        (annonce) => {
+                            console.log("Annonce ajoutée", annonce);
+                            this.getAllAnnonces();
+                            this.modalService.closeModal("ajoutAnnonce");
+                            this.toastr.success("Annonce ajoutée avec succès !");
+                        },
+                        (error) => {
+                            console.error('Une erreur s\'est produite lors de l\'ajout de l\'annonce:', error);
+                            this.toastr.error("Une erreur s'est produite lors de l'ajout de l'annonce.");
+                        }
+                    );
                 },
-                (error) => {
-                    console.error('Une erreur s\'est produite lors de l\'ajout de l\'annonce:', error);
-                    this.toastr.error("Une erreur s'est produite lors de l'ajout de l'annonce.");
-                }
-            );
-        }
+                error: (error) => {
+                    console.error("Erreur lors de l'upload de l'image", error);
+                    this.toastr.error(
+                        "Une erreur s'est produite lors de l'upload de l'image."
+                    );
+                },
+            });
+        } 
+
+
+        // if (this.annonceFormAdd.valid) {
+        //     let annonce = this.annonceFormAdd.value;
+
+        //     // Vérifie si idAnneeAnnonce est bien défini et est un nombre
+        //     console.log("Annonce avant envoi :", annonce);
+
+        //     const idAnneeAnnonce = +annonce.idAnneeAnnonce;
+
+        //     if (isNaN(idAnneeAnnonce)) {
+        //         this.annonceFormAdd.get('idAnneeAnnonce')?.setErrors({ 'invalid': true });
+        //         return;
+        //     }
+
+        //     // S'assurer que idAnneeAnnonce ne soit pas envoyé dans le corps de la requête
+        //     const annonceData = {
+        //         titre: annonce.titre,
+        //         description: annonce.description,
+        //         contenu: annonce.contenu,
+        //         dateLimite: annonce.date_limite,
+        //         etat: annonce.etat,
+        //         auteur: annonce.auteur, // Assure-toi que 'auteur' et d'autres champs nécessaires soient ici
+        //         imageAnnonce: annonce.image,
+        //         anneeAcademiqueId: idAnneeAnnonce // Utilisation de l'ID de l'année dans l'URL (et non dans le corps)
+        //     };
+
+        //     console.log("annoncedata: ", annonceData);
+
+        //     // Appel à l'API pour ajouter l'annonce
+        //     this.annonceService.addAnnonce(annonceData).subscribe(
+        //         (annonce) => {
+        //             console.log("Annonce ajoutée", annonce);
+        //             this.getAllAnnonces();
+        //             this.annonceFormAdd.reset();
+        //             this.modalService.closeModal('ajoutAnnonce');
+        //             this.toastr.success("Annonce ajoutée avec succès !");
+        //         },
+        //         (error) => {
+        //             console.error('Une erreur s\'est produite lors de l\'ajout de l\'annonce:', error);
+        //             this.toastr.error("Une erreur s'est produite lors de l'ajout de l'annonce.");
+        //         }
+        //     );
+        // }
     }
 
     // Supprimer une annonce
@@ -178,10 +271,10 @@ export class AnnoncesComponent {
         this.annonceFormUpdate.setValue({
             titre: this.selectedAnnonce.titre || '',
             description: this.selectedAnnonce.description || '',
-            id_annee: this.selectedAnnonce.annee || '',
-            image_annonce: this.selectedAnnonce.image_annonce || '',
+            idAnneeAnnonce: this.selectedAnnonce.anneeAcademique?.id  || '',
+            image: this.selectedAnnonce.imageAnnonce || '',
             auteur: this.selectedAnnonce.auteur || '',
-            date_limite: this.selectedAnnonce.date_limite || '',
+            date_limite: this.selectedAnnonce.dateLimite || '',
             contenu: this.selectedAnnonce.contenu || '',
             etat: this.selectedAnnonce.etat || '',
         });
@@ -193,40 +286,64 @@ export class AnnoncesComponent {
         console.log("ID annonce à modifier :", id);
 
         const donnees = this.annonceFormUpdate.value;
-        this.annonceService.updateAnnonce(id, donnees).subscribe(
-            (updateAnnonce) => {
-                console.log("Réponse API après mise à jour :", updateAnnonce);
 
-                // Mettre à jour l'élément correspondant dans tabsAnnonces
+        if(this.selectedFile){
+            // Upload de la nouvelle image
+            this.fileService.uploadFile(this.selectedFile).subscribe(
+                (fileResponse) => {
+                    const donnees = this.annonceFormUpdate.value;
+                    donnees.image = fileResponse.url;
+
+                    console.log("données: ", donnees);
+
+                    this.processUpdateAnnonce(id, donnees);
+                },
+                (error) => {
+                    console.error('Erreur upload image:', error);
+                    this.toastr.error("Erreur lors de l'upload de l'image");
+                }
+            );
+        } else {
+            // Mise à jour sans nouvelle image
+            const donnees = this.annonceFormUpdate.value;
+            this.processUpdateAnnonce(id, donnees);
+        }
+    }
+
+    // Méthode pour traiter la mise à jour d'une annonce
+    private processUpdateAnnonce(id: number, donnees: any) {
+        // Format the data correctly before sending to the API
+        const annonceData = {
+            titre: donnees.titre,
+            description: donnees.description,
+            contenu: donnees.contenu,
+            dateLimite: donnees.date_limite,
+            etat: donnees.etat,
+            auteur: donnees.auteur,
+            imageAnnonce: donnees.image,
+            anneeAcademiqueId: donnees.idAnneeAnnonce // Send just the ID instead of the whole object
+        };
+
+        this.annonceService.updateAnnonce(id, annonceData).subscribe(
+            (updatedAnnonce) => {
+                console.log("updatedAnnonce: ", updatedAnnonce);
                 this.tabsAnnonces = this.tabsAnnonces.map((annonce: any) =>
-                    annonce.id === id ? { ...annonce, ...updateAnnonce } : annonce
+                    annonce.id === id ? { ...annonce, ...updatedAnnonce } : annonce
                 );
-
-                // Vérifier que selectedAnnee est bien mise à jour
-                this.selectedAnnonce = { ...updateAnnonce };
-
-                // Réafficher les nouvelles valeurs dans le formulaire
-                this.annonceFormUpdate.patchValue({
-
-
-                });
-
-                console.log("Données mises à jour dans le formulaire :", this.annonceFormUpdate.value);
-
-                // this.getAllanneesAcademiques();
-                document.getElementById('modifierAnneeAcademique')?.classList.remove('show');
-                document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop')?.remove();
-
-
-                this.toastr.success("Année mise à jour avec succès !");
+                this.selectedAnnonce = { ...updatedAnnonce };
+                this.getAllAnnonces();
+                this.annonceFormUpdate.reset();
+                this.selectedFile = null;
+                this.modalService.closeModal("modifierAnnonce");
+                this.toastr.success("Annonce modifiée avec succès!");
             },
             (error) => {
-                console.error("Erreur lors de la mise à jour de l'année :", error);
-                this.toastr.error("Une erreur s'est produite lors de la mise à jour.");
+                console.error("Erreur lors de la mise à jour:", error);
+                this.toastr.error("Erreur lors de la mise à jour");
             }
         );
     }
+
 
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
@@ -264,5 +381,14 @@ export class AnnoncesComponent {
         this.currentPage = 1;
     }
 
+    // Méthode pour prévisualiser l'image
+    getImageUrl(annonce: any): string {
+        if (annonce?.imageAnnonce) {
+            // Extrait le nom du fichier de l'URL complète
+            const fileName = annonce.imageAnnonce.split('/').pop();
+            return this.fileService.getFileUrl(fileName);
+        }
+        return 'assets/images/default-profile.png';
+    }
 
 }

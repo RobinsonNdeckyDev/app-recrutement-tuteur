@@ -1,29 +1,36 @@
 <div class="row mt-3">
     <div class="col-md-4">
         <div class="card px-4 py-3 shadow border-0">
+            <span class="icon-number shadow">
+                <i class="bi bi-folder-fill"></i>
+            </span>
             <h5 class="text-primary fw-medium">Candidatures</h5>
-            <p class="">
-                <i></i>
+            <span class="spanNumb">
                 {{tabCandidatures.length}}
-            </p>
+            </span>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card px-4 py-3 shadow border-0">
-            <h5 class="text-primary fw-medium">Candidatures acceptées</h5>
-            <p class="">
-                <i></i>
+            <span class="icon-number shadow">
+                <i class="bi bi-megaphone"></i>
+            </span>
+            <h5 class="text-primary fw-medium">Annonces</h5>
+            <span class="spanNumb">
                 0
-            </p>
+                <!-- {{tabAnnonces.length}} -->
+            </span>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card px-4 py-3 shadow border-0">
-            <h5 class="text-primary fw-medium">documents</h5>
-            <p class="">
-                <i></i>
+            <span class="icon-number shadow">
+                <i class="bi bi-files"></i>
+            </span>
+            <h5 class="text-primary fw-medium">Mes documents</h5>
+            <span class="spanNumb">
                 {{tabDocuments.length}}
-            </p>
+            </span>
         </div>
     </div>
 </div>
@@ -31,9 +38,12 @@
 <div class="row mt-4">
     <div class="col-md-8">
         <div class="card px-4 py-3 shadow border-0">
-            <div class="d-flex justify-content-end align-items-center my-4">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <p class="fw-medium text-primary">Liste de mes candidatures</p>
                 <input type="text" class="form-control w-50" placeholder="Rechercher une candidature" (input)="searchCandidature($event)">
             </div>
+
+            <hr class="my-0">
 
             <table class="table table-striped mt-2">
                 <thead class="">
@@ -53,10 +63,14 @@
                             <td>{{ candidature?.annonce?.auteur }}</td>
                             <td>{{ candidature?.user?.prenom }}</td>
                             <td>{{ candidature?.user?.nom }}</td>
-                            <td [ngClass]="candidature.etat === 'En cours' ? 'bg-warning' : 'bg-primary text-white fw-medium'">
+                            <td [ngClass]="{
+                                'bg-warning text-white': candidature?.etat === 'PENDING',
+                                'bg-danger text-white': candidature?.etat === 'REJECTED',
+                                'bg-secondary text-white': candidature?.etat === 'CANCELLED',
+                                'bg-primary text-white': candidature?.etat === 'HIRED'
+                              }">
                                 {{
                                     candidature?.etat === 'PENDING' ? 'En cours' :
-                                    candidature?.etat === 'ACCEPTED' ? 'Acceptée' :
                                     candidature?.etat === 'REJECTED' ? 'Rejetée' :
                                     candidature?.etat === 'CANCELLED' ? 'Annulée' :
                                     candidature?.etat === 'HIRED' ? 'Recruté(e)' :
@@ -74,7 +88,7 @@
             </table>
 
             <!-- Pagination -->
-            <div class="d-flex justify-content-center mt-4 mb-3">
+            <div class="d-flex justify-content-center">
                 <nav>
                     <ul class="pagination">
                         <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
@@ -93,8 +107,10 @@
     </div>
     <div class="col-md-4">
         <div class="card border-0 shadow p-3">
-            <h5 class="text-primary fw-medium">État des candidatures</h5>
-            <canvas id="candidatureChart"></canvas>
+            <h5 class="text-primary fw-medium mb-3">État des candidatures</h5>
+            <div style="position: relative; height:49vh; margin: 0 auto;">
+                <canvas id="candidatureChart"></canvas>
+            </div>
         </div>
     </div>
 </div>

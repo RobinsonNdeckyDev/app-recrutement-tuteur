@@ -116,6 +116,25 @@ export class AnnoncesComponent {
 
     prepareCandidature(annonce: any) {
         this.annoncePostule = annonce;
+
+        // Ouvrir la modale de candidature après un court délai
+        setTimeout(() => {
+            document.getElementById('detailsAnnonce')?.classList.remove('show');
+            document.body.classList.remove('modal-open');
+            document.querySelector('.modal-backdrop')?.remove();
+            
+            // Ouvrir la modale de candidature
+            const modalCandidature = document.getElementById('candidatureAnnonce');
+            if (modalCandidature) {
+                modalCandidature.classList.add('show');
+                modalCandidature.style.display = 'block';
+                document.body.classList.add('modal-open');
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                document.body.appendChild(backdrop);
+            }
+        }, 150);
+
         console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
         this.formcandidature.patchValue({
             annonceId: annonce.id,
@@ -231,45 +250,48 @@ export class AnnoncesComponent {
     }
 
     postCandidature() {
-        this.formcandidature.patchValue({
-            etat: 'PENDING'
-        });
-
-        if(this.formcandidature.valid && this.selectedDocuments.length > 0) {
-            const userId = this.formcandidature.get('userId')?.value;
-            const annonceId = this.formcandidature.get('annonceId')?.value;
-
-            // Vérifier localement si une candidature existe déjà
-            if (this.checkIfCandidatureExists(userId, annonceId)) {
-                this.resetCandidatureForm();
-                this.toastrService.info("Vous avez déjà postulé à cette annonce");
-                return;
-            }
-
-            // Si pas de candidature existante, procéder à l'envoi
-            const candidatureData = {
-                userId: userId,
-                annonceId: annonceId,
-                documentIds: this.formcandidature.get('documentIds')?.value.split(',').map(Number),
-                etat: "PENDING"
-            };
-
-            this.candidatureService.addCandidature(candidatureData).subscribe({
-                next: (res: any) => {
-                    console.log("response candidature: ", res);
-                    this.formcandidature.reset();
-                    this.resetCandidatureForm();
-                    this.toastrService.success("Candidature envoyée avec succès");
-                    // Rafraîchir la liste des candidatures
-                    this.getAllCandidatures();
-                },
-                error: (err: any) => {
-                    this.toastrService.error("Erreur lors de l'envoi de la candidature");
-                }
-            });
-        } else {
-            this.toastrService.error('Veuillez remplir tous les champs requis');
+        if (!this.formcandidature.valid || this.selectedDocuments.length === 0) {
+            this.toastrService.error('Veuillez remplir tous les champs requis et sélectionner au moins un document');
+            return;
         }
+
+        const userId = this.formcandidature.get('userId')?.value;
+        const annonceId = this.formcandidature.get('annonceId')?.value;
+
+        // Vérification plus stricte
+        if (this.checkIfCandidatureExists(userId, annonceId)) {
+            this.toastrService.warning("Vous avez déjà postulé à cette annonce");
+            this.resetCandidatureForm();
+            return;
+        }
+
+        const candidatureData = {
+            userId: userId,
+            annonceId: annonceId,
+            documentIds: this.formcandidature.get('documentIds')?.value.split(',').map(Number),
+            etat: "PENDING"
+        };
+
+        console.log("Candidature post envoyée: ", candidatureData);
+
+        this.candidatureService.addCandidature(candidatureData).subscribe({
+            next: (res: any) => {
+                this.toastrService.success("Candidature envoyée avec succès");
+                this.getAllCandidatures(); // Rafraîchir la liste
+                this.resetCandidatureForm();
+            },
+            error: (err: any) => {
+                if (err.status === 409 || 
+                    err.error?.message?.includes('existe déjà') || 
+                    err.error?.message?.includes('duplicate')) {
+                    this.toastrService.warning("Vous avez déjà postulé à cette annonce");
+                } else {
+                    this.toastrService.error("Erreur lors de l'envoi de la candidature");
+                    console.error('Erreur détaillée:', err);
+                }
+                this.resetCandidatureForm();
+            }
+        });
     }
 
     // Effacer le formulaire de candidature
@@ -285,8 +307,9 @@ export class AnnoncesComponent {
     checkIfCandidatureExists(userId: number, annonceId: number): boolean {
         return this.tabCandidatures.some(
             (candidature: any) =>
-                candidature.user.id === userId &&
-                candidature.annonce.id === annonceId
+                candidature.user?.id === userId &&
+                candidature.annonce?.id === annonceId &&
+                !candidature.deleted_at // Vérifier si la candidature n'est pas supprimée
         );
     }
 }

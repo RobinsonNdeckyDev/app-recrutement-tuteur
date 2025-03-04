@@ -1,7 +1,7 @@
-<p class="fw-medium text-shadow">Gestion des annonces</p>
 
 <div class="card border-0 px-3 shadow">
-    <div class="d-flex justify-content-end align-items-center my-3">
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <p class="fw-medium text-primary">Gestion des annonces</p>
         <input type="text" class="form-control w-50" placeholder="Rechercher une annonce" (input)="searchAnnonce($event)">
     </div>
 
@@ -33,7 +33,7 @@
                             </div>
 
                         </div>
-                        <div class="mb-3">
+                        <div class="mb- single-line-text">
                             {{annonce.description}}
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3">

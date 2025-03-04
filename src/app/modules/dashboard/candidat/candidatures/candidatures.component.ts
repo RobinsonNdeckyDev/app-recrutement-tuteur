@@ -135,16 +135,6 @@ export class CandidaturesComponent {
         });
     }
 
-    // Méthode pour prévisualiser l'image
-    getImageUrl(candidat: any): string {
-        if (candidat?.photoProfil) {
-            // Extrait le nom du fichier de l'URL complète
-            const fileName = candidat.photoProfil.split('/').pop();
-            return this.fileService.getFileUrl(fileName);
-        }
-        return 'assets/images/default-profile.png';
-    }
-
     onDocumentSelect(event: any, document: any) {
         if (event.target.checked) {
             // Vérifier si le document n'est pas déjà sélectionné
@@ -213,5 +203,6 @@ export class CandidaturesComponent {
         // Réinitialiser à la première page après filtrage
         this.currentPage = 1;
     }
+    
 
 }

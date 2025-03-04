@@ -124,7 +124,7 @@ export class CandidaturesComponent {
         this.formcandidatureUpdate.patchValue({
             userId: candidature.user.id,
             annonceId: candidature.annonce.id,
-            documentIds: candidature.documentIds.map((doc: any) => doc.id),
+            documentIds: candidature.documents ? candidature.documents.map((doc: any) => doc.id) : [],
             etat: candidature.etat
         });
         console.log("Candidature sélectionnée: ", this.selectedCandidature)
@@ -222,12 +222,13 @@ export class CandidaturesComponent {
 
     // méthode de mise à jour candidature
     updateCandidatureStatus(candidatureId: number) {
+        console.log("formcandidatureUpdate: ", this.formcandidatureUpdate.value);
         if (this.formcandidatureUpdate.valid) {
             const updateData = {
                 etat: this.formcandidatureUpdate.get('etat')?.value,
                 userId: this.formcandidatureUpdate.get('userId')?.value,
                 annonceId: this.formcandidatureUpdate.get('annonceId')?.value,
-                documentIds: this.formcandidatureUpdate.get('documentIds')?.value
+                documentIds: this.formcandidatureUpdate.get('documents')?.value
             };
 
             console.log("updateDataCandidature: ", updateData);

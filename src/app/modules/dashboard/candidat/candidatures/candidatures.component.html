@@ -1,7 +1,7 @@
-<p class="fw-medium text-shadow">Mes candidatures</p>
 
 <div class="card border-0 px-3 shadow">
-    <div class="d-flex justify-content-end align-items-center my-3">
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <p class="fw-medium text-primary">Mes candidatures</p>
         <input type="text" class="form-control w-50" placeholder="Rechercher une annonce" (input)="searchCandidature($event)">
     </div>
 
@@ -42,7 +42,7 @@
                             </div>
 
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 single-line-text">
                             {{candidature.annonce.description}}
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -123,8 +123,11 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <img [src]="getImageUrl(selectedCandidature)" class="img-fluid rounded" [alt]="selectedCandidature?.user?.prenom">
-                            <h4 class="mb-5">  </h4>
+                            <!-- <img [src]="getUserImageUrl(selectedCandidature)"
+                                [alt]="selectedCandidature?.user?.nom"
+                                class="img-thumbnail w-100"
+                                style="max-height: 200px; object-fit: cover;"
+                            > -->
                         </div>
                         <div class="col-md-8">
                             <div class="row">
@@ -148,7 +151,11 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <img [src]="selectedCandidature?.image_annonce" alt="Image de l'annonce" class="img-fluid mb-3">
+                            <!-- <img [src]="getAnnonceImageUrl(selectedCandidature)"
+                                [alt]="selectedCandidature?.annonce?.titre"
+                                class="img-thumbnail w-100"
+                                style="max-height: 200px; object-fit: cover;"
+                            > -->
                         </div>
                         <div class="col-md-8">
                             <div class="row">

@@ -48,17 +48,18 @@
 <div class="row mt-4">
     <div class="col-md-8">
         <div class="card px-4 py-3 shadow border-0">
-            <div class="d-flex justify-content-end align-items-center my-4">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <p class="fw-medium text-primary">Liste candidatures</p>
                 <input type="text" class="form-control w-50" placeholder="Rechercher une candidature" (input)="searchCandidature($event)">
             </div>
 
             <table class="table table-striped mt-2">
                 <thead class="">
                     <tr>
-                        <th class="text-primary">Annonce</th>
-                        <th class="text-primary">Structure</th>
                         <th class="text-primary">Prénom</th>
                         <th class="text-primary">Nom</th>
+                        <th class="text-primary">Annonce</th>
+                        <th class="text-primary">Structure</th>
                         <th class="text-primary">Etat</th>
                     </tr>
                 </thead>
@@ -66,14 +67,18 @@
 
                     @if (getPaginatedCandidature()) {
                         <tr *ngFor="let candidature of getPaginatedCandidature()">
-                            <td>{{ candidature?.annonce?.titre }}</td>
-                            <td>{{ candidature?.annonce?.auteur }}</td>
                             <td>{{ candidature?.user?.prenom }}</td>
                             <td>{{ candidature?.user?.nom }}</td>
-                            <td [ngClass]="candidature.etat === 'En cours' ? 'bg-warning' : 'bg-primary text-white fw-medium'">
+                            <td>{{ candidature?.annonce?.titre }}</td>
+                            <td>{{ candidature?.annonce?.auteur }}</td>
+                            <td class="text-white" [ngClass]="{
+                                'bg-warning': candidature?.etat === 'PENDING',
+                                'bg-danger': candidature?.etat === 'REJECTED',
+                                'bg-secondary': candidature?.etat === 'CANCELLED',
+                                'bg-primary': candidature?.etat === 'HIRED'
+                              }">
                                 {{
                                     candidature?.etat === 'PENDING' ? 'En cours' :
-                                    candidature?.etat === 'ACCEPTED' ? 'Acceptée' :
                                     candidature?.etat === 'REJECTED' ? 'Rejetée' :
                                     candidature?.etat === 'CANCELLED' ? 'Annulée' :
                                     candidature?.etat === 'HIRED' ? 'Recruté(e)' :
@@ -91,7 +96,7 @@
             </table>
 
             <!-- Pagination -->
-            <div class="d-flex justify-content-center mt-4 mb-3">
+            <div class="d-flex justify-content-center">
                 <nav>
                     <ul class="pagination">
                         <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
@@ -109,9 +114,11 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow p-3">
-            <h5 class="text-primary fw-medium">État des candidatures</h5>
-            <canvas id="candidatureChart"></canvas>
+        <div class="card border-0 shadow p-3 h-100">
+            <h5 class="text-primary fw-medium mb-3">État des candidatures</h5>
+            <div class="chart-container w-100" style="position: relative; height:49vh; margin: 0 auto;">
+                <canvas id="candidatureChart"></canvas>
+            </div>
         </div>
     </div>
 </div>

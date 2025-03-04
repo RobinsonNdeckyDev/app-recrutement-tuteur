@@ -6,13 +6,14 @@ import { Document } from '../../../../core/models/document';
 import { ToastrService } from 'ngx-toastr';
 import { TypeDocService } from '../../../../core/services/api/type-doc.service';
 import { AuthService } from '../../../../core/services/authService/auth.service';
+import { SpinnerComponent } from '../../../../components/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-documents',
   standalone: true,
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, SpinnerComponent]
 })
 export class DocumentsComponent {
   // Stockage de tous les documents
@@ -32,6 +33,7 @@ export class DocumentsComponent {
   itemsPerPage = 6;
   totalItems = 0;
   documentsFiltered: any = [];
+  isLoading: boolean = false;
 
 constructor (
     private documentService: DocumentService,
@@ -247,17 +249,25 @@ constructor (
         const userConnected = this.authService.getCurrentUser();
         console.log("Uc: ", userConnected);
         if (userConnected) {
-            this.documentService.getDocuments().subscribe({
-                next: (documents) => {
-                    console.log("docmentsList: ", documents);
-                    // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
-                    this.documents = documents.filter(doc => doc.user?.id === userConnected.userId);
-                    this.documentsFiltered = [...this.documents];
-                    this.updatePagination();
-                    console.log("documents de l'utilisateur:", this.documents);
-                },
-                error: (error) => this.toastr.error('Erreur lors du chargement des documents')
-            });
+            this.isLoading = true;
+            setTimeout(() => {
+                this.documentService.getDocuments().subscribe({
+                    next: (documents) => {
+                        console.log("docmentsList: ", documents);
+                        // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
+                        this.documents = documents.filter(doc => doc.user?.id === userConnected.userId);
+                        this.documentsFiltered = [...this.documents];
+                        this.updatePagination();
+                        console.log("documents de l'utilisateur:", this.documents);
+                    },
+                    error: (error) => {
+                        this.toastr.error('Erreur lors du chargement des documents')
+                    },
+                    complete: () => {
+                        this.isLoading = false;
+                    }
+                });
+            }, 1000);
         }
     }
 

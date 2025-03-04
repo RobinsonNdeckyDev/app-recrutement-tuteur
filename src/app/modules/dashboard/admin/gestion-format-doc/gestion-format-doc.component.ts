@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { FormatDocService } from '../../../../core/services/api/format-doc.service';
+import { SpinnerComponent } from '../../../../components/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-gestion-format-doc',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, SpinnerComponent],
   templateUrl: './gestion-format-doc.component.html',
   styleUrl: './gestion-format-doc.component.css'
 })
@@ -18,6 +19,7 @@ export class GestionFormatDocComponent {
     formatDocForm!: FormGroup;
     formatDocFormUpdate!: FormGroup;
     formatDocFiltered: any[] = [];
+    isLoading = false;
     currentPage = 1;
     rowsPerPage = 4;
     totalPages = 0;
@@ -48,16 +50,24 @@ export class GestionFormatDocComponent {
 
     // Récupérer tous les formats docs
     getAllFormatDocs(){
-        this.formatDocService.getFormatDoc().subscribe(
-            (formatDoc) => {
-                console.log("FormatsDocs", formatDoc);
-                this.tabFormatDoc = formatDoc;
-                this.updatePagination(); // Mettre à jour la pagination
-            },
-            (error) => {
-                console.error('Une erreur s\'est produite lors de la récupération des formatsDocs:', error);
-            }
-        )
+        this.isLoading = true;
+        setTimeout(() => {
+            this.formatDocService.getFormatDoc().subscribe({
+                
+                next: (formatDoc) => {
+                    console.log("FormatsDocs", formatDoc);
+                    this.tabFormatDoc = formatDoc;
+                    this.updatePagination(); // Mettre à jour la pagination
+                },
+                error: (error) => {
+                    console.error('Une erreur s\'est produite lors de la récupération des formatsDocs:', error);
+                },
+                complete: () => {
+                    this.isLoading = false;
+                }
+            
+            })
+        }, 1000);
     }
 
     // Ajouter un format doc

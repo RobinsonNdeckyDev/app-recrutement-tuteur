@@ -1,7 +1,7 @@
-<p class="fw-medium text-shadow">Mes candidatures</p>
 
 <div class="card border-0 px-3 shadow">
-    <div class="d-flex justify-content-end align-items-center my-3">
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <p class="fw-medium text-primary my-0">Liste des candidatures</p>
         <input type="text" class="form-control w-50" placeholder="Rechercher une annonce" (input)="searchCandidature($event)">
     </div>
 
@@ -42,7 +42,7 @@
                         </div>
 
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 single-line-text">
                         {{candidature.annonce.description}}
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -176,7 +176,7 @@
 
                     <div class="docs">
                         <div class="row">
-                            @for (doc of selectedCandidature?.documentIds; track $index) {
+                            @for (doc of selectedCandidature?.documents; track $index) {
                                 <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill rounded shadow" style="font-size: 100px; color: blue; cursor:pointer;" (click)="downloadDocument(doc.id)"></i>
                                     <span class="fw-medium text-shadow mt-3"> {{doc.titre}} </span>
@@ -187,7 +187,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <h4 class="text-primary">Message</h4>
+                    <h4 class="text-primary">Etat candidature</h4>
                     <hr>
                     <!-- Sélecteur d'état -->
                     <div class="form-group">

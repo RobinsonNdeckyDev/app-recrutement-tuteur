@@ -223,9 +223,14 @@ export class DashCandidatComponent {
     initChart() {
         const ctx = document.getElementById('candidatureChart') as HTMLCanvasElement;
         
+        // taille du chart
+        ctx.style.width = '400px';
+        ctx.style.height = '400px'; 
+        ctx.style.margin = 'auto'; 
+        ctx.style.display = 'block'; 
+
         // Compter les différents états
         const pending = this.tabCandidatures.filter((c: any) => c.etat === 'PENDING').length;
-        const accepted = this.tabCandidatures.filter((c: any) => c.etat === 'ACCEPTED').length;
         const rejected = this.tabCandidatures.filter((c: any) => c.etat === 'REJECTED').length;
         const cancelled = this.tabCandidatures.filter((c: any) => c.etat === 'CANCELLED').length;
         const hired = this.tabCandidatures.filter((c: any) => c.etat === 'HIRED').length;
@@ -233,12 +238,11 @@ export class DashCandidatComponent {
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['En attente', 'Acceptées', 'Rejetées', 'Annulées', 'Recruté(e)'],
+                labels: ['En attente', 'Rejetées', 'Annulées', 'Recruté(e)'],
                 datasets: [{
-                    data: [pending, accepted, rejected, cancelled, hired],
+                    data: [pending, rejected, cancelled, hired],
                     backgroundColor: [
                         '#FFA726',  // Orange pour En attente
-                        '#66BB6A',  // Vert pour Acceptées
                         '#EF5350',  // Rouge pour Rejetées
                         '#78909C',  // Gris pour Annulées
                         '#42A5F5'   // Bleu pour Recruté(e)

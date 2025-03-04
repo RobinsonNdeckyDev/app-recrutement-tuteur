@@ -51,4 +51,5 @@ export class FileService {
     getFileUrl(fileName: string): string {
         return `${this.apiUrl}/download/${fileName}`;
     }
+
 }

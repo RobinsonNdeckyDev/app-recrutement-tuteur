@@ -1,4 +1,4 @@
-<p class="fw-medium text-shadow">Gestion formats de documents</p>
+<p class="fw-medium text-shadow mb-1">Gestion formats de documents</p>
 
 <div class="card px-3 shadow">
     <div class="d-flex justify-content-between align-items-center my-4">
@@ -10,18 +10,21 @@
         <!--  -->
     </div>
 
-    <table class="table table-striped mt-4">
-        <thead class="">
-            <tr>
-                <th>#</th>
-                <th>Nom format</th>
-                <th>Description</th>
-                <th>etat</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (getPaginatedFormatDoc()) {
+    @if(isLoading){
+        <app-spinner />
+    }@else if(getPaginatedFormatDoc().length){
+        <table class="table table-striped mt-4">
+            <thead class="">
+                <tr>
+                    <th>#</th>
+                    <th>Nom format</th>
+                    <th>Description</th>
+                    <th>etat</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
                 <tr *ngFor="let formatDoc of getPaginatedFormatDoc()">
                     <td>{{ formatDoc.id}}</td>
                     <td>{{ formatDoc.nomFormat }}</td>
@@ -35,32 +38,32 @@
                         <span><i class="pi pi-trash" (click)="deleteFormatDoc(formatDoc.id)"></i></span>
                     </td>
                 </tr>
-            }
-            @else {
-                <p class="text-center text-primary my-4">
-                    Aucune année académique disponible
-                </p>
-            }
-        </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4 mb-3">
-        <nav>
-            <ul class="pagination">
-                <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
-                    <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
-                </li>
-                <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
-                    <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
-                </li>
-                <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
-                    <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
+            </tbody>
+            
+        </table>
+    
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-4 mb-3">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
+                        <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
+                        <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
+                    </li>
+                    <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
+                        <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }@else {
+        <p class="text-center text-primary my-4">
+            Aucun format de document disponible
+        </p>
+    }
+   
 </div>
 
 <!-- Modal détail format Doc -->
