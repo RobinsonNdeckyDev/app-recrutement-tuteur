@@ -114,7 +114,7 @@ export class MenuService {
 
         // Récupérer le role de l'utilisateur
         const userConnected = this.authService.getCurrentUser();
-        console.log('userConnected', userConnected);
+        // console.log('userConnected', userConnected);
 
         // Filtrer les menus en fonction du role
         if (userConnected) {

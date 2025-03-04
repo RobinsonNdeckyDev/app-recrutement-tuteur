@@ -35,7 +35,7 @@ export class LoginComponent {
         if (this.loginForm.valid) {
             this.authService.login(this.loginForm.value).subscribe({
                 next: (response) => {
-                    console.log("response login", response);
+                    // console.log("response login", response);
                     this.authService.setUserData(response);
 
                     // Redirection basée sur le rôle

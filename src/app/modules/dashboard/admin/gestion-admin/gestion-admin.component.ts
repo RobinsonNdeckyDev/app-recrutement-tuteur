@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AdminService } from '../../../../core/services/api/admin.service';
 import { AuthService } from '../../../../core/services/authService/auth.service';
 import { FileService } from '../../../../core/services/api/file.service';
+import { ModalService } from '../../../../core/services/api/modal.service';
 
 @Component({
   selector: 'app-gestion-admin',
@@ -30,6 +31,7 @@ export class GestionAdminComponent {
         private toastr: ToastrService,
         private fb: FormBuilder,
         private fileService: FileService,
+        private modalService: ModalService
     ){
         this.adminFormAdd = this.fb.group({
             email: ['', Validators.required],
@@ -86,7 +88,7 @@ export class GestionAdminComponent {
     getAllAdmins(){
         this.adminService.getAdmins().subscribe(
             (admins) => {
-                console.log("Liste des admins", admins);
+                // console.log("Liste des admins", admins);
                 this.tabsAdmins = admins;
                 this.updatePagination(); // Mettre à jour la pagination
             },
@@ -109,12 +111,10 @@ export class GestionAdminComponent {
                     // Puis on crée l'admin avec l'URL de l'image
                     this.adminService.addAdmin(adminData).subscribe(
                         (admin) => {
-                            console.log("admin pour ajout", admin);
+                            // console.log("admin pour ajout", admin);
                             this.getAllAdmins();
-                            document.getElementById('ajoutAdmin')?.classList.remove('show');
-                            document.body.classList.remove('modal-open');
+                            this.modalService.closeModal("ajoutAdmin");
                             this.adminFormAdd.reset();
-                            document.querySelector('.modal-backdrop')?.remove();
                             this.selectedFile = null;
                             this.toastr.success("admin ajouté avec succes!")
                         },
@@ -133,12 +133,10 @@ export class GestionAdminComponent {
             // Si pas d'image, on crée l'admin directement
             this.adminService.addAdmin(this.adminFormAdd.value).subscribe(
                 (admin) => {
-                    console.log("admin pour ajout", admin);
+                    // console.log("admin pour ajout", admin);
                     this.getAllAdmins();
-                    document.getElementById('ajoutCandidat')?.classList.remove('show');
-                    document.body.classList.remove('modal-open');
+                    this.modalService.closeModal("ajoutAdmin");
                     this.adminFormAdd.reset();
-                    document.querySelector('.modal-backdrop')?.remove();
                     this.toastr.success("admin ajouté avec succes !")
                 },
                 (error) => {
@@ -148,59 +146,6 @@ export class GestionAdminComponent {
             )
         }
     }
-
-    // addAdmin() {
-    //     if (this.adminFormAdd.valid) {
-    //         if (this.selectedFile) {
-    //             // D'abord, on upload l'image
-    //             this.fileService.uploadFile(this.selectedFile).subscribe(
-    //                 (fileResponse) => {
-    //                     // On récupère l'URL de l'image uploadée
-    //                     const adminData = this.adminFormAdd.value;
-    //                     adminData.photoProfil = fileResponse.url;
-    //                     // Puis on crée l'admin avec l'URL de l'image
-    //                     this.adminService.addAdmin(adminData).subscribe(
-    //                         (admin) => {
-    //                             console.log("Admin ajouté avec image:", admin);
-    //                             this.getAllAdmins();
-    //                             this.closeModal('ajoutAdmin');
-    //                             this.adminFormAdd.reset();
-    //                             this.selectedFile = null;
-    //                             this.toastr.success("Administrateur ajouté avec succès !");
-    //                         },
-    //                         (error) => {
-    //                             console.error('Erreur lors de l\'ajout:', error);
-    //                             this.toastr.error("Erreur lors de l'ajout de l'administrateur");
-    //                         }
-    //                     );
-    //                 },
-    //                 (error) => {
-    //                     console.error('Erreur upload image:', error);
-    //                     this.toastr.error("Erreur lors de l'upload de l'image");
-    //                 }
-    //             );
-    //         } else {
-    //             // Si pas d'image, on crée l'admin directement
-    //             this.adminService.addAdmin(this.adminFormAdd.value).subscribe(
-    //                 (admin) => {
-    //                     console.log("Admin pour ajout", admin);
-    //                     this.getAllAdmins();
-    //                     document.getElementById('ajoutAdmin')?.classList.remove('show');
-    //                     document.body.classList.remove('modal-open');
-    //                     this.adminFormAdd.reset();
-    //                     document.querySelector('.modal-backdrop')?.remove();
-    //                     this.toastr.success("année ajouté avec succes !")
-    //                 },
-    //                 (error) => {
-    //                     console.error('Une erreur s\'est produite lors de l\'ajout d\'un admin:', error);
-    //                     this.toastr.error("Une erreur s'est produite lors de l'ajout d'un admin'.");
-    //                 }
-    //             )
-    //         }
-    //     }
-    // }
-
-    // Méthode utilitaire pour fermer les modals
 
     private closeModal(modalId: string) {
         document.getElementById(modalId)?.classList.remove('show');
@@ -215,7 +160,7 @@ export class GestionAdminComponent {
         );
 
         if (this.selectedAdmin) {
-            console.log("details admin: ", this.selectedAdmin);
+            // console.log("details admin: ", this.selectedAdmin);
         } else {
             console.error("admin non trouvé");
             this.toastr.error("admin non trouvé");
@@ -228,7 +173,7 @@ export class GestionAdminComponent {
             (admin: any) => admin.id === id
         );
 
-        console.log("admin selected: ", this.selectedAdmin);
+        // console.log("admin selected: ", this.selectedAdmin);
 
         if (!this.selectedAdmin) {
             console.error("Admin non trouvée !");
@@ -249,7 +194,7 @@ export class GestionAdminComponent {
             role: this.selectedAdmin.role || 'ADMIN'
         });
 
-        console.log("Formulaire pré-rempli :", this.adminFormUpdate.value);
+        // console.log("Formulaire pré-rempli :", this.adminFormUpdate.value);
     }
 
     // Mettre à jour un admin
@@ -261,7 +206,7 @@ export class GestionAdminComponent {
                     const donnees = this.adminFormUpdate.value;
                     donnees.photoProfil = fileResponse.url;
 
-                    console.log("données: ", donnees);
+                    // console.log("données: ", donnees);
 
                     this.processUpdateAdmin(id, donnees);
                 },
@@ -282,7 +227,7 @@ export class GestionAdminComponent {
         this.adminService.updateAdmin(id, donnees).subscribe(
             (updateAdmin) => {
 
-                console.log("updatedAdmin: ", updateAdmin);
+                // console.log("updatedAdmin: ", updateAdmin);
 
                 this.tabsAdmins = this.tabsAdmins.map((admin: any) =>
                     admin.id === id ? { ...admin, ...updateAdmin } : admin
@@ -305,7 +250,7 @@ export class GestionAdminComponent {
     deleteAdmin(id: number){
         this.adminService.deleteAdmin(id).subscribe(
             (admin) => {
-                console.log("admin à supprimer", admin);
+                // console.log("admin à supprimer", admin);
                 this.getAllAdmins();
                 this.toastr.success("admin supprimé avec succes !")
             },
@@ -319,7 +264,7 @@ export class GestionAdminComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabAdminsFiltered = [...this.tabsAdmins];
-        console.log("tabAdminFiltered: ", this.tabAdminsFiltered);
+        // console.log("tabAdminFiltered: ", this.tabAdminsFiltered);
         this.totalPages = Math.ceil(this.tabsAdmins.length / this.rowsPerPage);
     }
 

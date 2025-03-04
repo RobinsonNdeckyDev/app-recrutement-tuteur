@@ -83,7 +83,7 @@ export class AnnoncesComponent {
         const userConnected = this.authService.getCurrentUser();
         if(userConnected){
             this.userConnected = userConnected;
-            console.log("user infos: ", userConnected);
+            // console.log("user infos: ", userConnected);
         }else{
             this.toastrService.error('Erreur lors de la récupération des informations de l\'utilisateur');
         }
@@ -93,7 +93,7 @@ export class AnnoncesComponent {
         this.candidatureService.getCandidatures().subscribe({
             next: (res: any) => {
                 this.tabCandidatures = res;
-                console.log("tabCandidatures: ", this.tabCandidatures);
+                // console.log("tabCandidatures: ", this.tabCandidatures);
             },
             error: (err: any) => {
                 this.toastrService.error('Erreur lors de la récupération des candidatures');
@@ -105,7 +105,7 @@ export class AnnoncesComponent {
         this.annonceService.getAnnonces().subscribe({
             next: (res: any) => {
                 this.tabAnnonces = res;
-                console.log("tabAnnonces: ", this.tabAnnonces);
+                // console.log("tabAnnonces: ", this.tabAnnonces);
                 this.updatePagination();
             },
             error: (err: any) => {
@@ -135,7 +135,7 @@ export class AnnoncesComponent {
             }
         }, 150);
 
-        console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
+        // console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
         this.formcandidature.patchValue({
             annonceId: annonce.id,
             userId: this.userConnected.userId,
@@ -149,13 +149,13 @@ export class AnnoncesComponent {
         if (userConnected) {
             this.documentService.getDocuments().subscribe({
                 next: (documents) => {
-                    console.log("docmentsList: ", documents);
+                    // console.log("docmentsList: ", documents);
                     // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
                     this.tabDocuments = documents.filter(doc => doc.user?.id === userConnected.userId);
                     this.documentsFiltered = [...this.tabDocuments];
                     this.availableDocuments = [...this.documentsFiltered];
                     // this.updatePagination();
-                    console.log("documents de l'utilisateur:", this.tabDocuments);
+                    // console.log("documents de l'utilisateur:", this.tabDocuments);
                 },
                 error: (error) => this.toastrService.error('Erreur lors du chargement des documents')
             });
@@ -165,13 +165,13 @@ export class AnnoncesComponent {
     // Afficher les détails d'une annonce
     showdetailsAnnonce(annonce:any){
         this.selectedAnnonce = {...annonce};
-        console.log("Annonce sélectionnée: ", this.selectedAnnonce)
+        // console.log("Annonce sélectionnée: ", this.selectedAnnonce);
     }
 
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabFilteredAnnonces = [...this.tabAnnonces];
-        console.log("tabAnnoncesFiltered: ", this.tabFilteredAnnonces);
+        // console.log("tabAnnoncesFiltered: ", this.tabFilteredAnnonces);
         this.totalPages = Math.ceil(this.tabAnnonces.length / this.rowsPerPage);
     }
 
@@ -272,7 +272,7 @@ export class AnnoncesComponent {
             etat: "PENDING"
         };
 
-        console.log("Candidature post envoyée: ", candidatureData);
+        // console.log("Candidature post envoyée: ", candidatureData);
 
         this.candidatureService.addCandidature(candidatureData).subscribe({
             next: (res: any) => {

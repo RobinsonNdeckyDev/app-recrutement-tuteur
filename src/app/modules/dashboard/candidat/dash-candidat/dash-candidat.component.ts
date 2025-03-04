@@ -81,7 +81,7 @@ export class DashCandidatComponent {
         const userConnected = this.authService.getCurrentUser();
         if(userConnected){
             this.userConnected = userConnected;
-            console.log("user infos: ", userConnected);
+            // console.log("user infos: ", userConnected);
         }else{
             this.toastrService.error('Erreur lors de la récupération des informations de l\'utilisateur');
         }
@@ -90,18 +90,18 @@ export class DashCandidatComponent {
     // Liste des candidatures
     getAllCandidatures(){
         const userConnected = this.authService.getCurrentUser();
-        console.log("Uc: ", userConnected);
+        // console.log("Uc: ", userConnected);
         if (userConnected) {
             this.candidatureService.getCandidatures().subscribe({
                 next: (candidatures) => {
-                    console.log("Liste candidatures: ", candidatures);
+                    // console.log("Liste candidatures: ", candidatures);
                     this.tabCandidatures = candidatures;
                     // Filtrer les candidatures pour n'afficher que ceux de l'utilisateur connecté
                     this.tabCandidatures = this.tabCandidatures.filter((candidature: any) => candidature.user?.id === userConnected.userId);
                     this.tabCandidaturesFiltered = [...this.tabCandidatures];
                     this.updatePagination();
                     this.initChart();
-                    console.log("Candidatures de l'utilisateur:", this.tabCandidaturesFiltered);
+                    // console.log("Candidatures de l'utilisateur:", this.tabCandidaturesFiltered);
                 },
                 error: (error) => this.toastrService.error('Erreur lors du chargement des candidatures de l\'utilisateur')
             });
@@ -113,12 +113,12 @@ export class DashCandidatComponent {
         if (userConnected) {
             this.documentService.getDocuments().subscribe({
                 next: (documents) => {
-                    console.log("docmentsList: ", documents);
+                    // console.log("docmentsList: ", documents);
                     // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
                     this.tabDocuments = documents.filter(doc => doc.user?.id === userConnected.userId);
                     this.documentsFiltered = [...this.tabDocuments];
                     // this.updatePagination();
-                    console.log("documents de l'utilisateur:", this.tabDocuments);
+                    // console.log("documents de l'utilisateur:", this.tabDocuments);
                 },
                 error: (error) => this.toastrService.error('Erreur lors du chargement des documents')
             });
@@ -127,12 +127,12 @@ export class DashCandidatComponent {
 
     showDetailsCandidature(candidature: any){
         this.selectedCandidature = {...candidature};
-        console.log("Candidature sélectionnée: ", this.selectedCandidature)
+        // console.log("Candidature sélectionnée: ", this.selectedCandidature);
     }
 
     prepareCandidature(annonce: any) {
         this.annoncePostule = annonce;
-        console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
+        // console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
         this.formcandidatureUpdate.patchValue({
             annonceId: annonce.id,
             userId: this.userConnected.userId,
@@ -187,7 +187,7 @@ export class DashCandidatComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabCandidaturesFiltered = [...this.tabCandidatures];
-        console.log("tabCandidaturesFiltered: ", this.tabCandidaturesFiltered);
+        // console.log("tabCandidaturesFiltered: ", this.tabCandidaturesFiltered);
         this.totalPages = Math.ceil(this.tabCandidatures.length / this.rowsPerPage);
     }
 

@@ -43,7 +43,7 @@ export class GestionProfilComponent {
 
     getUserCompte(){
         this.userConnected = this.authService.getCurrentUser();
-        console.log("UserCompte: ", this.userConnected);
+        // console.log("UserCompte: ", this.userConnected);
 
         // Mettre à jour les valeurs du formulaire
         this.formUpdateCompte.patchValue({
@@ -57,7 +57,7 @@ export class GestionProfilComponent {
             role: this.userConnected.role
         });
 
-        console.log("FormUpdateValue: ", this.formUpdateCompte.value);
+        // console.log("FormUpdateValue: ", this.formUpdateCompte.value);
     }
 
     // Méthode pour prévisualiser l'image

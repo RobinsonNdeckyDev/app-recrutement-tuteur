@@ -39,10 +39,10 @@ export class RegisterComponent {
 
     inscriptionForm() {
         if (this.registerForm.valid) {
-            console.log(this.registerForm.value);
+            // console.log(this.registerForm.value);
             this.authService.inscription(this.registerForm.value).subscribe({
                 next: (response) => {
-                    console.log('Inscription réussie', response);
+                    // console.log('Inscription réussie', response);
                     this.toastr.success('Inscription réussie');
                     this.router.navigate(['/login']);
                 },

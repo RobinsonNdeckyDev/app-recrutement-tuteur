@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ToastrService } from 'ngx-toastr';
 import { FormatDocService } from '../../../../core/services/api/format-doc.service';
 import { TypeDocService } from './../../../../core/services/api/type-doc.service';
+import { ModalService } from '../../../../core/services/api/modal.service';
 
 
 @Component({
@@ -30,7 +31,8 @@ export class GestionTypeDocComponent {
         private formatDocService: FormatDocService,
         private typeDocService: TypeDocService,
         private fb: FormBuilder,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private modalService: ModalService
     ){
         this.typeDocForm = this.fb.group({
             nom_type: ['', Validators.required],
@@ -59,7 +61,7 @@ export class GestionTypeDocComponent {
     getAllTypeDocs(){
         this.typeDocService.getTypesDoc().subscribe(
             (typeDocs) => {
-                console.log("Typesdocs", typeDocs);
+                // console.log("Typesdocs", typeDocs);
                 this.tabTypeDoc = typeDocs;
                 this.updatePagination(); // Mettre à jour la pagination
             },
@@ -73,7 +75,7 @@ export class GestionTypeDocComponent {
     getAllFormatDocs(){
         this.formatDocService.getFormatDoc().subscribe(
             (formatDoc) => {
-                console.log("Liste des formats docs", formatDoc);
+                // console.log("Liste des formats docs", formatDoc);
                 this.tabFormatDoc = formatDoc;
             },
             (error) => {
@@ -102,7 +104,7 @@ export class GestionTypeDocComponent {
                 formatDocumentId: type.id_format_document
             };
 
-            console.log("typeDocData à l'envoi:", typeDocData);
+            // console.log("typeDocData à l'envoi:", typeDocData);
 
             // Appel à l'API pour ajouter le type de document
             this.typeDocService.createTypeDoc(typeDocData).subscribe({
@@ -110,9 +112,7 @@ export class GestionTypeDocComponent {
                     console.log("Type doc ajouté", typeDoc);
                     this.getAllTypeDocs();
                     this.typeDocForm.reset();
-                    document.getElementById('ajoutTypeDoc')?.classList.remove('show');
-                    document.body.classList.remove('modal-open');
-                    document.querySelector('.modal-backdrop')?.remove();
+                    this.modalService.closeModal('ajoutTypeDoc');
                     this.toastr.success("TypeDoc ajouté avec succès !");
                 },
                 error: (error) => {
@@ -129,7 +129,7 @@ export class GestionTypeDocComponent {
         );
 
         if (this.selectedTypeDoc) {
-            console.log("details type doc: ", this.selectedTypeDoc);
+            // console.log("details type doc: ", this.selectedTypeDoc);
         } else {
             console.error("Type de document non trouvé");
             this.toastr.error("Type de document non trouvé");
@@ -143,7 +143,7 @@ export class GestionTypeDocComponent {
         );
 
         if (!this.selectedTypeDoc) {
-            console.error("type doc non trouvée !");
+            // console.error("type doc non trouvée !");
             this.toastr.error("Impossible de trouver le type doc.");
             return;
         }
@@ -157,12 +157,12 @@ export class GestionTypeDocComponent {
             id_format_document: this.selectedTypeDoc.formatDocument?.id || '',
         });
 
-        console.log("Formulaire pré-rempli :", this.typeDocFormUpdate.value);
+        // console.log("Formulaire pré-rempli :", this.typeDocFormUpdate.value);
     }
 
     // Mettre à jour un type de document
     updateTypeDoc(id: number) {
-        console.log("ID typeDoc à modifier :", id);
+        // console.log("ID typeDoc à modifier :", id);
 
         const formValues = this.typeDocFormUpdate.value;
 
@@ -177,16 +177,14 @@ export class GestionTypeDocComponent {
 
         this.typeDocService.updateTypeDoc(id, donnees).subscribe(
             (updateTypeDoc) => {
-                console.log("Réponse API après mise à jour :", updateTypeDoc);
+                // console.log("Réponse API après mise à jour :", updateTypeDoc);
                 this.tabTypeDoc = this.tabTypeDoc.map((typeDoc: any) =>
                     typeDoc.id === id ? { ...typeDoc, ...updateTypeDoc } : typeDoc
                 );
                 this.selectedTypeDoc = { ...updateTypeDoc };
 
                 this.getAllTypeDocs();
-                document.getElementById('modifierTypeDoc')?.classList.remove('show');
-                document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop')?.remove();
+                this.modalService.closeModal('modifierTypeDoc');
 
                 this.toastr.success("Type doc mis à jour avec succès !");
             },
@@ -201,7 +199,7 @@ export class GestionTypeDocComponent {
     deleteTypeDoc(id: number){
         this.typeDocService.deleteTypeDoc(id).subscribe(
             (typeDoc) => {
-                console.log("type doc supprimé", typeDoc);
+                // console.log("type doc supprimé", typeDoc);
                 this.getAllTypeDocs();
                 this.toastr.success("type doc supprimé avec succes !")
             },
@@ -215,7 +213,7 @@ export class GestionTypeDocComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.typeDocFiltered = [...this.tabTypeDoc];
-        console.log("typeDocFiltered: ", this.typeDocFiltered);
+        // console.log("typeDocFiltered: ", this.typeDocFiltered);
         this.totalPages = Math.ceil(this.tabTypeDoc.length / this.rowsPerPage);
     }
 

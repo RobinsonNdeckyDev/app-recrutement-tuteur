@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ToastrService } from 'ngx-toastr';
 import { FormatDocService } from '../../../../core/services/api/format-doc.service';
 import { SpinnerComponent } from '../../../../components/ui/spinner/spinner.component';
+import { ModalService } from '../../../../core/services/api/modal.service';
 
 @Component({
   selector: 'app-gestion-format-doc',
@@ -27,7 +28,8 @@ export class GestionFormatDocComponent {
     constructor(
         private formatDocService: FormatDocService,
         private fb: FormBuilder,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private modalService: ModalService
     ){
         this.formatDocForm = this.fb.group({
             nomFormat: ['', Validators.required],
@@ -53,9 +55,9 @@ export class GestionFormatDocComponent {
         this.isLoading = true;
         setTimeout(() => {
             this.formatDocService.getFormatDoc().subscribe({
-                
+
                 next: (formatDoc) => {
-                    console.log("FormatsDocs", formatDoc);
+                    // console.log("FormatsDocs", formatDoc);
                     this.tabFormatDoc = formatDoc;
                     this.updatePagination(); // Mettre à jour la pagination
                 },
@@ -65,7 +67,7 @@ export class GestionFormatDocComponent {
                 complete: () => {
                     this.isLoading = false;
                 }
-            
+
             })
         }, 1000);
     }
@@ -75,12 +77,10 @@ export class GestionFormatDocComponent {
         const formatDoc = this.formatDocForm.value;
         this.formatDocService.createFormatDoc(formatDoc).subscribe(
             (formatDoc) => {
-                console.log("formatDoc", formatDoc);
+                // console.log("formatDoc", formatDoc);
                 this.getAllFormatDocs();
-                document.getElementById('ajoutFormatDoc')?.classList.remove('show');
-                document.body.classList.remove('modal-open');
+                this.modalService.closeModal('ajoutFormatDoc');
                 this.formatDocForm.reset();
-                document.querySelector('.modal-backdrop')?.remove();
                 this.toastr.success("formatDoc ajouté avec succes!")
             },
             (error) => {
@@ -92,12 +92,12 @@ export class GestionFormatDocComponent {
 
     // Modifier un format doc
     updateFormatDoc(id: number) {
-        console.log("ID formatDoc à modifier :", id);
+        // console.log("ID formatDoc à modifier :", id);
 
         const donnees = this.formatDocFormUpdate.value;
         this.formatDocService.updateFormatDoc(id, donnees).subscribe(
             (updateFormatDoc) => {
-                console.log("Réponse API après mise à jour :", updateFormatDoc);
+                // console.log("Réponse API après mise à jour :", updateFormatDoc);
 
                 // Mettre à jour l'élément correspondant dans tabAnneesAcademiques
                 this.tabFormatDoc = this.tabFormatDoc.map((formatDoc: any) =>
@@ -114,12 +114,10 @@ export class GestionFormatDocComponent {
                     etat: updateFormatDoc.etat,
                 });
 
-                console.log("Données mises à jour dans le formulaire :", this.formatDocFormUpdate.value);
+                // console.log("Données mises à jour dans le formulaire :", this.formatDocFormUpdate.value);
 
                 this.getAllFormatDocs();
-                document.getElementById('modifierFormatDoc')?.classList.remove('show');
-                document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop')?.remove();
+                this.modalService.closeModal('modifierFormatDoc');
 
 
                 this.toastr.success("FormatDoc mise à jour avec succès !");
@@ -135,7 +133,7 @@ export class GestionFormatDocComponent {
     deleteFormatDoc(id: number){
         this.formatDocService.deleteFormatDoc(id).subscribe(
             (formatDoc) => {
-                console.log("formatDoc", formatDoc);
+                // console.log("formatDoc", formatDoc);
                 this.getAllFormatDocs();
                 this.toastr.success("formatDoc supprimé avec succes!")
             },
@@ -150,9 +148,9 @@ export class GestionFormatDocComponent {
         this.selectedFormatDoc = this.tabFormatDoc.find(
             (formatDoc: any) => formatDoc.id === id
         );
-        
+
         if (this.selectedFormatDoc) {
-            console.log("details format doc: ", this.selectedFormatDoc);
+            // console.log("details format doc: ", this.selectedFormatDoc);
         } else {
             console.error("Format document non trouvé");
             this.toastr.error("Format document non trouvé");
@@ -164,7 +162,7 @@ export class GestionFormatDocComponent {
         );
 
         if (!this.selectedFormatDoc) {
-            console.error("formatDoc non trouvée !");
+            // console.error("formatDoc non trouvée !");
             this.toastr.error("Impossible de trouver formatDoc.");
             return;
         }
@@ -176,7 +174,7 @@ export class GestionFormatDocComponent {
             etat: this.selectedFormatDoc.etat || ''
         });
 
-        console.log("Formulaire pré-rempli :", this.formatDocFormUpdate.value);
+        // console.log("Formulaire pré-rempli :", this.formatDocFormUpdate.value);
     }
 
     // Met à jour la liste filtrée et le nombre total de pages

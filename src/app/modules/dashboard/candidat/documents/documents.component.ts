@@ -96,7 +96,7 @@ export class DocumentsComponent {
         );
 
         if (this.selectedDocument) {
-            console.log("details doc: ", this.selectedDocument);
+            // console.log("details doc: ", this.selectedDocument);
         } else {
             console.error("document non trouvé");
             this.toastr.error("document non trouvé");
@@ -150,7 +150,7 @@ export class DocumentsComponent {
     getUserConnected() {
         const userConnected = this.authService.getCurrentUser();
         if (userConnected) {
-            console.log('user connecté', userConnected);
+            // console.log('user connecté', userConnected);
             this.documentForm.patchValue({
                 userId: userConnected.userId
             });
@@ -172,14 +172,14 @@ export class DocumentsComponent {
         formData.append('userId', this.documentForm.get('userId')?.value);
 
         // Ajout de logs pour déboguer
-        console.log('FormData content:');
+        // console.log('FormData content:');
         formData.forEach((value, key) => {
             console.log(key, value);
         });
 
         this.documentService.uploadDocument(formData).subscribe({
             next: (response) => {
-            console.log('Document response', response);
+            // console.log('Document response', response);
             this.toastr.success('Document uploadé avec succès');
             this.loadUserDocuments();
             this.documentForm.reset();
@@ -209,7 +209,7 @@ export class DocumentsComponent {
         this.typeDocService.getTypesDoc().subscribe({
         next: (typeDocuments) => {
             this.typeDocuments = typeDocuments;
-            console.log("typeDocs: ", typeDocuments);
+            // console.log("typeDocs: ", typeDocuments);
         },
         error: (error) => {
             this.toastr.error('Erreur lors du chargement des types de documents');
@@ -246,16 +246,16 @@ export class DocumentsComponent {
      */
     private loadUserDocuments(): void {
         const userConnected = this.authService.getCurrentUser();
-        console.log("Uc: ", userConnected);
+        // console.log("Uc: ", userConnected);
         if (userConnected) {
             this.documentService.getDocuments().subscribe({
                 next: (documents) => {
-                    console.log("docmentsList: ", documents);
+                    // console.log("docmentsList: ", documents);
                     // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
                     this.documents = documents.filter(doc => doc.user?.id === userConnected.userId);
                     this.documentsFiltered = [...this.documents];
                     this.updatePagination();
-                    console.log("documents de l'utilisateur:", this.documents);
+                    // console.log("documents de l'utilisateur:", this.documents);
                 },
                 error: (error) => this.toastr.error('Erreur lors du chargement des documents')
             });

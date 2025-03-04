@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AuthService } from '../../../../core/services/authService/auth.service';
 import { CommonModule } from '@angular/common';
 import { FileService } from '../../../../core/services/api/file.service';
+import { ModalService } from '../../../../core/services/api/modal.service';
 
 @Component({
   selector: 'app-gestion-candidat',
@@ -31,6 +32,7 @@ export class GestionCandidatComponent {
         private fileService: FileService,
         private authService: AuthService,
         private fb: FormBuilder,
+        private modalService: ModalService
     ){
         this.candidatFormAdd = this.fb.group({
             email: ['', Validators.required],
@@ -87,7 +89,7 @@ export class GestionCandidatComponent {
     getAllCandidats(){
         this.candidatService.getCandidats().subscribe(
             (candidats) => {
-                console.log("Liste des candidats", candidats);
+                // console.log("Liste des candidats", candidats);
                 this.tabsCandidats = candidats;
                 this.updatePagination(); // Mettre à jour la pagination
             },
@@ -107,17 +109,15 @@ export class GestionCandidatComponent {
                     const candidatData = this.candidatFormAdd.value;
                     candidatData.photoProfil = response.url;
 
-                    console.log("candidatData avant ajout: ", candidatData);
+                    // console.log("candidatData avant ajout: ", candidatData);
 
                     // Puis on crée le candidat avec l'URL de l'image
                     this.authService.inscription(candidatData).subscribe(
                         (candidat) => {
-                            console.log("candidat pour ajout", candidat);
+                            // console.log("candidat pour ajout", candidat);
                             this.getAllCandidats();
-                            document.getElementById('ajoutCandidat')?.classList.remove('show');
-                            document.body.classList.remove('modal-open');
+                            this.modalService.closeModal("ajoutCandidat");
                             this.candidatFormAdd.reset();
-                            document.querySelector('.modal-backdrop')?.remove();
                             this.selectedFile = null;
                             this.toastr.success("candidat ajouté avec succes!")
                         },
@@ -136,12 +136,10 @@ export class GestionCandidatComponent {
             // Si pas d'image, on crée le candiddat directement
             this.candidatService.addCandidat(this.candidatFormAdd.value).subscribe(
                 (candidat) => {
-                    console.log("Candidat pour ajout", candidat);
+                    // console.log("Candidat pour ajout", candidat);
                     this.getAllCandidats();
-                    document.getElementById('ajoutCandidat')?.classList.remove('show');
-                    document.body.classList.remove('modal-open');
+                    this.modalService.closeModal("ajoutCandidat");
                     this.candidatFormAdd.reset();
-                    document.querySelector('.modal-backdrop')?.remove();
                     this.toastr.success("candidat ajouté avec succes !")
                 },
                 (error) => {
@@ -166,7 +164,7 @@ export class GestionCandidatComponent {
         );
 
         if (this.selectedCandidat) {
-            console.log("details candidat: ", this.selectedCandidat);
+            // console.log("details candidat: ", this.selectedCandidat);
         } else {
             console.error("candidat non trouvé");
             this.toastr.error("candidat non trouvé");
@@ -197,7 +195,7 @@ export class GestionCandidatComponent {
             role: this.selectedCandidat.role || 'CANDIDAT'
         });
 
-        console.log("Formulaire pré-rempli :", this.candidatFormUpdate.value);
+        // console.log("Formulaire pré-rempli :", this.candidatFormUpdate.value);
     }
 
     // Mettre à jour un candidat
@@ -209,7 +207,7 @@ export class GestionCandidatComponent {
                     const donnees = this.candidatFormUpdate.value;
                     donnees.photoProfil = fileResponse.url;
 
-                    console.log("données: ", donnees);
+                    // console.log("données: ", donnees);
 
                     this.processUpdateCandidat(id, donnees);
                 },
@@ -230,7 +228,7 @@ export class GestionCandidatComponent {
         this.candidatService.updateCandidat(id, donnees).subscribe(
             (updateCandidat) => {
 
-                console.log("updatedCandidat: ", updateCandidat);
+                // console.log("updatedCandidat: ", updateCandidat);
 
                 this.tabsCandidats = this.tabsCandidats.map((candidat: any) =>
                     candidat.id === id ? { ...candidat, ...updateCandidat } : candidat
@@ -255,7 +253,7 @@ export class GestionCandidatComponent {
     deleteCandidat(id: number){
         this.candidatService.deleteCandidat(id).subscribe(
             (candidat) => {
-                console.log("candidat à supprimer", candidat);
+                // console.log("candidat à supprimer", candidat);
                 this.getAllCandidats();
                 this.toastr.success("candidat supprimé avec succes !")
             },
@@ -269,7 +267,7 @@ export class GestionCandidatComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabsCandidatsFiltered = [...this.tabsCandidats];
-        console.log("tabtabsCandidatsFiltered: ", this.tabsCandidatsFiltered);
+        // console.log("tabtabsCandidatsFiltered: ", this.tabsCandidatsFiltered);
         this.totalPages = Math.ceil(this.tabsCandidats.length / this.rowsPerPage);
     }
 

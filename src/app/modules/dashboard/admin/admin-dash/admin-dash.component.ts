@@ -72,7 +72,7 @@ export class AdminDashComponent {
         this.candidatureService.getCandidatures().subscribe(
             (data) => {
                 this.tabCandidatures = data;
-                console.log("dataCandidatures: ", this.tabCandidatures);
+                // console.log("dataCandidatures: ", this.tabCandidatures);
                 this.tabCandidaturesFiltered = [...this.tabCandidatures];
                 this.updatePagination();
                 this.initChart();
@@ -87,7 +87,7 @@ export class AdminDashComponent {
         this.annonceService.getAnnonces().subscribe(
             (data) => {
                 this.tabAnnonces = data;
-                console.log("datAnnonces: ", this.tabAnnonces);
+                // console.log("datAnnonces: ", this.tabAnnonces);
 
             },
             (error) => {
@@ -100,7 +100,7 @@ export class AdminDashComponent {
         this.candidatService.getCandidats().subscribe(
             (data) => {
                 this.tabCandidats = data;
-                console.log("dataCandidats: ", this.tabCandidats);
+                // console.log("dataCandidats: ", this.tabCandidats);
             },
             (error) => {
                 console.log("Erreur lors de la récupération des candidats: ", error)
@@ -110,15 +110,15 @@ export class AdminDashComponent {
 
     getAllDocuments(){
         const userConnected = this.authService.getCurrentUser();
-        console.log("Uc: ", userConnected);
+        // console.log("Uc: ", userConnected);
         if (userConnected) {
             this.documentService.getDocuments().subscribe({
                 next: (documents) => {
-                    console.log("docmentsList: ", documents);
+                    // console.log("docmentsList: ", documents);
                     // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
                     this.documents = documents.filter(doc => doc.user?.id === userConnected.userId);
                     this.documentsFiltered = [...this.documents];
-                    console.log("documents de l'utilisateur:", this.documents);
+                    // console.log("documents de l'utilisateur:", this.documents);
                 },
                 error: (error) => this.toastrService.error('Erreur lors du chargement des documents')
             });
@@ -127,12 +127,12 @@ export class AdminDashComponent {
 
     showDetailsCandidature(candidature: any){
         this.selectedCandidature = {...candidature};
-        console.log("Candidature sélectionnée: ", this.selectedCandidature)
+        // console.log("Candidature sélectionnée: ", this.selectedCandidature);
     }
 
     prepareCandidature(annonce: any) {
         this.annoncePostule = annonce;
-        console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
+        // console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
         this.formcandidatureUpdate.patchValue({
             annonceId: annonce.id,
             userId: this.userConnected.userId,
@@ -144,7 +144,7 @@ export class AdminDashComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabCandidaturesFiltered = [...this.tabCandidatures];
-        console.log("tabCandidaturesFiltered: ", this.tabCandidaturesFiltered);
+        // console.log("tabCandidaturesFiltered: ", this.tabCandidaturesFiltered);
         this.totalPages = Math.ceil(this.tabCandidatures.length / this.rowsPerPage);
     }
 
@@ -179,8 +179,8 @@ export class AdminDashComponent {
 
     initChart() {
         const ctx = document.getElementById('candidatureChart') as HTMLCanvasElement;
-        console.log("ctx: ", ctx);
-        
+        // console.log("ctx: ", ctx);
+
         // Compter les différents états
         const pending = this.tabCandidaturesFiltered.filter((c: any) => c.etat === 'PENDING').length;
         const rejected = this.tabCandidaturesFiltered.filter((c: any) => c.etat === 'REJECTED').length;

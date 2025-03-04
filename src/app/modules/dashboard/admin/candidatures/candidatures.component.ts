@@ -78,7 +78,7 @@ export class CandidaturesComponent {
         const userConnected = this.authService.getCurrentUser();
         if(userConnected){
             this.userConnected = userConnected;
-            console.log("user infos: ", userConnected);
+            // console.log("user infos: ", userConnected);
         }else{
             this.toastrService.error('Erreur lors de la récupération des informations de l\'utilisateur');
         }
@@ -87,15 +87,15 @@ export class CandidaturesComponent {
     // Liste des candidatures
     getAllCandidatures(){
         const userConnected = this.authService.getCurrentUser();
-        console.log("Uc: ", userConnected);
+        // console.log("Uc: ", userConnected);
         if (userConnected) {
             this.candidatureService.getCandidatures().subscribe({
                 next: (candidatures) => {
-                    console.log("Liste candidatures: ", candidatures);
+                    // console.log("Liste candidatures: ", candidatures);
                     this.tabCandidatures = candidatures;
                     this.tabCandidaturesFiltered = [...this.tabCandidatures];
                     this.updatePagination();
-                    console.log("Liste des candidatures:", this.tabCandidaturesFiltered);
+                    // console.log("Liste des candidatures:", this.tabCandidaturesFiltered);
                 },
                 error: (error) => this.toastrService.error('Erreur lors du chargement des candidatures')
             });
@@ -107,12 +107,12 @@ export class CandidaturesComponent {
         if (userConnected) {
             this.documentService.getDocuments().subscribe({
                 next: (documents) => {
-                    console.log("docmentsList: ", documents);
+                    // console.log("docmentsList: ", documents);
                     // Filtrer les documents pour n'afficher que ceux de l'utilisateur connecté
                     this.tabDocuments = documents.filter(doc => doc.user?.id === userConnected.userId);
                     this.documentsFiltered = [...this.tabDocuments];
                     // this.updatePagination();
-                    console.log("documents de l'utilisateur:", this.tabDocuments);
+                    // console.log("documents de l'utilisateur:", this.tabDocuments);
                 },
                 error: (error) => this.toastrService.error('Erreur lors du chargement des documents')
             });
@@ -127,12 +127,12 @@ export class CandidaturesComponent {
             documentIds: candidature.documents ? candidature.documents.map((doc: any) => doc.id) : [],
             etat: candidature.etat
         });
-        console.log("Candidature sélectionnée: ", this.selectedCandidature)
+        // console.log("Candidature sélectionnée: ", this.selectedCandidature);
     }
 
     prepareCandidature(annonce: any) {
         this.annoncePostule = annonce;
-        console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
+        // console.log("Annonce pour candidature selectionné: ", this.annoncePostule);
         this.formcandidatureUpdate.patchValue({
             annonceId: annonce.id,
             userId: this.userConnected.userId,
@@ -187,7 +187,7 @@ export class CandidaturesComponent {
     // Met à jour la liste filtrée et le nombre total de pages
     updatePagination() {
         this.tabCandidaturesFiltered = [...this.tabCandidatures];
-        console.log("tabCandidaturesFiltered: ", this.tabCandidaturesFiltered);
+        // console.log("tabCandidaturesFiltered: ", this.tabCandidaturesFiltered);
         this.totalPages = Math.ceil(this.tabCandidatures.length / this.rowsPerPage);
     }
 
@@ -222,7 +222,7 @@ export class CandidaturesComponent {
 
     // méthode de mise à jour candidature
     updateCandidatureStatus(candidatureId: number) {
-        console.log("formcandidatureUpdate: ", this.formcandidatureUpdate.value);
+        // console.log("formcandidatureUpdate: ", this.formcandidatureUpdate.value);
         if (this.formcandidatureUpdate.valid) {
             const updateData = {
                 etat: this.formcandidatureUpdate.get('etat')?.value,
@@ -231,7 +231,7 @@ export class CandidaturesComponent {
                 documentIds: this.formcandidatureUpdate.get('documents')?.value
             };
 
-            console.log("updateDataCandidature: ", updateData);
+            // console.log("updateDataCandidature: ", updateData);
 
             this.candidatureService.updateCandidature(candidatureId, updateData).subscribe({
                 next: (response) => {
@@ -240,7 +240,7 @@ export class CandidaturesComponent {
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
-                    console.log("Response aprés update: ", response);
+                    // console.log("Response aprés update: ", response);
                     this.getAllCandidatures();
                 },
                 error: (error) => {

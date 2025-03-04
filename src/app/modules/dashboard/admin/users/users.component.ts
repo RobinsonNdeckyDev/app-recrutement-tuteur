@@ -74,7 +74,7 @@ export class UsersComponent {
                 this.tabUsers = res;
                 this.tabUsersFiltered = this.tabUsers;
                 this.initChart();
-                console.log("liste des utilisateurs: ", this.tabUsersFiltered);
+                // console.log("liste des utilisateurs: ", this.tabUsersFiltered);
             },
             error: (err) => {
                 console.log(err);
@@ -84,8 +84,8 @@ export class UsersComponent {
 
     initChart() {
         const ctx = document.getElementById('candidatureChart') as HTMLCanvasElement;
-        console.log("ctx: ", ctx);
-        
+        // console.log("ctx: ", ctx);
+
         // Compter les différents états
         const administrateurs = this.tabUsersFiltered.filter((user: any) => user.role === 'ADMIN').length;
         const candidats = this.tabUsersFiltered.filter((user: any) => user.role === 'CANDIDAT').length;

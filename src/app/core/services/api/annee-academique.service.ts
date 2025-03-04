@@ -31,7 +31,7 @@ export class AnneeAcademiqueService {
             `Bearer ${token}`
         );
 
-        console.log('headers:', headers);
+        // console.log('headers:', headers);
         // console.log('Token:', token);
         // console.log('Request URL:', `${this.apiUrl}/annees-acdemiques`);
 

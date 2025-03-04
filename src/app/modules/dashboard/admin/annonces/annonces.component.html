@@ -94,7 +94,7 @@
 
 
 <!-- Modal d'ajout annonce -->
-<div class="modal fade" id="ajoutAnnonce" tabindex="-1" aria-labelledby="ajoutAnnonceLabel" aria-hidden="true">
+<div class="modal fade" id="ajoutAnnonce" tabindex="-1" aria-labelledby="ajoutAnnonceLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -124,7 +124,13 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="imageAnnonce" class="form-label text-primary">Image</label>
-                                <input type="file" class="form-control" id="imageAnnonce" name="imageAnnonce" formControlName="image">
+                                <input type="file"
+                                    class="form-control"
+                                    id="imageAnnonce"
+                                    name="imageAnnonce"
+                                    (change)="onFileSelected($event)"
+                                    accept="image/*"
+                                >
                             </div>
                             <div class="mb-3">
                                 <label for="auteur" class="form-label text-primary">Auteur</label>
@@ -178,7 +184,7 @@
                     <div class="col-4">
                         <img [src]="getImageUrl(selectedAnnonce)"
                             [alt]="selectedAnnonce.titre"
-                            class="img-thumbnail"  
+                            class="img-thumbnail"
                         >
 
                         <div class="">
@@ -200,7 +206,7 @@
 
 
 <!-- Modifier annonce -->
-<div class="modal fade" id="modifierAnnonce" tabindex="-1" aria-labelledby="modifierAnnonceLabel" aria-hidden="true">
+<div class="modal fade" id="modifierAnnonce" tabindex="-1" aria-labelledby="modifierAnnonceLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -223,7 +229,7 @@
                                 <label for="idAnneeAnnonce" class="form-label text-primary">Année académique</label>
                                 <select class="form-select" formControlName="idAnneeAnnonce" id="idAnneeAnnonce" aria-label="Default select example">
                                     <option disabled>Sélectionner une année académique</option>
-                                    <option *ngFor="let annee of tabAnneeAcademiques" 
+                                    <option *ngFor="let annee of tabAnneeAcademiques"
                                             [value]="annee.id"
                                             [selected]="annee.id === selectedAnnonce?.anneeAcademique?.id">
                                         {{ annee.annee }}
