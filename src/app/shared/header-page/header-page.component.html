@@ -24,7 +24,7 @@
                 </li>
             </ul>
 
-            <div class="btn-nav">
+            <div class="btn-nav me-2">
                 @if(userConnected){
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -32,7 +32,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" routerLink="/dashboard/candidat">Mon Dashboard</a></li>
-                            <li><a class="dropdown-item" (click)="logoutUser()">Se déconnecter</a></li>
+                            <li><a class="dropdown-item" style="cursor: pointer;" (click)="logoutUser()">Se déconnecter</a></li>
                         </ul>
                     </div>
                 }
@@ -45,3 +45,4 @@
         </div>
     </div>
 </nav>
+

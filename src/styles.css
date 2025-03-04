@@ -57,7 +57,7 @@ p {
     padding: 0 1rem;
 }
 
-.navbar li {
+.navbar .nav-item {
     margin: 0 1.5rem;
     padding: 0 0.5rem;
 }

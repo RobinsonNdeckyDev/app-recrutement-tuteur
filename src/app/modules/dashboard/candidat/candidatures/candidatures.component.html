@@ -10,11 +10,15 @@
             @if (getPaginatedCandidature()) {
                 <div class="col-md-6" *ngFor="let candidature of getPaginatedCandidature()">
                     <div class="card px-2">
-                        <div class="etatAnnonce" [ngClass]="candidature.etat === 'En cours' ? 'bg-warning' : 'bg-primary'">
+                        <div class="etatAnnonce" [ngClass]="{
+                            'bg-warning': candidature?.etat === 'PENDING',
+                            'bg-danger': candidature?.etat === 'REJECTED',
+                            'bg-secondary': candidature?.etat === 'CANCELLED',
+                            'bg-success': candidature?.etat === 'HIRED'
+                          }">
                             <span >
                                 {{
                                     candidature?.etat === 'PENDING' ? 'Candidature en cours' :
-                                    candidature?.etat === 'ACCEPTED' ? 'Candidature Acceptée' :
                                     candidature?.etat === 'REJECTED' ? 'Candidature Rejetée' :
                                     candidature?.etat === 'CANCELLED' ? 'Candidature Annulée' :
                                     candidature?.etat === 'HIRED' ? 'Candidature Recruté(e)' :
@@ -105,10 +109,14 @@
             <div class="modal-body">
                 <div class="mb-5">
                     <h3 class="text-center fw-medium text-primary">Informations</h3>
-                    <p class="my-2 text-center text-white" [ngClass]="selectedCandidature?.etat === 'En cours' ? 'bg-warning' : 'bg-primary'">
+                    <p class="my-2 text-center text-white" [ngClass]="{
+                        'bg-warning': selectedCandidature?.etat === 'PENDING',
+                        'bg-danger': selectedCandidature?.etat === 'REJECTED',
+                        'bg-secondary': selectedCandidature?.etat === 'CANCELLED',
+                        'bg-success': selectedCandidature?.etat === 'HIRED'
+                      }">
                         Votre candidature est :
                         {{selectedCandidature?.etat === 'PENDING' ? 'En attente' :
-                          selectedCandidature?.etat === 'ACCEPTED' ? 'Acceptée' :
                           selectedCandidature?.etat === 'REJECTED' ? 'Rejetée' :
                           selectedCandidature?.etat === 'CANCELLED' ? 'Annulée' :
                           selectedCandidature?.etat === 'HIRED' ? 'Recruté(e)' :
