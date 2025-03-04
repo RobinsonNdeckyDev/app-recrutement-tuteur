@@ -24,6 +24,7 @@ export class NavbarDashComponent {
     logout() {
         this.authService.logout();
         this.toastr.success('Déconnexion réussie');
+        window.location.href = '/login';
     }
 
     userConnected() {
