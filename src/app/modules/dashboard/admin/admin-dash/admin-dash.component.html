@@ -53,19 +53,18 @@
                 <input type="text" class="form-control w-50" placeholder="Rechercher une candidature" (input)="searchCandidature($event)">
             </div>
 
-            <table class="table table-striped mt-2">
-                <thead class="">
-                    <tr>
-                        <th class="text-primary">Prénom</th>
-                        <th class="text-primary">Nom</th>
-                        <th class="text-primary">Annonce</th>
-                        <th class="text-primary">Structure</th>
-                        <th class="text-primary">Etat</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @if (getPaginatedCandidature()) {
+            @if (getPaginatedCandidature().length) {
+                <table class="table table-striped mt-2">
+                    <thead class="">
+                        <tr>
+                            <th class="text-primary">Prénom</th>
+                            <th class="text-primary">Nom</th>
+                            <th class="text-primary">Annonce</th>
+                            <th class="text-primary">Structure</th>
+                            <th class="text-primary">Etat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <tr *ngFor="let candidature of getPaginatedCandidature()">
                             <td>{{ candidature?.user?.prenom }}</td>
                             <td>{{ candidature?.user?.nom }}</td>
@@ -86,31 +85,31 @@
                                 }}
                             </td>
                         </tr>
-                    }
-                    @else {
-                        <p class="text-center text-primary my-4">
-                            Aucun administrateur disponible
-                        </p>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center">
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
-                            <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
-                        </li>
-                        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
-                            <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
-                        </li>
-                        <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
-                            <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
+                                <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
+                            </li>
+                            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
+                                <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
+                            </li>
+                            <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
+                                <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }@else {
+                <p class="text-center text-primary my-4">
+                    Aucun administrateur disponible
+                </p>
+            }
+            
         </div>
     </div>
     <div class="col-md-4">

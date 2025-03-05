@@ -6,75 +6,19 @@
     <input type="text" class="form-control w-50" placeholder="Rechercher un candidat" (input)="searchCandidat($event)">
 </div>
 
-<table class="table table-striped mt-2">
-    <thead class="">
-        <tr>
-            <th>Photo</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <!-- <th>Etat</th> -->
-            <th class="text-center">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                test
-            </td>
-            <td class="text-center d-flex justify-content-center align-items-center">
-                <span><i class="pi pi-pencil" data-bs-toggle="modal" data-bs-target="#modifierAnneeAcademique"></i></span>
-                <span><i class="pi pi-trash"></i></span>
-            </td>
-        </tr> -->
-        @if (getPaginatedCandidats()) {
+@if (getPaginatedCandidats().length) {
+    <table class="table table-striped mt-2">
+        <thead class="">
+            <tr>
+                <th>Photo</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <!-- <th>Etat</th> -->
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
             <tr *ngFor="let candidat of getPaginatedCandidats()">
                 <td>
                     <img [src]="getImageUrl(candidat)"
@@ -95,35 +39,30 @@
                     <span><i class="pi pi-trash" (click)="deleteCandidat(candidat.id)"></i></span>
                 </td>
             </tr>
-        }
-        @else {
-            <tr>
-                <td colspan="6">
-                    <p class="text-center text-primary my-4">
-                        Aucun candidat disponible
-                    </p>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<!-- Pagination -->
-<div class="d-flex justify-content-center mt-4 mb-3">
-    <nav>
-        <ul class="pagination">
-            <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
-                <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
-            </li>
-            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
-                <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
-            </li>
-            <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
-                <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4 mb-3">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
+                    <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
+                </li>
+                <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
+                    <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
+                    <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}@else {
+    <p class="text-center text-primary my-4">
+        Aucun candidat disponible
+    </p>
+}
 
 
 

@@ -6,20 +6,19 @@
     <input type="text" class="form-control w-50" placeholder="Rechercher un admin" (input)="searchAdmin($event)">
 </div>
 
-<table class="table table-striped mt-2">
-    <thead class="">
-        <tr>
-            <th>Photo</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <!-- <th>Etat</th> -->
-            <th class="text-center">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @if (getPaginatedAdmin()) {
+@if (getPaginatedAdmin().length) {
+    <table class="table table-striped mt-2">
+        <thead class="">
+            <tr>
+                <th>Photo</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <!-- <th>Etat</th> -->
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
             <tr *ngFor="let admin of getPaginatedAdmin()">
                 <td>
                     <img [src]="getImageUrl(admin)"
@@ -40,32 +39,30 @@
                     <span><i class="pi pi-trash" (click)="deleteAdmin(admin.id)"></i></span>
                 </td>
             </tr>
-        }
-        @else {
-            <p class="text-center text-primary my-4">
-                Aucun administrateur disponible
-            </p>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<!-- Pagination -->
-<div class="d-flex justify-content-center mt-4 mb-3">
-    <nav>
-        <ul class="pagination">
-            <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
-                <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
-            </li>
-            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
-                <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
-            </li>
-            <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
-                <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
-            </li>
-        </ul>
-    </nav>
-</div>
-
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4 mb-3">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" [ngClass]="{'disabled': currentPage === 1}">
+                    <a class="page-link" (click)="setPage(currentPage - 1)">&laquo;</a>
+                </li>
+                <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === (i + 1)}">
+                    <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
+                    <a class="page-link" (click)="setPage(currentPage + 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}@else {
+    <p class="text-center text-primary my-4">
+        Aucun administrateur disponible
+    </p>
+}
 
 
 <!-- Modal d'ajout -->
